@@ -130,7 +130,10 @@ def new_vintage(
             "name": model_name,
             "build_phase": model_phase,
             "git_commit": _git_commit(),
-            "git_dirty": _git_dirty(),
+            # Naming the uncommitted files matters more than a yes/no. A dirty
+            # tree only threatens reconstructability if the dirty files are
+            # model code, and code_sha256 below settles that either way.
+            "git_uncommitted_files": _git_dirty_files(),
             "code_sha256": {
                 str(p.relative_to(paths.REPO_ROOT)): _sha256(p) for p in code_paths if p.exists()
             },
@@ -200,9 +203,9 @@ def _git_commit() -> str:
     return _git("rev-parse", "HEAD") or "unknown"
 
 
-def _git_dirty() -> bool:
+def _git_dirty_files() -> list[str]:
     status = _git("status", "--porcelain")
-    return bool(status)
+    return [line[3:] for line in status.splitlines() if line.strip()]
 
 
 def _git(*args: str) -> str:
