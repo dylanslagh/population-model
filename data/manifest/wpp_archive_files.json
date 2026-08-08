@@ -1,0 +1,71 @@
+{
+  "files": {
+    "wpp1992": {
+      "bytes": 4153420,
+      "filename": "WPP1992-Excel-files.zip",
+      "first_downloaded": "2026-08-08",
+      "revision_year": 1992,
+      "sha256": "396c7c51221cf054bd8b348e8580f3d7329885f153f9c1fd55f11d64e7e03a49",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/5_Archive/WPP1992-Excel-files.zip"
+    },
+    "wpp1994": {
+      "bytes": 2777984,
+      "filename": "WPP1994-Excel-files.zip",
+      "first_downloaded": "2026-08-08",
+      "revision_year": 1994,
+      "sha256": "45c437e8ac2e450f4c8db614efcd85772515a975b0e60ce5e83d1a0a9c63da14",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/5_Archive/WPP1994-Excel-files.zip"
+    },
+    "wpp1996": {
+      "bytes": 6681834,
+      "filename": "WPP1996-Excel-files.zip",
+      "first_downloaded": "2026-08-08",
+      "revision_year": 1996,
+      "sha256": "472c9209592150e753f931cfcbc4577cd598bb0f074cfc5f66dedad0211c82f8",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/5_Archive/WPP1996-Excel-files.zip"
+    },
+    "wpp2000": {
+      "bytes": 32063935,
+      "filename": "WPP2000-Excel-files.zip",
+      "first_downloaded": "2026-08-08",
+      "revision_year": 2000,
+      "sha256": "b1483850c8b865342134329528161d142b93ee72bb58bbb350b714f09e8b0078",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/5_Archive/WPP2000-Excel-files.zip"
+    },
+    "wpp2002": {
+      "bytes": 63757833,
+      "filename": "WPP2002-Excel-files.zip",
+      "first_downloaded": "2026-08-08",
+      "revision_year": 2002,
+      "sha256": "ba4f72b6738566f40ee11f22c2e93aac90d6e2e4dae92f1acc8b6320a3ad3c12",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/5_Archive/WPP2002-Excel-files.zip"
+    },
+    "wpp2004": {
+      "bytes": 156616569,
+      "filename": "WPP2004-Excel-files.zip",
+      "first_downloaded": "2026-08-08",
+      "revision_year": 2004,
+      "sha256": "b915d90124a885c48b45946656e3e2e6b6163666e78643aefd79c2a1f67261a7",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/5_Archive/WPP2004-Excel-files.zip"
+    },
+    "wpp2006": {
+      "bytes": 136838654,
+      "filename": "WPP2006-Excel-files.zip",
+      "first_downloaded": "2026-08-08",
+      "revision_year": 2006,
+      "sha256": "5726f231fc436b0954462987341f9663eebe198e60d16fb71fc6ec52851aa674",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/5_Archive/WPP2006-Excel-files.zip"
+    },
+    "wpp2008": {
+      "bytes": 216476036,
+      "filename": "WPP2008-Excel-files.zip",
+      "first_downloaded": "2026-08-08",
+      "revision_year": 2008,
+      "sha256": "d8135a9734fa1df14b9803a33694292cab57ab9f21ca15e8fc3e8a093e7bee55",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/5_Archive/WPP2008-Excel-files.zip"
+    }
+  },
+  "manifest": "wpp_archive_files",
+  "revision_label": "UN World Population Prospects, 2024 revision",
+  "source_page": "https://population.un.org/wpp/downloads"
+}

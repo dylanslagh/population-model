@@ -62,9 +62,19 @@ python -m pytest tests/ -q           # fast, no data needed
 
 ## Where the project is
 
-Phase 2 of the ten in spec section 10 is done and tested. Phase 1 (the backtest
-harness over archived WPP revisions) is not started, and the spec asks for it
-first — it was deferred because archived revisions before the mid-1990s are
-scanned volumes and getting them is a research task, not a coding one. Phases
-3–6 are open. `scenarios.py` declares the unimplemented scenarios with the phase
-that owes them, so the gap is visible rather than silent.
+Phases 1 and 2 of spec section 10 are done and tested. Phases 3–6 are open.
+`scenarios.py` declares the unimplemented scenarios with the phase that owes
+them, so the gap is visible rather than silent.
+
+A correction worth keeping, because it was written down wrong once: archived WPP
+revisions are **not** scanned volumes. All fourteen back to 1992 are Excel
+workbooks, downloadable from the WPP downloads page under file type "Archive",
+and they use the same UN country codes still in use today. If you find a claim
+anywhere in this repo that the archives are hard to get, it is stale.
+
+Reading them has two traps. Their internal layout drifts between revisions, so
+`ingest/archive.py` locates the header rather than assuming a row number. And
+several revisions ship counterfactual scenarios alongside the real projection —
+"no AIDS", "instant replacement", "zero migration" — which are excluded by name
+in `sources/wpp_archive.py`. Grading a counterfactual as though it were a
+forecast would be a serious error, not a rounding problem.

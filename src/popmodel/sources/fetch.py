@@ -25,7 +25,7 @@ from datetime import date
 from pathlib import Path
 
 from popmodel import paths
-from popmodel.sources import wpp2024
+from popmodel.sources import wpp2024, wpp_archive
 
 _CHUNK = 1 << 20  # 1 MiB
 _USER_AGENT = "population-model/0.0.1 (research; contact via github.com/dylanslagh)"
@@ -44,25 +44,29 @@ class FetchResult:
     downloaded: bool  # False means it was already present and verified
 
 
-def manifest_path(revision: str = wpp2024.REVISION) -> Path:
-    return paths.MANIFEST / f"{revision.lower()}_files.json"
+_MAIN_MANIFEST = wpp2024.REVISION.lower()
 
 
-def load_manifest(revision: str = wpp2024.REVISION) -> dict:
-    p = manifest_path(revision)
+def manifest_path(name: str = _MAIN_MANIFEST) -> Path:
+    suffix = "" if name.endswith("_files") else "_files"
+    return paths.MANIFEST / f"{name.lower()}{suffix}.json"
+
+
+def load_manifest(name: str = _MAIN_MANIFEST) -> dict:
+    p = manifest_path(name)
     if p.exists():
         return json.loads(p.read_text(encoding="utf-8"))
     return {
-        "revision": revision,
+        "manifest": name,
         "revision_label": wpp2024.REVISION_LABEL,
         "source_page": wpp2024.SOURCE_PAGE,
         "files": {},
     }
 
 
-def save_manifest(manifest: dict, revision: str = wpp2024.REVISION) -> None:
+def save_manifest(manifest: dict, name: str = _MAIN_MANIFEST) -> None:
     paths.MANIFEST.mkdir(parents=True, exist_ok=True)
-    manifest_path(revision).write_text(
+    manifest_path(name).write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
 
@@ -179,3 +183,58 @@ def raw_path(key: str) -> Path:
             f"  Run:  python scripts/fetch_wpp.py {key}"
         )
     return p
+
+
+# ---------------------------------------------------------------------------
+# The archived revisions. Same download and checksum discipline, separate
+# manifest, because they are a different kind of thing: not inputs to the
+# model but the record it is graded against.
+# ---------------------------------------------------------------------------
+
+ARCHIVE_MANIFEST = "wpp_archive_files"
+
+
+def archive_path(key: str) -> Path:
+    rev = wpp_archive.REVISIONS[key]
+    p = paths.RAW / "archive" / rev.filename
+    if not p.exists():
+        raise FileNotFoundError(
+            f"{rev.filename} has not been downloaded.\n"
+            f"  Run:  python scripts/fetch_archive.py {key}"
+        )
+    return p
+
+
+def fetch_archive(key: str, *, force: bool = False) -> FetchResult:
+    rev = wpp_archive.REVISIONS[key]
+    dest = paths.RAW / "archive" / rev.filename
+    manifest = load_manifest(ARCHIVE_MANIFEST)
+    recorded = manifest["files"].get(key)
+
+    downloaded = False
+    if force or not dest.exists():
+        print(f"  {rev.filename}  (~{rev.approx_mb} MB)")
+        _download(rev.url, dest)
+        downloaded = True
+
+    digest = sha256_of(dest)
+    if recorded and recorded["sha256"] != digest:
+        raise ChecksumMismatch(
+            f"{rev.filename} does not match the manifest.\n"
+            f"  expected {recorded['sha256']}\n  found    {digest}\n"
+            "An archived revision is a historical record and should never "
+            "change. Investigate before proceeding."
+        )
+    if not recorded:
+        manifest["files"][key] = {
+            "filename": rev.filename,
+            "url": rev.url,
+            "revision_year": rev.year,
+            "sha256": digest,
+            "bytes": dest.stat().st_size,
+            "first_downloaded": date.today().isoformat(),
+        }
+        save_manifest(manifest, ARCHIVE_MANIFEST)
+
+    return FetchResult(key=key, path=dest, sha256=digest, bytes=dest.stat().st_size,
+                       downloaded=downloaded)

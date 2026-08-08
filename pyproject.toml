@@ -14,6 +14,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Reading the UN's archived revisions, which are 1990s-era binary .xls files.
+# Only the backtest needs this.
+archive = ["xlrd>=2.0"]
+# Figures.
+viz = ["matplotlib>=3.8"]
 # Phase 4. Not needed for anything currently in the repo.
 bayes = ["numpyro>=0.15", "jax>=0.4"]
 dev = ["pytest>=8.0"]
