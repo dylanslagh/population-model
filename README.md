@@ -37,7 +37,11 @@ of the project's own claims get loaded into it.
 **What the engine says, using the UN's assumptions unchanged:** world population
 peaks at **10.29 billion in 2084**, and is down to **8.78 billion by 2150**. The
 UN does not publish past 2100, so the second half of that sentence is the sort
-of thing this project exists to say.
+of thing this project exists to say — with the caveat that nobody publishes
+fertility or mortality rates past 2100 either, so the run holds both at their
+2100 values from there on. That is an assumption, not a finding, and a
+conservative one on mortality: the recurring institutional failure is that
+life expectancy gains get under-projected, decade after decade.
 
 The absurdity check — every woman keeps having children at exactly the 2024 rate
 for her age and country, forever — gives **53 billion in 2150**. Nobody believes
