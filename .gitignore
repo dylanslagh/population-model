@@ -1,0 +1,22 @@
+# Downloaded source data. Large, and reproducible from scripts/fetch_wpp.py.
+# The checksum manifest in data/manifest/ IS committed, so a fresh clone can
+# verify it got byte-identical files.
+data/raw/
+data/interim/
+
+# Build products that can be regenerated
+data/processed/
+out/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# OS / editor
+Thumbs.db
+.DS_Store

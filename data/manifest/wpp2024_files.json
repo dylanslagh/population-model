@@ -1,0 +1,71 @@
+{
+  "files": {
+    "fertility_age1": {
+      "bytes": 301907467,
+      "filename": "WPP2024_Fertility_by_Age1.csv.gz",
+      "first_downloaded": "2026-08-07",
+      "purpose": "Age-specific fertility rates by single year of age, 1950-2100.",
+      "sha256": "b2a1ab1f6dff7c7bc2ae90323486b5ab086f48c21ad99ae95aed127cc2e7a985",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Fertility_by_Age1.csv.gz"
+    },
+    "fertility_age5": {
+      "bytes": 82864610,
+      "filename": "WPP2024_Fertility_by_Age5.csv.gz",
+      "first_downloaded": "2026-08-07",
+      "purpose": "The same rates in five-year groups, but covering ages 10-54. Needed because the single-age file omits mothers under 15 and over 49, who between them account for about 0.3% of world births - small, and enough to bias a 126-year projection.",
+      "sha256": "c0d3b5b7e992902df3be1980cfa86c440c1cd673ecec9d4826142a03aece04ec",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Fertility_by_Age5.csv.gz"
+    },
+    "indicators_medium": {
+      "bytes": 16557272,
+      "filename": "WPP2024_Demographic_Indicators_Medium.csv.gz",
+      "first_downloaded": "2026-08-07",
+      "purpose": "Location table (LocID, ISO3, type), sex ratio at birth, net migration totals, and the UN's own TFR/e0/births for checking.",
+      "sha256": "286ac36bb1415e2e1ade03acfef0a29f0e4c087e2f78e38c48f50c5df89082bc",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz"
+    },
+    "indicators_variants": {
+      "bytes": 75342445,
+      "filename": "WPP2024_Demographic_Indicators_OtherVariants.csv.gz",
+      "first_downloaded": "2026-08-07",
+      "purpose": "Same indicators for the non-medium variants. Total population under zero-migration and constant-fertility: the headline numbers the engine has to reproduce.",
+      "sha256": "a860504df54877e4c19788bf6e16920d6017d021b4c149eaf8b5662674180a54",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_OtherVariants.csv.gz"
+    },
+    "life_table_female": {
+      "bytes": 203000798,
+      "filename": "WPP2024_Life_Table_Complete_Medium_Female_2024-2100.csv.gz",
+      "first_downloaded": "2026-08-07",
+      "purpose": "Complete (single-age) female life tables; Lx gives survival ratios.",
+      "sha256": "8ebd82988839c514556290364794daf7e8d29a39987f7c15c2cb04b4bf8845d1",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Life_Table_Complete_Medium_Female_2024-2100.csv.gz"
+    },
+    "life_table_male": {
+      "bytes": 204285181,
+      "filename": "WPP2024_Life_Table_Complete_Medium_Male_2024-2100.csv.gz",
+      "first_downloaded": "2026-08-07",
+      "purpose": "Complete (single-age) male life tables; Lx gives survival ratios.",
+      "sha256": "0a7e3eceaef592a599ec2808dd43e5081b0b834e2a579a6fd886fcf6ede77a1b",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Life_Table_Complete_Medium_Male_2024-2100.csv.gz"
+    },
+    "pop_jan1_age5_variants": {
+      "bytes": 191593060,
+      "filename": "WPP2024_Population1JanuaryByAge5GroupSex_OtherVariants.csv.gz",
+      "first_downloaded": "2026-08-07",
+      "purpose": "Age structure under the non-medium variants, at 1 January so the time reference matches the engine exactly. The age-structure validation target.",
+      "sha256": "d4728fad5a376c7678ce14be04b553ee95274cd08bf8aa816e0c761453829e5a",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Population1JanuaryByAge5GroupSex_OtherVariants.csv.gz"
+    },
+    "pop_jan1_single_proj": {
+      "bytes": 67882675,
+      "filename": "WPP2024_Population1JanuaryBySingleAgeSex_Medium_2024-2100.csv.gz",
+      "first_downloaded": "2026-08-07",
+      "purpose": "Base population at 1 January 2024 by single age and sex - the state vector the projection starts from (spec 5.1: fork at 2024). Also the medium-variant reference path.",
+      "sha256": "a44c70cbf852c07fbe844bb45271ee5b533b62e6c2a6edcb3cf7f23bcbb13ab3",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Population1JanuaryBySingleAgeSex_Medium_2024-2100.csv.gz"
+    }
+  },
+  "revision": "WPP2024",
+  "revision_label": "UN World Population Prospects, 2024 revision",
+  "source_page": "https://population.un.org/wpp/downloads"
+}

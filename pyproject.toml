@@ -1,0 +1,29 @@
+[project]
+name = "popmodel"
+version = "0.0.1"
+description = "World population model to 2150 — mechanistic, Bayesian, scored."
+requires-python = ">=3.11"
+
+# Deliberately short. Spec section 9: "Every dependency is a liability."
+# numpy and pandas only. Stan/NumPyro arrive in Phase 4 and go in an extra,
+# so the deterministic engine and the backtest harness stay installable with
+# nothing but a stock scientific Python.
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+# Phase 4. Not needed for anything currently in the repo.
+bayes = ["numpyro>=0.15", "jax>=0.4"]
+dev = ["pytest>=8.0"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
