@@ -12,6 +12,21 @@ does. A long-run fertility of 1.85 versus 1.30 is a 4.4× difference in world
 population at 2150, from a parameter nobody can measure. Precision in the base
 data is nearly irrelevant. Precision about the mechanism is everything.
 
+## How it works
+
+![How the model works](docs/how-the-model-works.svg)
+
+The engine is the grey part: age everyone up a year, thin them by survival
+rates, count the babies, add the migrants, repeat 126 times. It is the same
+arithmetic in every population projection ever built, including the UN's, and
+there is nothing to disagree about in it.
+
+Everything anyone argues about is the purple part — what fertility, survival
+and migration *do* over the next century. Today those come from the UN, so the
+model currently produces UN answers, which is exactly what makes it testable.
+The project's own account of fertility, where selection competes against a
+rising cost of parenthood, plugs into the same socket and is not built yet.
+
 ## What exists now
 
 **The projection engine, built and tested.** This is phase 2 of the ten phases
