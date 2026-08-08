@@ -1,0 +1,126 @@
+{
+  "created_utc": "2026-08-08T01:54:33+00:00",
+  "data": {
+    "base_year": 2024,
+    "built_utc": "2026-08-08T01:48:59+00:00",
+    "last_rate_year": 2100,
+    "revision": "WPP2024",
+    "revision_label": "UN World Population Prospects, 2024 revision",
+    "source_files": {
+      "fertility_age1": {
+        "filename": "WPP2024_Fertility_by_Age1.csv.gz",
+        "sha256": "b2a1ab1f6dff7c7bc2ae90323486b5ab086f48c21ad99ae95aed127cc2e7a985"
+      },
+      "fertility_age5": {
+        "filename": "WPP2024_Fertility_by_Age5.csv.gz",
+        "sha256": "c0d3b5b7e992902df3be1980cfa86c440c1cd673ecec9d4826142a03aece04ec"
+      },
+      "indicators_medium": {
+        "filename": "WPP2024_Demographic_Indicators_Medium.csv.gz",
+        "sha256": "286ac36bb1415e2e1ade03acfef0a29f0e4c087e2f78e38c48f50c5df89082bc"
+      },
+      "indicators_variants": {
+        "filename": "WPP2024_Demographic_Indicators_OtherVariants.csv.gz",
+        "sha256": "a860504df54877e4c19788bf6e16920d6017d021b4c149eaf8b5662674180a54"
+      },
+      "life_table_female": {
+        "filename": "WPP2024_Life_Table_Complete_Medium_Female_2024-2100.csv.gz",
+        "sha256": "8ebd82988839c514556290364794daf7e8d29a39987f7c15c2cb04b4bf8845d1"
+      },
+      "life_table_male": {
+        "filename": "WPP2024_Life_Table_Complete_Medium_Male_2024-2100.csv.gz",
+        "sha256": "0a7e3eceaef592a599ec2808dd43e5081b0b834e2a579a6fd886fcf6ede77a1b"
+      },
+      "pop_jan1_age5_variants": {
+        "filename": "WPP2024_Population1JanuaryByAge5GroupSex_OtherVariants.csv.gz",
+        "sha256": "d4728fad5a376c7678ce14be04b553ee95274cd08bf8aa816e0c761453829e5a"
+      },
+      "pop_jan1_single_proj": {
+        "filename": "WPP2024_Population1JanuaryBySingleAgeSex_Medium_2024-2100.csv.gz",
+        "sha256": "a44c70cbf852c07fbe844bb45271ee5b533b62e6c2a6edcb3cf7f23bcbb13ab3"
+      }
+    },
+    "units": {
+      "asfr": "births per woman per year",
+      "population": "people",
+      "srb": "male births per female birth",
+      "sx": "survival ratio into age a (UN Sx convention)"
+    }
+  },
+  "model": {
+    "build_phase": 2,
+    "code_sha256": {
+      "src\\popmodel\\__init__.py": "3d17da37c1131ecd47d48bf897d56393a3cabb57d3b33f4fddbadc9f40c3688a",
+      "src\\popmodel\\engine\\__init__.py": "87e24936002f47d84cb49d98ab16a54bfa88077efc89986503d8fc9149a3ddc7",
+      "src\\popmodel\\engine\\cohort.py": "7d0cda1cf035720aa2b63011d385891b8209bfc5b0ce205be3bda8464e519154",
+      "src\\popmodel\\ingest\\__init__.py": "64eca3def025c449421aa32511e837f58a403d5382ae57d21fbd77f5dc23c8b4",
+      "src\\popmodel\\ingest\\reference.py": "902ea9fe6d97bac2feab84398409ad2862eda0fed73432ec6a1c0ee756b906bb",
+      "src\\popmodel\\ingest\\wpp.py": "41eb5cc690e44075cb8454572b2d09759629a7ffcefc5920265542b2efd79f83",
+      "src\\popmodel\\paths.py": "c022a4ca33f11b81cc6bceb66e872866db12b3e5f3fd7bc904027cdd38017fb3",
+      "src\\popmodel\\scenarios.py": "833a954b474f01b0e506f59696a76270ae9aa2763844836e3427d7c4782fbcc5",
+      "src\\popmodel\\sources\\__init__.py": "77eafc15593fbe9876f75695d01f5a232039933fcaf32c23408f04b5101f252a",
+      "src\\popmodel\\sources\\fetch.py": "c53cc6f5b592a9eb870ea4cd168987e416e165e63003064c78fd6379ddad787a",
+      "src\\popmodel\\sources\\wpp2024.py": "245786a477b179eb93f6921c7deae7ea289b70a790cc7fb9fcd022a1ff4d873c",
+      "src\\popmodel\\track\\__init__.py": "934c924db7ec47d1aee7bb98778cf874891e61a978af64268aa8e35e5b9623d3",
+      "src\\popmodel\\track\\scoring.py": "dd0e5e66569de55da7a997dfcaac9f2cf4591057361fe779ae6ed39d1fa2d0ae",
+      "src\\popmodel\\track\\vintage.py": "31c23add417c82014c33dc1fbcaef76124444a41592ac129736f2619345e14e8"
+    },
+    "git_commit": "312dd2f8083ff5a37529f0f6e93893c5c8895e9e",
+    "git_uncommitted_files": [],
+    "name": "popmodel deterministic cohort-component engine"
+  },
+  "notes": "First stored vintage. Contains no claim of this project's own: the mechanistic layer (spec section 6) is not built. Its purpose is to fix the file format early, as spec section 10 asks, and to record the engine's validation state at the moment the numbers below were produced. Engine validation: world population at 2100 within 0.0010% of the UN's published zero-migration variant.",
+  "quantities": [
+    {
+      "description": "World population on 1 January 2100, running the UN's medium fertility and mortality assumptions through this engine, with net migration backed out of the UN's own medium path.",
+      "id": "world_population_2100_un_medium",
+      "is_project_claim": false,
+      "kind": "point",
+      "notes": "Not this project's claim. The engine run uses the UN's own fertility and mortality assumptions unchanged; only the arithmetic is ours. Recorded as a baseline, and to exercise the storage format. A point, not a distribution: the engine is deterministic and the Bayesian layer is phase 4. Cannot be scored with a proper rule until it has an uncertainty attached.",
+      "point": 10183031210.436806,
+      "resolution_date": "2100",
+      "scenario": "un-medium",
+      "source_of_truth": "UN WPP estimates for 2100, or successor series",
+      "unit": "people"
+    },
+    {
+      "description": "World population on 1 January 2150 under the same assumptions, with fertility and mortality held at their 2100 levels beyond the end of the published series.",
+      "id": "world_population_2150_un_medium",
+      "is_project_claim": false,
+      "kind": "point",
+      "notes": "Not this project's claim. The engine run uses the UN's own fertility and mortality assumptions unchanged; only the arithmetic is ours. Recorded as a baseline, and to exercise the storage format. A point, not a distribution: the engine is deterministic and the Bayesian layer is phase 4. Cannot be scored with a proper rule until it has an uncertainty attached. Holding mortality flat after 2100 is an assumption and probably a conservative one: spec section 10 records that life expectancy gains have been under-projected for sixty years running.",
+      "point": 8784006007.579395,
+      "resolution_date": "2150",
+      "scenario": "un-medium",
+      "source_of_truth": "UN WPP estimates for 2150, or successor series",
+      "unit": "people"
+    },
+    {
+      "description": "Calendar year in which world population peaks, UN medium assumptions.",
+      "id": "world_population_peak_year_un_medium",
+      "is_project_claim": false,
+      "kind": "point",
+      "notes": "Not this project's claim. The engine run uses the UN's own fertility and mortality assumptions unchanged; only the arithmetic is ours. Recorded as a baseline, and to exercise the storage format. A point, not a distribution: the engine is deterministic and the Bayesian layer is phase 4. Cannot be scored with a proper rule until it has an uncertainty attached.",
+      "point": 2084.0,
+      "resolution_date": "~2090, once the peak is behind us",
+      "scenario": "un-medium",
+      "source_of_truth": "UN WPP estimates, or successor series",
+      "unit": "year"
+    },
+    {
+      "description": "World population on 1 January 2150 if every woman kept bearing children at the UN's frozen constant-fertility rates forever.",
+      "id": "world_population_2150_constant_fertility",
+      "is_project_claim": false,
+      "kind": "point",
+      "notes": "Absurdity check. Recorded because the size of the gap between this and the medium run is the whole argument of spec section 2.2: the long-run fertility process is doing essentially all the work. Validated against the UN's own constant-fertility variant at 2100, -0.052%.",
+      "point": 53408875271.824524,
+      "resolution_date": "never - this is a check, not a forecast",
+      "scenario": "constant-fertility",
+      "source_of_truth": "n/a; the assumption is known to be false",
+      "unit": "people"
+    }
+  ],
+  "schema_version": "1.0",
+  "title": "Phase 2: deterministic engine, UN assumptions carried to 2150",
+  "vintage_id": "2026-08-07-phase2-engine"
+}
