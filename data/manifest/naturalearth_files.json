@@ -1,0 +1,23 @@
+{
+  "files": {
+    "countries": {
+      "bytes": 3083490,
+      "filename": "ne_50m_admin_0_countries.geojson",
+      "first_downloaded": "2026-08-09",
+      "release": "v5.1.2",
+      "sha256": "3e458fc036ad0a66411f2c1e6cac49c5d7bfb81cb1123bc513b22511a2b7fdeb",
+      "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_50m_admin_0_countries.geojson"
+    },
+    "map_units": {
+      "bytes": 3179420,
+      "filename": "ne_50m_admin_0_map_units.geojson",
+      "first_downloaded": "2026-08-09",
+      "release": "v5.1.2",
+      "sha256": "b8d421aca6e9e08e8cdf09cc26af111cc3e0deba4fe915611d58ade71e8a4db0",
+      "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_50m_admin_0_map_units.geojson"
+    }
+  },
+  "manifest": "naturalearth_files",
+  "revision_label": "UN World Population Prospects, 2024 revision",
+  "source_page": "https://population.un.org/wpp/downloads"
+}

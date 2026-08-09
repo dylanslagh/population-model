@@ -25,7 +25,7 @@ from datetime import date
 from pathlib import Path
 
 from popmodel import paths
-from popmodel.sources import wpp2024, wpp_archive
+from popmodel.sources import naturalearth, wpp2024, wpp_archive
 
 _CHUNK = 1 << 20  # 1 MiB
 _USER_AGENT = "population-model/0.0.1 (research; contact via github.com/dylanslagh)"
@@ -203,6 +203,55 @@ def archive_path(key: str) -> Path:
             f"  Run:  python scripts/fetch_archive.py {key}"
         )
     return p
+
+
+GEO_MANIFEST = "naturalearth_files"
+
+
+def geo_path(key: str) -> Path:
+    layer = naturalearth.LAYERS[key]
+    p = paths.RAW / "naturalearth" / naturalearth.RELEASE / layer.filename
+    if not p.exists():
+        raise FileNotFoundError(
+            f"{layer.filename} has not been downloaded.\n"
+            f"  Run:  python scripts/fetch_geometry.py"
+        )
+    return p
+
+
+def fetch_geometry(key: str, *, force: bool = False) -> FetchResult:
+    layer = naturalearth.LAYERS[key]
+    dest = paths.RAW / "naturalearth" / naturalearth.RELEASE / layer.filename
+    manifest = load_manifest(GEO_MANIFEST)
+    recorded = manifest["files"].get(key)
+
+    downloaded = False
+    if force or not dest.exists():
+        print(f"  {layer.filename}  (~{layer.approx_mb} MB)")
+        _download(layer.url, dest)
+        downloaded = True
+
+    digest = sha256_of(dest)
+    if recorded and recorded["sha256"] != digest:
+        raise ChecksumMismatch(
+            f"{layer.filename} does not match the manifest.\n"
+            f"  expected {recorded['sha256']}\n  found    {digest}\n"
+            f"This is pinned to Natural Earth {naturalearth.RELEASE}, a tagged "
+            "release, so the bytes should never move. Investigate."
+        )
+    if not recorded:
+        manifest["files"][key] = {
+            "filename": layer.filename,
+            "url": layer.url,
+            "release": naturalearth.RELEASE,
+            "sha256": digest,
+            "bytes": dest.stat().st_size,
+            "first_downloaded": date.today().isoformat(),
+        }
+        save_manifest(manifest, GEO_MANIFEST)
+
+    return FetchResult(key=key, path=dest, sha256=digest, bytes=dest.stat().st_size,
+                       downloaded=downloaded)
 
 
 def fetch_archive(key: str, *, force: bool = False) -> FetchResult:

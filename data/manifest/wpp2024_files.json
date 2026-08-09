@@ -56,6 +56,14 @@
       "sha256": "d4728fad5a376c7678ce14be04b553ee95274cd08bf8aa816e0c761453829e5a",
       "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Population1JanuaryByAge5GroupSex_OtherVariants.csv.gz"
     },
+    "pop_jan1_single_hist": {
+      "bytes": 62107912,
+      "filename": "WPP2024_Population1JanuaryBySingleAgeSex_Medium_1950-2023.csv.gz",
+      "first_downloaded": "2026-08-09",
+      "purpose": "Historical population pyramids, 1950-2023. Needed for Phase 3, not Phase 2.",
+      "sha256": "b9a2c95d1608e7ae2c506c1516f1dab60535513c143c49b3e55087515b7ebe91",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Population1JanuaryBySingleAgeSex_Medium_1950-2023.csv.gz"
+    },
     "pop_jan1_single_proj": {
       "bytes": 67882675,
       "filename": "WPP2024_Population1JanuaryBySingleAgeSex_Medium_2024-2100.csv.gz",
