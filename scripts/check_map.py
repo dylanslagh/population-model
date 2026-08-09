@@ -154,6 +154,36 @@ def main() -> int:
     plt.close(fig)
     print(f"3. wrote {out.relative_to(paths.REPO_ROOT)} - open it and look at it")
 
+    # 3b. the same for the data-confidence mode, whose colours are a lookup
+    # rather than a ramp and so fail differently: a band name that does not
+    # match the table renders as "no data" and looks deliberate.
+    bands = [("within 5 years", "#9FE1CB"), ("5 to 14 years", "#FAC775"),
+             ("15 years or more", "#D85A30"), ("none since 1985", "#712B13"),
+             ("not listed", "#B4B2A9")]
+    band_colour = dict(bands)
+    unknown = sorted({c.get("band") for c in data["countries"].values()} - set(band_colour))
+    if unknown:
+        problems.append(f"band values with no colour: {unknown}")
+    fig, ax = plt.subplots(figsize=(15, 8), dpi=110)
+    for iso, d in data["shapes"].items():
+        col = band_colour.get(data["countries"][iso].get("band"), "#EEEEEE")
+        for ring in parse_path(d):
+            ax.add_patch(MplPolygon(ring, closed=True, facecolor=col,
+                                    edgecolor="white", linewidth=0.3))
+    ax.set_xlim(0, data["viewWidth"]); ax.set_ylim(data["viewHeight"], 0)
+    ax.set_aspect("equal"); ax.axis("off")
+    ax.set_title("How long since each country ran a census - redrawn from the page's own data",
+                 fontsize=11, loc="left", color="#2C2C2A")
+    ax.legend(handles=[plt.Line2D([0], [0], marker="s", linestyle="", markersize=10,
+                                  markerfacecolor=c, markeredgecolor="none", label=n)
+                       for n, c in bands],
+              loc="lower left", frameon=False, ncol=5, fontsize=9)
+    fig.tight_layout()
+    out2 = paths.OUT / "map-check-census.png"
+    fig.savefig(out2, format="png", facecolor="white")
+    plt.close(fig)
+    print(f"   wrote {out2.relative_to(paths.REPO_ROOT)}")
+
     interesting = ["NGA", "COD", "IND", "CHN", "JPN", "KOR", "USA", "DEU", "NER"]
     print("\n   change 2024 to 2100, as the page computes it:")
     for iso in interesting:

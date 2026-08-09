@@ -1,0 +1,16 @@
+{
+  "files": {
+    "census_dates": {
+      "bytes": 248740,
+      "filename": "census_dates.html",
+      "first_downloaded": "2026-08-09",
+      "last_changed": "2026-08-09",
+      "sha256": "900b7f3691efe2c1309e422b16816e5ed45ebb127a7e71db3443f987fccf6165",
+      "source": "UN Statistics Division, census dates by country",
+      "url": "https://unstats.un.org/unsd/demographic-social/census/censusdates/"
+    }
+  },
+  "manifest": "unsd_files",
+  "revision_label": "UN World Population Prospects, 2024 revision",
+  "source_page": "https://population.un.org/wpp/downloads"
+}

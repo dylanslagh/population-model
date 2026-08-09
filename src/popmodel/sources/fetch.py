@@ -25,7 +25,7 @@ from datetime import date
 from pathlib import Path
 
 from popmodel import paths
-from popmodel.sources import naturalearth, wpp2024, wpp_archive
+from popmodel.sources import naturalearth, unsd_census, wpp2024, wpp_archive
 
 _CHUNK = 1 << 20  # 1 MiB
 _USER_AGENT = "population-model/0.0.1 (research; contact via github.com/dylanslagh)"
@@ -287,3 +287,40 @@ def fetch_archive(key: str, *, force: bool = False) -> FetchResult:
 
     return FetchResult(key=key, path=dest, sha256=digest, bytes=dest.stat().st_size,
                        downloaded=downloaded)
+
+
+CENSUS_MANIFEST = "unsd_files"
+
+
+def census_page(*, force: bool = False) -> Path:
+    """The UNSD census-dates page, downloaded and checksummed like everything else.
+
+    It is a live HTML page rather than a dated release, so the checksum will
+    legitimately change when UNSD updates it. A mismatch is therefore news, not
+    an error: it means a country has counted its people since last time.
+    """
+    dest = paths.RAW / "unsd" / "census_dates.html"
+    manifest = load_manifest(CENSUS_MANIFEST)
+    recorded = manifest["files"].get("census_dates")
+
+    if force or not dest.exists():
+        print("  UNSD census dates page")
+        _download(unsd_census.URL, dest)
+
+    digest = sha256_of(dest)
+    if recorded and recorded["sha256"] != digest:
+        print(f"  note: the UNSD page has changed since {recorded['first_downloaded']}. "
+              "That is expected over time - censuses happen.")
+    if not recorded or recorded["sha256"] != digest:
+        manifest["files"]["census_dates"] = {
+            "filename": dest.name,
+            "url": unsd_census.URL,
+            "source": unsd_census.SOURCE,
+            "sha256": digest,
+            "bytes": dest.stat().st_size,
+            "first_downloaded": (recorded or {}).get("first_downloaded",
+                                                     date.today().isoformat()),
+            "last_changed": date.today().isoformat(),
+        }
+        save_manifest(manifest, CENSUS_MANIFEST)
+    return dest

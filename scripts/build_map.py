@@ -26,6 +26,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from popmodel import crosswalk, export, geometry, paths  # noqa: E402
+from popmodel.ingest import census  # noqa: E402
 from popmodel.ingest import wpp  # noqa: E402
 
 TOLERANCE = 0.08
@@ -80,6 +81,11 @@ def main() -> int:
     print("Building the map")
     paths_by_loc, view_height, to_view = project_shapes(cw.shapes)
 
+    # The data-confidence layer. A projection for Lebanon and a projection for
+    # Denmark are drawn in the same ink otherwise, and they are not the same
+    # kind of object.
+    conf = census.load_table().set_index("iso3")
+
     site_dir = export.out_dir()
     index = json.loads((site_dir / "index.json").read_text(encoding="utf-8"))
     by_iso = {c["iso3"]: c for c in index["countries"]}
@@ -105,6 +111,10 @@ def main() -> int:
             "f": female,
             "m": male,
             "t": totals,
+            "cen": (None if iso not in conf.index or conf.loc[iso, "last_census_year"] !=
+                    conf.loc[iso, "last_census_year"]
+                    else int(conf.loc[iso, "last_census_year"])),
+            "band": (str(conf.loc[iso, "band"]) if iso in conf.index else "not listed"),
             "pk": meta["peak_year"],
             "pkp": meta["peak_population"],
             "grew": meta["peaked_before_end"],
@@ -170,6 +180,11 @@ svg{display:block;width:100%;height:auto}
 .country.sel{stroke:var(--ink);stroke-width:1.6}
 .legend{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;
   font-size:12px;color:var(--muted)}
+.modes{display:flex;gap:6px;margin:0 0 10px}
+.modes button{font:inherit;font-size:12.5px;padding:5px 11px;cursor:pointer;
+  border:1px solid var(--faint);background:transparent;color:var(--muted);
+  border-radius:99px}
+.modes button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .swatch{width:26px;height:11px;border-radius:2px;display:inline-block}
 h2{font-size:16px;font-weight:500;margin:0 0 2px}
 .note{color:var(--muted);font-size:12.5px;margin:0 0 10px}
@@ -198,14 +213,20 @@ footer p{max-width:80ch}
 
 <main>
   <div class="card">
-    <svg id="map" role="img" aria-label="World map of projected population change"></svg>
+    <div class="modes" role="group" aria-label="What the colour shows">
+      <button id="m-change" class="on" type="button">Population change</button>
+      <button id="m-census" type="button">When they last counted</button>
+    </div>
+    <svg id="map" role="img" aria-label="World map"></svg>
     <div class="legend" id="legend"></div>
+    <p class="note" id="modenote"></p>
   </div>
 
   <div class="card">
     <h2 id="cname">World</h2>
     <p class="note" id="cnote"></p>
     <div class="stats" id="stats"></div>
+    <p class="note" id="census"></p>
     <label for="yr">Population pyramid — <span id="yrlabel"></span>
       <span class="kind" id="kind"></span></label>
     <input type="range" id="yr" min="0" max="8" step="1" value="3">
@@ -268,6 +289,26 @@ footer p{max-width:80ch}
     return "rgb(" + STOPS[STOPS.length-1][1].join(",") + ")";
   }
 
+  // Recency of the last census. A sequential ramp, so the eye goes to the
+  // countries whose numbers are least anchored to an actual count.
+  var BANDS = [
+    ["within 5 years",   "#9FE1CB"],
+    ["5 to 14 years",    "#FAC775"],
+    ["15 years or more", "#D85A30"],
+    ["none since 1985",  "#712B13"],
+    ["not listed",       "#B4B2A9"]
+  ];
+  var BAND_COLOUR = {};
+  BANDS.forEach(function(b){ BAND_COLOUR[b[0]] = b[1]; });
+
+  var mode = "change";
+
+  function fillFor(iso){
+    var c = D.countries[iso];
+    if (mode === "census") return BAND_COLOUR[c.band] || "var(--faint)";
+    return colour(changePct(iso));
+  }
+
   function changePct(iso){
     var c = D.countries[iso];
     var i2024 = 2024 - D.annualFrom, i2100 = 2100 - D.annualFrom;
@@ -282,23 +323,51 @@ footer p{max-width:80ch}
   var frag = "";
   Object.keys(D.shapes).forEach(function(iso){
     frag += '<path class="country" data-iso="' + iso + '" d="' + D.shapes[iso] +
-            '" fill="' + colour(changePct(iso)) + '"></path>';
+            '"></path>';
   });
   Object.keys(D.countries).forEach(function(iso){
     var pt = D.countries[iso].pt;
     if (pt) {
       frag += '<circle class="country" data-iso="' + iso + '" cx="' + pt[0] + '" cy="' +
-              pt[1] + '" r="3.2" fill="' + colour(changePct(iso)) + '"></circle>';
+              pt[1] + '" r="3.2"></circle>';
     }
   });
   map.innerHTML = frag;
 
   var legend = document.getElementById("legend");
-  var marks = [-75, -50, -25, 0, 50, 100, 200];
-  legend.innerHTML = "<span>2024 to 2100:</span>" + marks.map(function(v){
-    return '<span><i class="swatch" style="background:' + colour(v) + '"></i> ' +
-           (v > 0 ? "+" : "") + v + "%</span>";
-  }).join("");
+  var modenote = document.getElementById("modenote");
+
+  function repaint(){
+    Array.prototype.forEach.call(document.querySelectorAll(".country"), function(el){
+      el.setAttribute("fill", fillFor(el.getAttribute("data-iso")));
+    });
+    if (mode === "census"){
+      legend.innerHTML = "<span>last census:</span>" + BANDS.map(function(b){
+        return '<span><i class="swatch" style="background:' + b[1] + '"></i> ' +
+               b[0] + "</span>";
+      }).join("");
+      modenote.textContent = "How long since each country ran a population census "
+        + "(UN Statistics Division). This is one dimension of confidence, not a "
+        + "data-quality score: Denmark counts continuously from registers rather "
+        + "than by census, and a recent census can still be a poor one.";
+    } else {
+      var marks = [-75, -50, -25, 0, 50, 100, 200];
+      legend.innerHTML = "<span>2024 to 2100:</span>" + marks.map(function(v){
+        return '<span><i class="swatch" style="background:' + colour(v) + '"></i> ' +
+               (v > 0 ? "+" : "") + v + "%</span>";
+      }).join("");
+      modenote.textContent = "";
+    }
+  }
+
+  document.getElementById("m-change").addEventListener("click", function(){
+    mode = "change"; this.classList.add("on");
+    document.getElementById("m-census").classList.remove("on"); repaint();
+  });
+  document.getElementById("m-census").addEventListener("click", function(){
+    mode = "census"; this.classList.add("on");
+    document.getElementById("m-change").classList.remove("on"); repaint();
+  });
 
   // ---- detail panel -------------------------------------------------------
   var selected = null;
@@ -333,7 +402,10 @@ footer p{max-width:80ch}
 
   function drawPyramid(c, yi){
     var svg = document.getElementById("pyr");
-    var W = 340, H = 240, padL = 26, padB = 20, mid = W/2;
+    // padT exists so the "100+" label has somewhere to sit. Without it the
+    // top bar starts at y=0, the label's ascender is clipped by the viewBox
+    // edge, and it reads as though it collides with the slider above.
+    var W = 340, H = 250, padL = 26, padB = 20, padT = 10, mid = W/2;
     var f = c.f[yi], m = c.m[yi];
     var biggest = 0;
     for (var y=0;y<YEARS.length;y++){
@@ -344,7 +416,7 @@ footer p{max-width:80ch}
     }
     if (biggest <= 0) biggest = 1;
     var half = (W - padL) / 2 - 4;
-    var bh = (H - padB) / NAGE;
+    var bh = (H - padB - padT) / NAGE;
     var s = "";
     for (var a=0;a<NAGE;a++){
       var yy = H - padB - (a+1)*bh;
@@ -359,7 +431,7 @@ footer p{max-width:80ch}
       s += '<text x="2" y="' + (yy+3) + '" font-size="9" fill="var(--muted)">' +
            (a===100?"100+":a) + '</text>';
     });
-    s += '<line x1="' + mid + '" y1="0" x2="' + mid + '" y2="' + (H-padB) +
+    s += '<line x1="' + mid + '" y1="' + padT + '" x2="' + mid + '" y2="' + (H-padB) +
          '" stroke="var(--faint)" stroke-width="1"></line>';
     s += '<text x="' + (mid-6) + '" y="' + (H-6) + '" font-size="10" text-anchor="end" ' +
          'fill="var(--female)">women</text>';
@@ -411,6 +483,14 @@ footer p{max-width:80ch}
     ].map(function(p){
       return '<div class="stat"><b>' + p[1] + '</b><span>' + p[0] + '</span></div>';
     }).join("");
+    var cen = document.getElementById("census");
+    if (iso) {
+      cen.textContent = c.cen
+        ? "Last census " + c.cen + ", " + (2024 - c.cen) + " years before the base year."
+        : "No census recorded since 1985 — these figures are modelled from other evidence.";
+    } else {
+      cen.textContent = "";
+    }
     update();
     Array.prototype.forEach.call(document.querySelectorAll(".country"), function(el){
       el.classList.toggle("sel", el.getAttribute("data-iso") === iso);
@@ -438,14 +518,20 @@ footer p{max-width:80ch}
   map.addEventListener("mousemove", function(e){
     var iso = e.target.getAttribute && e.target.getAttribute("data-iso");
     if (!iso){ tip.style.opacity = 0; return; }
-    var c = D.countries[iso], p = changePct(iso);
-    tip.textContent = c.n + "  " + (p >= 0 ? "+" : "") + p.toFixed(0) + "%";
+    var c = D.countries[iso];
+    if (mode === "census"){
+      tip.textContent = c.n + "  " + (c.cen ? "last census " + c.cen : c.band);
+    } else {
+      var p = changePct(iso);
+      tip.textContent = c.n + "  " + (p >= 0 ? "+" : "") + p.toFixed(0) + "%";
+    }
     tip.style.left = (e.clientX + 12) + "px";
     tip.style.top = (e.clientY + 12) + "px";
     tip.style.opacity = 1;
   });
   map.addEventListener("mouseleave", function(){ tip.style.opacity = 0; });
 
+  repaint();
   show(null);
 })();
 </script>
