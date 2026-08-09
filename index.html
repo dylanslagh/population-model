@@ -190,7 +190,9 @@ footer p{max-width:80ch}
 
   function repaint(){
     Array.prototype.forEach.call(document.querySelectorAll(".country"), function(el){
-      el.setAttribute("fill", fillFor(el.getAttribute("data-iso")));
+      // The .country rule supplies a neutral fallback. Apply choropleth colours
+      // as an inline style so that rule cannot win the CSS cascade.
+      el.style.fill = fillFor(el.getAttribute("data-iso"));
     });
     if (mode === "census"){
       legend.innerHTML = "<span>last census:</span>" + BANDS.map(function(b){

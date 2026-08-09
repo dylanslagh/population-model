@@ -113,17 +113,28 @@ def main() -> int:
     if not script:
         problems.append("could not find the page script")
     else:
+        country_rule = re.search(r"\.country\s*\{([^}]*)\}", html, re.S)
+        class_sets_fill = bool(country_rule and
+                               re.search(r"(?:^|;)\s*fill\s*:", country_rule.group(1)))
+        uses_presentation_fill = 'setAttribute("fill", fillFor(' in script.group(1)
+        if class_sets_fill and uses_presentation_fill:
+            problems.append(
+                "the .country CSS fill overrides the choropleth presentation attribute"
+            )
+        else:
+            print("2. map colours survive the CSS cascade")
+
         with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as fh:
             fh.write("(function(){" + script.group(1))
             tmp = fh.name
         try:
             r = subprocess.run(["node", "--check", tmp], capture_output=True, text=True, timeout=60)
             if r.returncode == 0:
-                print("2. javascript passes node --check")
+                print("   javascript passes node --check")
             else:
                 problems.append("javascript syntax error:\n" + (r.stderr or r.stdout))
         except FileNotFoundError:
-            print("2. node not available; skipped the syntax check")
+            print("   node not available; skipped the syntax check")
         finally:
             Path(tmp).unlink(missing_ok=True)
 
