@@ -1,5 +1,9 @@
 # Working rules for this repo
 
+**Starting cold? Read [HANDOFF.md](HANDOFF.md) first.** It has what is built,
+what is verified, and the traps that produce plausible wrong answers rather than
+errors. This file is only the rules.
+
 Read `spec/population-2150-spec-v0.3.md` before changing anything. Read section 3
 (philosophy) before section 5 (architecture) — several architectural decisions
 look wrong if you assume the goal is forecast accuracy. It isn't.

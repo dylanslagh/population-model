@@ -4,7 +4,8 @@ An interactive map, backed by a demographic projection that runs to 2150 and
 keeps score of its own predictions. The design brief is in
 [spec/population-2150-spec-v0.3.md](spec/population-2150-spec-v0.3.md) and it is
 the authority on why the project exists; this file is about what has actually
-been built.
+been built. If you are picking the project up to work on it, read
+[HANDOFF.md](HANDOFF.md).
 
 The short version of the argument: by 2150 essentially nobody alive today is
 still alive, so the answer is dominated entirely by what long-run fertility
