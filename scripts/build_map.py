@@ -31,7 +31,10 @@ from popmodel.ingest import wpp  # noqa: E402
 TOLERANCE = 0.08
 VIEW_WIDTH = 1000.0
 PYRAMID_YEARS = [1950, 1975, 2000, 2024, 2050, 2075, 2100, 2125, 2150]
-SITE = paths.REPO_ROOT / "site"
+# The hub serves each project from /<project>/ and looks for index.html at
+# the repo root, so that is where the page goes. Relative asset paths only,
+# which is free here because everything is embedded in the one file.
+SITE = paths.REPO_ROOT
 
 
 def project_shapes(shapes: dict[int, dict]):
@@ -127,7 +130,6 @@ def main() -> int:
     }
 
     html = TEMPLATE.replace("__DATA__", json.dumps(payload, separators=(",", ":")))
-    SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / "index.html"
     out.write_text(html, encoding="utf-8")
     print(f"  {len(shapes_by_iso)} shapes, {len(data)} countries")

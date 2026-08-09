@@ -34,7 +34,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from popmodel import paths  # noqa: E402
 
-PAGE = paths.REPO_ROOT / "site" / "index.html"
+PAGE = paths.REPO_ROOT / "index.html"
 
 # Must stay in step with STOPS in the page.
 STOPS = [
