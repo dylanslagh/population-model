@@ -393,5 +393,4 @@ Smaller, well-defined work if you want something self-contained:
 
 *Last verified 2026-08-09: 86 tests pass; engine validation, map QA, paper
 build/render review, and public-payload staging pass. The currently deployed map
-is live on the authenticated hub; the new paper/navigation changes still require
-the normal repository push and hub publish.*
+and its new paper/navigation surface are live on the authenticated hub.*
