@@ -114,6 +114,13 @@ population forecast yet.
 - `scripts/fetch_uw_posteriors.py` downloads them resumably and records a local
   SHA-256 because UW publishes no cryptographic checksum. It labels them as UW
   products, not UN products.
+- Both annual archives are downloaded, fingerprinted in the committed manifest,
+  and safely unpacked. `src/popmodel/sources/uw_extract.py` verifies the archive
+  again before an atomic unpack and rejects unsafe members or stale outputs.
+- `r/uw-extract/` pins R 4.4.2, `bayesTFR` 7.4-4, and `bayesLife` 5.3-0 and reads
+  only through the packages' official accessors. `scripts/export_uw_fixture.py`
+  coordinates the first Finland export; `src/popmodel/ingest/uw.py` validates
+  the complete year grid, 1,000 trajectory IDs, fingerprints, and location set.
 - `src/popmodel/bayes/propagate.py` separates compact TFR/e0 source draws from
   engine-ready age schedules. Every engine-ready draw retains its fertility and
   mortality component IDs and says how those separate products were paired.
@@ -122,17 +129,21 @@ population forecast yet.
   Migration and any extension beyond a source's final year must be explicit.
 
 The source archives contain 1,000 annual trajectories for 236 locations and a
-2023 anchor followed by 2024–2100 forecasts. WPP contains 237 locations. The
-likely omission is Holy See (M49 336), but the adapter must verify the extracted
-LocIDs exactly; do not silently fill or drop anything.
+2023 anchor followed by 2024–2100 forecasts. The real Finland accessor fixture
+confirmed all 236 extracted LocIDs and that the sole WPP omission is Holy See
+(M49 336). The result is recorded in
+`data/manifest/uw_wpp2024_finland_fixture.json`; do not invent a trajectory to
+fill it.
 
 ## 4. What is not built
 
 - **Phase 4, the Bayesian layer beyond its foundation.** Source definitions,
-  draw contracts, and probabilistic propagation are built and unit-tested. The
-  native R export adapter, TFR/e0-to-age-schedule conversion, prior-predictive
-  checks, and real ensemble runs are not built yet. Existing published outputs
-  are still single deterministic paths.
+  safe extraction, the pinned official-accessor adapter, draw contracts, and
+  probabilistic propagation are built and unit-tested. The adapter has also
+  passed a genuine 1,000-trajectory Finland export from the downloaded archives.
+  Full 236-location export, TFR/e0-to-age-schedule conversion, prior-predictive
+  checks, and real population ensemble runs are not built yet. Existing
+  published outputs are still single deterministic paths.
 - **Phase 5, the mechanistic layer.** Selection and transmission competing with
   a falling fertility environment. This is the project's actual thesis and none
   of it is implemented. `scenarios.py` declares those scenarios with the phase
@@ -175,9 +186,15 @@ python -m pytest tests/ -q           # fast tests, no data needed
 Phase 4 source inventory and downloads (2.24 GB compressed for both annual
 archives):
 
-```bash
+```powershell
 python scripts/fetch_uw_posteriors.py --list
 python scripts/fetch_uw_posteriors.py
+python scripts/fetch_uw_posteriors.py --check
+python scripts/unpack_uw_posteriors.py
+$env:RTOOLS44_HOME = 'C:\path\to\rtools44'
+$rscript = 'C:\path\to\R-4.4.2\bin\Rscript.exe'
+& $rscript --vanilla r\uw-extract\bootstrap.R
+python scripts\export_uw_fixture.py --rscript $rscript
 ```
 
 Backtest (needs the archives, ~590 MB):
@@ -197,6 +214,13 @@ python scripts/build_census.py
 python scripts/build_site_data.py
 python scripts/build_map.py
 python scripts/check_map.py          # verifies the page without a browser
+```
+
+Paper and reviewed public payload:
+
+```bash
+python scripts/build_paper.py
+python scripts/build_public.py
 ```
 
 ## 7. Conventions you will get wrong if you guess
@@ -317,6 +341,10 @@ page. The pattern that replaced it, and which is better discipline anyway:
 ## 11. Deploying
 
 The map is served at `hub.dylanslagh.com/population-model/`, password-gated.
+The repository now also contains a LaTeX paper, a reviewed stable PDF, a paper
+landing page, and `scripts/build_public.py`, which stages only the reviewed map
+and paper surface into `dist/`. A genuinely public host has not been configured
+yet; the current live route remains the authenticated hub.
 
 The hub is a separate repo (`project-hub`) that clones every project and
 publishes them as one site. Two things that matter here:
@@ -333,14 +361,13 @@ publishes them as one site. Two things that matter here:
 
 In the spec's order, hardest first:
 
-1. **Continue Phase 4 — extract one country faithfully.** Download the pinned
-   UW annual archives, use version-pinned `bayesTFR`/`bayesLife` accessors from
-   R, and export a one-country fixture before attempting a bulk conversion.
-   Confirm accessor-applied WPP shifts, draw IDs, female/male e0 pairing, the
-   2023 anchor, and the exact 236-location list (expected missing location: Holy
-   See, M49 336). Then implement a separately versioned TFR/e0-to-age-schedule
-   converter and run prior predictive checks before any fit. Do not put the
-   projection inside the sampler.
+1. **Continue Phase 4 — build the schedule converter.** The pinned archives,
+   official-accessor reader, and genuine Finland fixture are complete. Implement
+   a separately versioned TFR/e0-to-age-schedule converter, prove it reconstructs
+   the compact Finland source quantities within declared tolerances, then export
+   all 236 locations and run prior-predictive checks before any fit. Holy See is
+   confirmed absent and must remain an explicit reconciliation decision. Do not
+   put the projection inside the sampler.
 2. **Phase 5 — the mechanistic layer.** The project's actual thesis, and the
    only part that could be wrong *diagnostically* rather than numerically. Pin
    every parameter to independent evidence; anything that cannot be is a
@@ -364,5 +391,7 @@ Smaller, well-defined work if you want something self-contained:
 
 ---
 
-*Last verified 2026-08-09: 49 tests pass, engine validation passes, backtest and
-map rebuild cleanly, and the map is live on the hub.*
+*Last verified 2026-08-09: 86 tests pass; engine validation, map QA, paper
+build/render review, and public-payload staging pass. The currently deployed map
+is live on the authenticated hub; the new paper/navigation changes still require
+the normal repository push and hub publish.*

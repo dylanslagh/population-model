@@ -1,0 +1,67 @@
+\section{Historical projection backtest}
+
+The retrospective analysis uses archived WPP revisions whose target years have
+since elapsed and are covered by a later WPP estimate series. Each vintage is
+evaluated only over horizons that had resolved by the comparison date. The
+current implementation covers the 1992, 1994, 1996, 2000, 2002, 2004, 2006,
+and 2008 revisions and reports results at the world and stable regional levels,
+avoiding country comparisons where changing borders would create false errors.
+The omitted 1998 release and later revisions will be documented explicitly
+when the historical archive is extended; the present eight-vintage set is the
+implemented and reproducible scope rather than a claim to cover every release
+in the period \citep{unwpparchives}.
+
+The comparison series is WPP 2024. It is an updated demographic estimate, not
+ground truth. This distinction is especially important for weak-data countries
+and much less consequential for world totals. The low and high projection
+variants are fertility scenarios rather than probability intervals; whether a
+later estimate falls between them is therefore described as inclusion in the
+printed range, not probabilistic calibration.
+The current calculation conditions on the WPP 2024 estimates as fixed
+comparison values and does not propagate uncertainty in those estimates.
+
+For population, the analysis records signed and absolute relative error by
+vintage, target year, horizon, and region. Fertility and life expectancy are
+evaluated separately to identify which projected components moved in the same
+direction as population error. Overlapping target years and successive
+vintages are not independent observations. The final paper will therefore
+present vintage-level distributions and robustness analyses rather than treat
+every vintage-year pair as an independent replication.
+
+Across the scored world-level vintage-year pairs, the mean signed population
+error is \BacktestWorldMeanSignedError, where a negative value means that the
+projection was below the later WPP 2024 estimate. The 1992 revision projected
+too high; every included revision from 1996 onward projected too low. The
+forecasts overlap in target years and are not independent tests of an unchanged
+model.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{backtest-world-population.png}
+  \caption{Medium-variant world population projections from eight archived WPP
+  revisions, shown only for target years available in the later WPP 2024
+  estimate series. The right panel reports signed relative error; negative
+  values are underprojections.}
+  \label{fig:world-backtest}
+\end{figure}
+
+The component backtest points in different directions across regions. Mean
+African fertility error is \BacktestAfricaTfrError, while mean Eastern Asian
+fertility error is \BacktestEastAsiaTfrError. Life expectancy is lower than the
+later comparison series by \BacktestLifeExpectancyError{} on average. These
+figures identify where the archived trajectories missed; they do not establish
+a causal mechanism. In a separate range check, \BacktestRangeInclusion{} of the
+world-level observations fall inside the printed low-to-high fertility
+variants. That quantity is not a probability-interval coverage rate.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\textwidth]{backtest-fertility.png}
+  \caption{Archived total-fertility projections for Africa and Eastern Asia
+  compared with WPP 2024 estimates. The opposite-signed misses motivate a
+  mechanism-explicit comparison, but do not themselves attribute cause.}
+  \label{fig:fertility-backtest}
+\end{figure}
+
+A formal component decomposition and extension to later gradeable revisions
+remain required before making stronger causal claims.

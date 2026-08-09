@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Research design and preliminary backtest for a transparent, mechanism-explicit population projection framework to 2150.">
+  <title>Paper - Population projections that can be wrong for a reason</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg:#fbfaf7; --panel:#fff; --ink:#242422; --muted:#65635e;
+      --line:#d6d3ca; --accent:#0c5b96; --soft:#f4eedc; --soft-line:#a17a26;
+    }
+    @media (prefers-color-scheme:dark) {
+      :root { --bg:#1b1b19; --panel:#232321; --ink:#f1efe8; --muted:#b4b2a9;
+        --line:#44423d; --accent:#85b7eb; --soft:#302b1d; --soft-line:#c49a3a; }
+    }
+    * { box-sizing:border-box }
+    body { margin:0; background:var(--bg); color:var(--ink);
+      font:16px/1.65 ui-serif,Georgia,Cambria,"Times New Roman",serif; }
+    a { color:var(--accent) }
+    a:focus-visible { outline:3px solid var(--accent); outline-offset:3px }
+    .wrap { width:min(880px,calc(100% - 36px)); margin:0 auto }
+    nav { display:flex; justify-content:space-between; gap:20px; align-items:center;
+      padding:22px 0; font:14px/1.3 ui-sans-serif,system-ui,sans-serif; }
+    nav a { text-decoration:none }
+    .status { display:inline-block; border:1px solid var(--soft-line);
+      background:var(--soft); border-radius:99px; padding:5px 10px;
+      font:12px/1.2 ui-sans-serif,system-ui,sans-serif; }
+    header { padding:58px 0 38px }
+    h1 { font-size:clamp(34px,6vw,62px); line-height:1.03; letter-spacing:-.035em;
+      max-width:14ch; margin:18px 0 16px; font-weight:600; }
+    .subtitle { color:var(--muted); font-size:clamp(18px,2.4vw,23px);
+      line-height:1.4; max-width:64ch; margin:0 0 24px; }
+    .meta { color:var(--muted); font:14px/1.5 ui-sans-serif,system-ui,sans-serif }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:28px }
+    .button { display:inline-block; border:1px solid var(--accent); border-radius:7px;
+      padding:10px 15px; text-decoration:none;
+      font:600 14px/1.2 ui-sans-serif,system-ui,sans-serif; }
+    .button.primary { background:var(--accent); color:var(--panel) }
+    main { padding:0 0 72px }
+    section { border-top:1px solid var(--line); padding:34px 0 }
+    h2 { font-size:24px; margin:0 0 14px }
+    h3 { font:600 15px/1.3 ui-sans-serif,system-ui,sans-serif; margin:24px 0 5px }
+    p { max-width:74ch }
+    ul { padding-left:22px; max-width:72ch }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:22px }
+    @media (max-width:680px) { .grid { grid-template-columns:1fr } header { padding-top:36px } }
+    code { background:var(--panel); border:1px solid var(--line); border-radius:4px;
+      padding:2px 5px; font-size:.88em }
+    .citation { background:var(--panel); border:1px solid var(--line); border-radius:9px;
+      padding:16px 18px; overflow-wrap:anywhere }
+    footer { color:var(--muted); border-top:1px solid var(--line); padding:24px 0 40px;
+      font:13px/1.5 ui-sans-serif,system-ui,sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav aria-label="Project">
+      <a href="../index.html">Interactive model</a>
+      <span>Population model to 2150</span>
+    </nav>
+
+    <header>
+      <span class="status">Analysis protocol and preliminary evidence</span>
+      <h1>Population projections that can be wrong for a reason</h1>
+      <p class="subtitle">Research design and preliminary backtest for a mechanism-explicit framework to 2150.</p>
+      <p class="meta">Dylan Slagh · Draft version 0.1.0 · August 2026</p>
+      <div class="actions">
+        <a class="button primary" href="population-model.pdf">Read the paper (PDF)</a>
+        <a class="button" href="#status">What is finished</a>
+      </div>
+    </header>
+
+    <main>
+      <section aria-labelledby="abstract">
+        <h2 id="abstract">Abstract</h2>
+        <p>Conditional on age-specific fertility, mortality, and migration schedules, cohort-component projection is deterministic. Long-run results nevertheless depend on uncertain structural assumptions about how those schedules evolve. This project separates those layers, backtests archived United Nations projection vintages, validates an independent demographic engine, and defines a framework in which competing explanations of post-transition fertility can be compared through identical accounting and scored against nearer-term outcomes.</p>
+      </section>
+
+      <section id="status" aria-labelledby="status-heading">
+        <h2 id="status-heading">Current status</h2>
+        <div class="grid">
+          <div>
+            <h3>Supported now</h3>
+            <ul>
+              <li>An eight-vintage historical WPP backtest.</li>
+              <li>A single-year, age-by-sex cohort-component engine.</li>
+              <li>Independent implementation checks against WPP 2024.</li>
+              <li>A verified official-accessor UW fixture for Finland.</li>
+              <li>A reproducible source and prediction-vintage design.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Still under construction</h3>
+            <ul>
+              <li>Bulk UW extraction and age-schedule conversion.</li>
+              <li>Conversion from compact trajectories to age schedules.</li>
+              <li>The mechanism-explicit fertility comparison.</li>
+              <li>The final probabilistic results to 2150.</li>
+            </ul>
+          </div>
+        </div>
+        <p>The PDF marks unfinished sections visibly. It does not present placeholder simulations as findings.</p>
+      </section>
+
+      <section aria-labelledby="versions">
+        <h2 id="versions">Data and versions</h2>
+        <p>The preliminary analysis uses WPP 2024 as its comparison and base-data vintage. The probabilistic source archives are University of Washington products aligned to WPP 2024, not official UN posterior draws. Their exact byte lengths and SHA-256 fingerprints are pinned in <code>data/manifest/uw_wpp2024_files.json</code>.</p>
+        <p>Paper version and model-data vintage are kept separate: a prose revision does not silently become a new forecast, and a new forecast does not overwrite an older paper.</p>
+      </section>
+
+      <section aria-labelledby="citation">
+        <h2 id="citation">Citation</h2>
+        <div class="citation">Slagh, Dylan. 2026. “Population Projections That Can Be Wrong for a Reason: Research Design and Preliminary Backtest for a Mechanism-Explicit Framework to 2150.” Analysis protocol and preliminary evidence, version 0.1.0.</div>
+      </section>
+    </main>
+
+    <footer>
+      This page and the PDF are companion outputs of the same project. A stable release archive and formal citation metadata will be added before the manuscript is described as a completed working paper.
+    </footer>
+  </div>
+</body>
+</html>

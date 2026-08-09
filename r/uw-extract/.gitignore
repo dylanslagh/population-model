@@ -1,0 +1,4 @@
+library/
+sources/
+installed-packages.tsv
+installed-source-manifest.tsv

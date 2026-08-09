@@ -6,9 +6,13 @@ Two figures, both generated from out/backtest_*.csv, which are generated from
 the archives. No number in either is typed by hand.
 
   docs/backtest-world-population.svg
+  docs/backtest-world-population.pdf
+  docs/backtest-world-population.png
       Every vintage's projection of world population, against what happened.
 
   docs/backtest-fertility.svg
+  docs/backtest-fertility.pdf
+  docs/backtest-fertility.png
       The two fertility failures, which are what actually drove the population
       misses: Africa's decline projected too fast, East Asia's floor assumed
       too high.
@@ -130,7 +134,11 @@ def world_population_figure(pop: pd.DataFrame) -> Path:
     fig.tight_layout(rect=(0, 0.04, 1, 0.93))
 
     out = DOCS / "backtest-world-population.svg"
+    paper_out = DOCS / "backtest-world-population.pdf"
+    raster_out = DOCS / "backtest-world-population.png"
     fig.savefig(out, format="svg", transparent=True)
+    fig.savefig(paper_out, format="pdf", transparent=True)
+    fig.savefig(raster_out, format="png", dpi=300, facecolor="white")
     plt.close(fig)
     _make_theme_aware(out)
     return out
@@ -171,7 +179,11 @@ def fertility_figure(tfr: pd.DataFrame) -> Path:
     fig.tight_layout(rect=(0, 0, 1, 0.93))
 
     out = DOCS / "backtest-fertility.svg"
+    paper_out = DOCS / "backtest-fertility.pdf"
+    raster_out = DOCS / "backtest-fertility.png"
     fig.savefig(out, format="svg", transparent=True)
+    fig.savefig(paper_out, format="pdf", transparent=True)
+    fig.savefig(raster_out, format="png", dpi=300, facecolor="white")
     plt.close(fig)
     _make_theme_aware(out)
     return out

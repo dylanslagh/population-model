@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import sys
 from dataclasses import replace
 
@@ -87,3 +88,25 @@ def test_check_fails_when_only_one_required_archive_was_recorded(
     output = capsys.readouterr().out
     assert "NOT RECORDED  e0_annual" in output
     assert "all archives verified" not in output
+
+
+def test_real_finland_fixture_receipt_matches_the_archive_manifest():
+    source = json.loads(
+        (paths.MANIFEST / "uw_wpp2024_files.json").read_text(encoding="utf-8")
+    )
+    fixture = json.loads(
+        (paths.MANIFEST / "uw_wpp2024_finland_fixture.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert fixture["archive_sha256"] == {
+        key: source["files"][key]["sha256"] for key in uw_wpp2024.REQUIRED_KEYS
+    }
+    assert fixture["result"] == {
+        "source_years": "2023-2100",
+        "model_years": "2024-2100",
+        "trajectories": 1000,
+        "locations": 236,
+        "missing_wpp_loc_ids": [336],
+        "alignment_shift_values_per_component": 78,
+    }

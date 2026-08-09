@@ -1,0 +1,23 @@
+\section{Model checking and scorekeeping}
+
+The Bayesian workflow will begin with prior predictive simulation. Priors that
+violate stated demographic constraints or assign substantial mass to extreme
+paths unsupported by an explicit scenario rationale will be revised before
+fitting. Posterior predictive checks will assess whether the model reproduces
+salient features of the observed data and whether predictive failures remain
+concentrated by region or forecast horizon.
+
+Retrospective evaluation will use rolling information cutoffs. Genuine
+vintage-pure hindcasts will use only contemporaneously available inputs;
+reconstructed pseudo-out-of-sample exercises will be labelled separately and
+will not be conflated with posterior predictive checks. Parameters are
+estimated only from information available before the target period, and
+predictions are evaluated on later cohort outcomes. Probabilistic comparisons
+will use proper scoring rules, including the continuous ranked probability
+score already implemented in the project
+\citep{gneiting2007}. Calibration and sharpness will be reported separately.
+
+Future predictions will be written as immutable vintages. Each commitment will
+identify the quantity, units, resolution source, expected resolution date,
+stored predictive distribution, and scoring rule. A new model may supersede an
+old one, but it will not overwrite what the old model predicted.

@@ -19,6 +19,10 @@
 body{margin:0;background:var(--bg);color:var(--ink);
   font:15px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 header{padding:20px 22px 6px;max-width:1400px;margin:0 auto}
+.project-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;
+  margin:0 0 12px;color:var(--muted);font-size:12.5px}
+.project-nav a{color:var(--accent);text-decoration:none}
+.project-nav a:hover{text-decoration:underline}
 h1{font-size:21px;font-weight:500;margin:0 0 4px}
 .sub{color:var(--muted);font-size:13.5px;max-width:70ch;margin:0}
 main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr);gap:16px;
@@ -56,6 +60,10 @@ footer p{max-width:80ch}
 </head>
 <body>
 <header>
+  <nav class="project-nav" aria-label="Project">
+    <span>Population model to 2150</span>
+    <a href="paper/index.html">Paper and citation</a>
+  </nav>
   <h1>World population to 2150</h1>
   <p class="sub">Colour shows projected change between 2024 and 2100. Click any country
   for its population pyramid. Equal-area projection, so a country's size on screen is
@@ -65,8 +73,8 @@ footer p{max-width:80ch}
 <main>
   <div class="card">
     <div class="modes" role="group" aria-label="What the colour shows">
-      <button id="m-change" class="on" type="button">Population change</button>
-      <button id="m-census" type="button">When they last counted</button>
+      <button id="m-change" class="on" type="button" aria-pressed="true">Population change</button>
+      <button id="m-census" type="button" aria-pressed="false">When they last counted</button>
     </div>
     <svg id="map" role="img" aria-label="World map"></svg>
     <div class="legend" id="legend"></div>
@@ -215,11 +223,15 @@ footer p{max-width:80ch}
 
   document.getElementById("m-change").addEventListener("click", function(){
     mode = "change"; this.classList.add("on");
-    document.getElementById("m-census").classList.remove("on"); repaint();
+    this.setAttribute("aria-pressed", "true");
+    document.getElementById("m-census").classList.remove("on");
+    document.getElementById("m-census").setAttribute("aria-pressed", "false"); repaint();
   });
   document.getElementById("m-census").addEventListener("click", function(){
     mode = "census"; this.classList.add("on");
-    document.getElementById("m-change").classList.remove("on"); repaint();
+    this.setAttribute("aria-pressed", "true");
+    document.getElementById("m-change").classList.remove("on");
+    document.getElementById("m-change").setAttribute("aria-pressed", "false"); repaint();
   });
 
   // ---- detail panel -------------------------------------------------------

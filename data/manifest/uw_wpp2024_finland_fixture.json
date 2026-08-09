@@ -1,0 +1,40 @@
+{
+  "fixture": "Finland (LocID 246, ISO3 FIN)",
+  "verified_on": "2026-08-09",
+  "source_revision": "UW_WPP2024",
+  "archive_sha256": {
+    "tfr_annual": "f3222dc265d88c9832eb9532f041ce66189e985d8eb4de144118db93f42bf3ee",
+    "e0_annual": "982129138f87a8311a07989c41e70ca3e66bda6edc69e816501adf61ee1cb852"
+  },
+  "reader": {
+    "R_version": "4.4.2",
+    "packages": {
+      "bayesTFR": "7.4-4",
+      "bayesLife": "5.3-0"
+    },
+    "package_source_revisions": {
+      "bayesTFR": "9c7116a00e8f6cb59956c859bee6659b65a574a4",
+      "bayesLife": "94780a40847a319b81e3c4dd4a01fa3b58dd733e"
+    },
+    "package_source_sha256": {
+      "bayesTFR": "8acec2ccf4c0c66f3bbbd23559d5bd13b44aaba48bae700113f4fbc760b91d58",
+      "bayesLife": "30cb9601ad8bc0c9e080a07de34e1b8769206295e153fa1c308c2ca5fa6084e1"
+    }
+  },
+  "result": {
+    "source_years": "2023-2100",
+    "model_years": "2024-2100",
+    "trajectories": 1000,
+    "locations": 236,
+    "missing_wpp_loc_ids": [336],
+    "alignment_shift_values_per_component": 78
+  },
+  "export_file_sha256": {
+    "locations.csv": "16e16dbcbbc1ac20e297eab3ae27c2363834b5b9e713a143b0f853766a85e9de",
+    "r-metadata.tsv": "7cb2452ccf8eb05584d848df83c3bb4ccfe2574a64ac615f612dc43a79ea05d3",
+    "session-info.txt": "ad173f4b488477d3c8edffe516f391d0012aed0b075fa82ad9786d5b95684066",
+    "shifts.csv": "4730b270e221c3846948583db89be164ff885de69038b0a51c5978ff656e40e5",
+    "trajectories.csv": "f72cdea1a2bc6c6865f1d21ab35640bc564342358f8c215f8066374206ad5aa9"
+  },
+  "note": "The full accessor export remains in gitignored data/interim. This committed receipt pins the real export's source, reader, dimensions, reconciliation result, and file fingerprints without republishing the trajectory data."
+}

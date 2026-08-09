@@ -1,0 +1,36 @@
+\documentclass[11pt]{article}
+
+\input{preamble}
+\input{generated/results_macros}
+\input{metadata}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\fcolorbox{DraftBorder}{DraftBackground}{%
+  \parbox{0.91\textwidth}{\small\textbf{Draft status.}
+  The historical backtest and deterministic projection architecture are
+  implemented. The UW probabilistic baseline is being assembled. Mechanism
+  estimates and long-run comparative results do not yet exist and are not
+  implied by this draft.}}
+\end{center}
+
+\input{sections/01_abstract}
+\input{sections/02_introduction}
+\input{sections/03_data_backtest}
+\input{sections/04_projection_architecture}
+\input{sections/05_probabilistic_baseline}
+\input{sections/06_mechanisms}
+\input{sections/07_model_checks}
+\input{sections/08_discussion}
+\input{sections/09_conclusion}
+
+\appendix
+\input{appendices/reproducibility}
+
+\bibliographystyle{plainnat}
+\bibliography{bibliography/references}
+
+\end{document}

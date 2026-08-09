@@ -1,0 +1,42 @@
+{
+  "checksum_policy": "UW publishes no cryptographic checksums for these archives. The first successful download is hashed with SHA-256 and becomes authoritative for this project; the publisher-reported byte length is checked first.",
+  "files": {
+    "e0_annual": {
+      "bytes": 435101297,
+      "creation_script_url": "https://bayespop.csss.washington.edu/data/bayesLife/WPP2024/e01/README.r",
+      "etag_when_verified": "\"19ef1e71-62647614df90d\"",
+      "filename": "e01simWPP2024.tgz",
+      "first_downloaded": "2026-08-09",
+      "last_modified_when_verified": "2024-11-07T00:04:37Z",
+      "package": "bayesLife",
+      "package_version": "5.3-0",
+      "purpose": "1,000 paired female/male annual life-expectancy trajectories through 2100. Predictive means are shifted to WPP 2024 medium values.",
+      "sha256": "982129138f87a8311a07989c41e70ca3e66bda6edc69e816501adf61ee1cb852",
+      "unpacked_sim_dir": "e01/sim20241101",
+      "url": "https://bayespop.csss.washington.edu/data/bayesLife/e01simWPP2024.tgz",
+      "url_verified_on": "2026-08-09"
+    },
+    "tfr_annual": {
+      "bytes": 1808601202,
+      "creation_script_url": "https://bayespop.csss.washington.edu/data/bayesTFR/TFRsimWPP2024/TFR1unc/README.r",
+      "etag_when_verified": "\"6bcd1072-6264750cda46c\"",
+      "filename": "TFR1simWPP2024.tgz",
+      "first_downloaded": "2026-08-09",
+      "last_modified_when_verified": "2024-11-07T00:00:00Z",
+      "package": "bayesTFR",
+      "package_version": "7.4-4",
+      "purpose": "1,000 annual total-fertility trajectories, including uncertainty around annual estimates and projections through 2100. Predictive means are shifted to WPP 2024 medium values.",
+      "sha256": "f3222dc265d88c9832eb9532f041ce66189e985d8eb4de144118db93f42bf3ee",
+      "unpacked_sim_dir": "TFR1unc/sim20241101",
+      "url": "https://bayespop.csss.washington.edu/data/bayesTFR/TFR1simWPP2024.tgz",
+      "url_verified_on": "2026-08-09"
+    }
+  },
+  "manifest": "uw_wpp2024_files",
+  "publisher_note": "University of Washington product; not an official UN product",
+  "revision": "UW_WPP2024",
+  "revision_label": "UW Bayesian annual trajectories aligned to WPP 2024",
+  "source_page": "https://bayespop.csss.washington.edu/download/",
+  "urls_verified_on": "2026-08-09",
+  "vignette": "https://bayespop.csss.washington.edu/bayesPop/vignettes/population-projections.html"
+}
