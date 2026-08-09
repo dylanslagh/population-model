@@ -104,11 +104,35 @@ Czechoslovakia, Sudan and Ethiopia all changed shape inside the window.
 - `src/popmodel/sources/fetch.py` — every download checksummed, manifests
   committed. A file the UN silently reissues fails loudly.
 
+### Phase 4 foundation — source and propagation boundaries
+
+The Bayesian layer has started, but it does **not** produce a posterior
+population forecast yet.
+
+- `src/popmodel/sources/uw_wpp2024.py` pins the exact annual UW TFR and e0
+  archives, package versions, publisher byte lengths, and creation scripts.
+- `scripts/fetch_uw_posteriors.py` downloads them resumably and records a local
+  SHA-256 because UW publishes no cryptographic checksum. It labels them as UW
+  products, not UN products.
+- `src/popmodel/bayes/propagate.py` separates compact TFR/e0 source draws from
+  engine-ready age schedules. Every engine-ready draw retains its fertility and
+  mortality component IDs and says how those separate products were paired.
+- Prior and posterior draws use the same one-draw-at-a-time path through
+  `cohort.step`; only country totals are retained, and world totals are derived.
+  Migration and any extension beyond a source's final year must be explicit.
+
+The source archives contain 1,000 annual trajectories for 236 locations and a
+2023 anchor followed by 2024–2100 forecasts. WPP contains 237 locations. The
+likely omission is Holy See (M49 336), but the adapter must verify the extracted
+LocIDs exactly; do not silently fill or drop anything.
+
 ## 4. What is not built
 
-- **Phase 4, the Bayesian layer.** Two-stage fitting, starting from the
-  University of Washington's published MCMC objects rather than from scratch.
-  Nothing probabilistic exists yet — every output is a single deterministic path.
+- **Phase 4, the Bayesian layer beyond its foundation.** Source definitions,
+  draw contracts, and probabilistic propagation are built and unit-tested. The
+  native R export adapter, TFR/e0-to-age-schedule conversion, prior-predictive
+  checks, and real ensemble runs are not built yet. Existing published outputs
+  are still single deterministic paths.
 - **Phase 5, the mechanistic layer.** Selection and transmission competing with
   a falling fertility environment. This is the project's actual thesis and none
   of it is implemented. `scenarios.py` declares those scenarios with the phase
@@ -145,7 +169,15 @@ python scripts/fetch_wpp.py          # ~1.2 GB of UN data, once
 python scripts/build_bundle.py       # CSV -> arrays, ~90s
 python scripts/validate_engine.py    # THE engine test; must pass first
 python scripts/run_to_2150.py        # scenarios to 2150
-python -m pytest tests/ -q           # 49 tests, ~1s, no data needed
+python -m pytest tests/ -q           # fast tests, no data needed
+```
+
+Phase 4 source inventory and downloads (2.24 GB compressed for both annual
+archives):
+
+```bash
+python scripts/fetch_uw_posteriors.py --list
+python scripts/fetch_uw_posteriors.py
 ```
 
 Backtest (needs the archives, ~590 MB):
@@ -301,12 +333,14 @@ publishes them as one site. Two things that matter here:
 
 In the spec's order, hardest first:
 
-1. **Phase 4 — the Bayesian layer.** Start from the UW MCMC objects for the
-   WPP2024 fertility and life-expectancy models (the annual TFR object is
-   ~1.7 GB). Two-stage: fit parameters, then push each posterior draw through
-   the deterministic engine. Do not put the projection inside the sampler.
-   Run prior predictive checks first — if the prior implies 244 billion or 300
-   million, stop.
+1. **Continue Phase 4 — extract one country faithfully.** Download the pinned
+   UW annual archives, use version-pinned `bayesTFR`/`bayesLife` accessors from
+   R, and export a one-country fixture before attempting a bulk conversion.
+   Confirm accessor-applied WPP shifts, draw IDs, female/male e0 pairing, the
+   2023 anchor, and the exact 236-location list (expected missing location: Holy
+   See, M49 336). Then implement a separately versioned TFR/e0-to-age-schedule
+   converter and run prior predictive checks before any fit. Do not put the
+   projection inside the sampler.
 2. **Phase 5 — the mechanistic layer.** The project's actual thesis, and the
    only part that could be wrong *diagnostically* rather than numerically. Pin
    every parameter to independent evidence; anything that cannot be is a

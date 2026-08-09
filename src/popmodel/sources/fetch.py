@@ -25,7 +25,7 @@ from datetime import date
 from pathlib import Path
 
 from popmodel import paths
-from popmodel.sources import naturalearth, unsd_census, wpp2024, wpp_archive
+from popmodel.sources import naturalearth, unsd_census, uw_wpp2024, wpp2024, wpp_archive
 
 _CHUNK = 1 << 20  # 1 MiB
 _USER_AGENT = "population-model/0.0.1 (research; contact via github.com/dylanslagh)"
@@ -33,6 +33,10 @@ _USER_AGENT = "population-model/0.0.1 (research; contact via github.com/dylansla
 
 class ChecksumMismatch(RuntimeError):
     """A file on disk does not match the checksum recorded in the manifest."""
+
+
+class SourceSizeMismatch(RuntimeError):
+    """A source archive no longer has the byte length verified from its publisher."""
 
 
 @dataclass
@@ -183,6 +187,114 @@ def raw_path(key: str) -> Path:
             f"  Run:  python scripts/fetch_wpp.py {key}"
         )
     return p
+
+
+# ---------------------------------------------------------------------------
+# UW posterior trajectories aligned to WPP 2024. These are UW products, not
+# part of the UN input manifest above.
+# ---------------------------------------------------------------------------
+
+UW_MANIFEST = "uw_wpp2024_files"
+
+
+def load_uw_manifest() -> dict:
+    p = manifest_path(UW_MANIFEST)
+    if p.exists():
+        return json.loads(p.read_text(encoding="utf-8"))
+    return {
+        "manifest": UW_MANIFEST,
+        "revision": uw_wpp2024.REVISION,
+        "revision_label": uw_wpp2024.REVISION_LABEL,
+        "source_page": uw_wpp2024.SOURCE_PAGE,
+        "vignette": uw_wpp2024.VIGNETTE,
+        "urls_verified_on": uw_wpp2024.URLS_VERIFIED_ON,
+        "publisher_note": "University of Washington product; not an official UN product",
+        "checksum_policy": (
+            "UW publishes no cryptographic checksums for these archives. The first "
+            "successful download is hashed with SHA-256 and becomes authoritative "
+            "for this project; the publisher-reported byte length is checked first."
+        ),
+        "files": {},
+    }
+
+
+def save_uw_manifest(manifest: dict) -> None:
+    paths.MANIFEST.mkdir(parents=True, exist_ok=True)
+    manifest_path(UW_MANIFEST).write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
+
+def uw_archive_path(key: str) -> Path:
+    archive = uw_wpp2024.ARCHIVES[key]
+    p = paths.RAW / uw_wpp2024.REVISION / archive.filename
+    if not p.exists():
+        raise FileNotFoundError(
+            f"{archive.filename} has not been downloaded.\n"
+            f"  Run:  python scripts/fetch_uw_posteriors.py {key}"
+        )
+    return p
+
+
+def fetch_uw_archive(key: str, *, force: bool = False) -> FetchResult:
+    archive = uw_wpp2024.ARCHIVES[key]
+    dest = paths.RAW / uw_wpp2024.REVISION / archive.filename
+    manifest = load_uw_manifest()
+    recorded = manifest["files"].get(key)
+
+    downloaded = False
+    if force or not dest.exists():
+        print(f"  {archive.filename}  ({archive.expected_bytes / 1e9:.2f} GB)")
+        _download(archive.url, dest)
+        downloaded = True
+
+    size = dest.stat().st_size
+    if size != archive.expected_bytes:
+        raise SourceSizeMismatch(
+            f"{archive.filename} has {size:,} bytes; the official URL returned "
+            f"{archive.expected_bytes:,} bytes when verified on "
+            f"{uw_wpp2024.URLS_VERIFIED_ON}. Do not treat the ETag as a checksum. "
+            "Re-check the UW download page and creation script before updating "
+            "the expected size."
+        )
+    digest = sha256_of(dest)
+    if recorded and recorded["sha256"] != digest:
+        raise ChecksumMismatch(
+            f"{archive.filename} does not match the project's first-download hash.\n"
+            f"  expected {recorded['sha256']} ({recorded['bytes']} bytes)\n"
+            f"  found    {digest} ({size} bytes)\n"
+            "The local archive is damaged or UW replaced it in place. Investigate "
+            "before exporting any trajectories."
+        )
+
+    if not recorded:
+        manifest["files"][key] = {
+            "filename": archive.filename,
+            "url": archive.url,
+            "purpose": archive.purpose,
+            "package": archive.package,
+            "package_version": archive.package_version,
+            "unpacked_sim_dir": archive.unpacked_sim_dir,
+            "creation_script_url": archive.creation_script_url,
+            "sha256": digest,
+            "bytes": size,
+            "first_downloaded": date.today().isoformat(),
+            "url_verified_on": uw_wpp2024.URLS_VERIFIED_ON,
+            "etag_when_verified": archive.etag_when_verified,
+            "last_modified_when_verified": archive.last_modified_when_verified,
+        }
+        save_uw_manifest(manifest)
+
+    return FetchResult(key, dest, digest, size, downloaded)
+
+
+def fetch_uw_all(
+    keys: list[str] | None = None, *, force: bool = False
+) -> list[FetchResult]:
+    return [
+        fetch_uw_archive(key, force=force)
+        for key in (keys or uw_wpp2024.REQUIRED_KEYS)
+    ]
 
 
 # ---------------------------------------------------------------------------
