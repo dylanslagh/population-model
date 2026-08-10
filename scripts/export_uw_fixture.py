@@ -34,6 +34,32 @@ from popmodel.ingest.uw import (  # noqa: E402
 from popmodel.sources import fetch, uw_extract, uw_wpp2024  # noqa: E402
 
 
+def _iso3_for(loc_id: int) -> str:
+    """The ISO3 code the rest of the project uses for this UN LocID.
+
+    Derived from the committed crosswalk rather than passed in beside the
+    country code. Two independent ways of naming the same country is one too
+    many: a mismatched pair does not error anywhere downstream, it just
+    silently projects one country using another country's schedules.
+    """
+    path = paths.REFERENCE / "crosswalk.csv"
+    try:
+        with path.open(encoding="utf-8-sig", newline="") as handle:
+            for row in csv.DictReader(handle):
+                if int(row["loc_id"]) == loc_id:
+                    code = str(row["iso3"]).strip().upper()
+                    if len(code) != 3:
+                        raise RuntimeError(
+                            f"crosswalk has no usable ISO3 for LocID {loc_id}"
+                        )
+                    return code
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"the country crosswalk is missing: {path}") from exc
+    raise RuntimeError(
+        f"LocID {loc_id} is not in {path.name}; refusing to guess an ISO3 code"
+    )
+
+
 def _rscript_path(argument: str | None) -> Path:
     candidates = []
     if argument:
@@ -177,15 +203,24 @@ def _build_metadata(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--country-code", type=int, default=246)
-    parser.add_argument("--iso3", default="FIN")
+    parser.add_argument(
+        "--iso3",
+        help=(
+            "optional cross-check; the ISO3 code is derived from the committed "
+            "crosswalk and this must agree with it if given"
+        ),
+    )
     parser.add_argument("--rscript", help="path to R 4.4.2 Rscript.exe")
     parser.add_argument("--output", type=Path, help="output directory")
     parser.add_argument("--check-only", action="store_true", help="validate an existing export")
     parser.add_argument("--min-free-gb", type=float, default=25.0)
     args = parser.parse_args()
-    iso3 = args.iso3.strip().upper()
-    if len(iso3) != 3:
-        parser.error("--iso3 must contain three characters")
+    iso3 = _iso3_for(args.country_code)
+    if args.iso3 and args.iso3.strip().upper() != iso3:
+        parser.error(
+            f"--iso3={args.iso3.strip().upper()} disagrees with the crosswalk, "
+            f"which has LocID {args.country_code} as {iso3}"
+        )
     if args.min_free_gb < 0:
         parser.error("--min-free-gb cannot be negative")
     output = args.output or (

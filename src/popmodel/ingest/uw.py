@@ -107,15 +107,22 @@ def _read_locations(path: Path) -> tuple[tuple[int, ...], dict[int, str]]:
     return tuple(codes), names
 
 
-def _read_wpp_crosswalk(path: Path) -> dict[int, str]:
+def _read_wpp_crosswalk(path: Path) -> dict[int, dict[str, str]]:
     try:
         with path.open(encoding="utf-8-sig", newline="") as handle:
             reader = csv.DictReader(handle)
-            if "loc_id" not in (reader.fieldnames or ()) or "name" not in (
-                reader.fieldnames or ()
-            ):
-                raise UwExportError("WPP crosswalk must contain loc_id and name")
-            result = {int(row["loc_id"]): str(row["name"]).strip() for row in reader}
+            required = {"loc_id", "name", "iso3"}
+            if not required.issubset(set(reader.fieldnames or ())):
+                raise UwExportError(
+                    "WPP crosswalk must contain loc_id, name and iso3"
+                )
+            result = {
+                int(row["loc_id"]): {
+                    "name": str(row["name"]).strip(),
+                    "iso3": str(row["iso3"]).strip().upper(),
+                }
+                for row in reader
+            }
     except FileNotFoundError as exc:
         raise UwExportError(f"WPP crosswalk is missing: {path}") from exc
     if len(result) != 237:
@@ -279,8 +286,22 @@ def validate_uw_export(
             "UW/WPP location reconciliation must leave only Holy See (LocID 336); "
             f"missing={sorted(missing)}, extra={sorted(extra)}"
         )
-    if "holy see" not in wpp[336].lower():
+    if "holy see" not in wpp[336]["name"].lower():
         raise UwExportError("LocID 336 is not labelled Holy See in the WPP crosswalk")
+    # The country code and the ISO3 code must name the same country. Nothing
+    # downstream errors when they disagree: the schedule converter simply
+    # projects one country using another country's fertility and mortality, and
+    # the result looks entirely reasonable.
+    if loc_id not in wpp:
+        raise UwExportError(
+            f"exported LocID {loc_id} is not one of the 237 WPP locations"
+        )
+    expected_iso3 = wpp[loc_id]["iso3"]
+    if iso3.upper() != expected_iso3:
+        raise UwExportError(
+            f"export is labelled {iso3.upper()} but LocID {loc_id} is "
+            f"{expected_iso3} ({wpp[loc_id]['name']}) in the crosswalk"
+        )
     reconciliation = _require(metadata, "location_reconciliation", "metadata")
     if reconciliation != {
         "uw_count": uw_wpp2024.EXPECTED_LOCATIONS,

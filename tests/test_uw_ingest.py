@@ -77,10 +77,15 @@ def _write_source_export(directory):
 def _write_crosswalk(path, source_codes):
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
-        writer.writerow(("loc_id", "name"))
+        writer.writerow(("loc_id", "iso3", "name"))
         for code in source_codes:
-            writer.writerow((code, "Finland" if code == 246 else f"Location {code}"))
-        writer.writerow((336, "Holy See"))
+            finland = code == 246
+            writer.writerow((
+                code,
+                "FIN" if finland else f"X{code % 100:02d}",
+                "Finland" if finland else f"Location {code}",
+            ))
+        writer.writerow((336, "VAT", "Holy See"))
 
 
 def test_accessor_export_validates_and_becomes_2024_forward_draws(tmp_path):
@@ -114,6 +119,34 @@ def test_accessor_export_validates_and_becomes_2024_forward_draws(tmp_path):
     assert first.provenance.fertility_draw_id == "tfr-trajectory-1"
     assert first.provenance.mortality_draw_id == "joint-e0-trajectory-1"
     assert "not document" in first.provenance.coupling_method
+
+
+def test_a_country_code_and_iso3_that_disagree_are_rejected(tmp_path):
+    """The bug this test exists for produced no error at all.
+
+    `export_uw_fixture.py` took the country code and the ISO3 code as separate
+    arguments, and the ISO3 defaulted to Finland's. Exporting Nigeria stamped
+    it FIN, and the schedule converter then projected Nigeria on Finland's
+    fertility and mortality. Every downstream check passed; only the size of
+    the mortality adjustment, which was absurd, gave it away.
+    """
+    export_dir = tmp_path / "export"
+    source_codes = _write_source_export(export_dir)
+    crosswalk = tmp_path / "crosswalk.csv"
+    _write_crosswalk(crosswalk, source_codes)
+    metadata = export_uw_fixture._build_metadata(
+        export_dir,
+        archive_sha256={"tfr_annual": "a" * 64, "e0_annual": "b" * 64},
+        country_code=246,
+        iso3="FIN",
+    )
+    # Same file, relabelled as another country that is genuinely in the source.
+    other = next(code for code in source_codes if code != 246)
+    metadata["country"]["loc_id"] = other
+    (export_dir / "metadata.json").write_text(json.dumps(metadata), encoding="utf-8")
+
+    with pytest.raises(uw.UwExportError, match="labelled FIN"):
+        uw.validate_uw_export(export_dir, crosswalk_path=crosswalk)
 
 
 def test_file_fingerprint_failure_precedes_data_use(tmp_path):

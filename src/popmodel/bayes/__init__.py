@@ -21,3 +21,14 @@ from popmodel.bayes.propagate import (  # noqa: F401
     TrajectoryProvenance,
     propagate,
 )
+from popmodel.bayes.schedules import (  # noqa: F401
+    ReferenceSchedules,
+    ScheduleConversionError,
+    ScheduleDiagnostics,
+    WppRelationalConverter,
+    life_expectancy,
+    life_years,
+    scale_fertility,
+    shift_survival,
+    solve_shift,
+)
