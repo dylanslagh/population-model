@@ -4,6 +4,11 @@ Written for whoever works on this next, human or model. `CLAUDE.md` is the
 short list of rules. This is the longer briefing: what exists, what is verified,
 what will bite you, and what to do next.
 
+> **Start with `NEXT_SESSION.md`.** It contains Dylan's clarified end goal,
+> current session status, the exact next task, and a link to `LOCAL_TOOLS.md`,
+> where the actual R, Rtools, Python, Tectonic, archive, and export paths are
+> recorded. This file is the deeper technical history.
+
 ---
 
 ## 1. What this is
@@ -191,11 +196,14 @@ python scripts/fetch_uw_posteriors.py --list
 python scripts/fetch_uw_posteriors.py
 python scripts/fetch_uw_posteriors.py --check
 python scripts/unpack_uw_posteriors.py
-$env:RTOOLS44_HOME = 'C:\path\to\rtools44'
-$rscript = 'C:\path\to\R-4.4.2\bin\Rscript.exe'
+$env:RTOOLS44_HOME = 'C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\rtools44'
+$rscript = 'C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\R-4.4.2\bin\Rscript.exe'
 & $rscript --vanilla r\uw-extract\bootstrap.R
-python scripts\export_uw_fixture.py --rscript $rscript
+& .\.venv\Scripts\python.exe scripts\export_uw_fixture.py --rscript $rscript
 ```
+
+All local runtime, archive, extraction, and fixture paths are recorded in
+`LOCAL_TOOLS.md`.
 
 Backtest (needs the archives, ~590 MB):
 
@@ -341,10 +349,11 @@ page. The pattern that replaced it, and which is better discipline anyway:
 ## 11. Deploying
 
 The map is served at `hub.dylanslagh.com/population-model/`, password-gated.
-The repository now also contains a LaTeX paper, a reviewed stable PDF, a paper
-landing page, and `scripts/build_public.py`, which stages only the reviewed map
-and paper surface into `dist/`. A genuinely public host has not been configured
-yet; the current live route remains the authenticated hub.
+The repository contains an early LaTeX/PDF paper scaffold, a paper landing page,
+and `scripts/build_public.py`, which can stage the reviewed map and paper surface
+into `dist/`. The scaffold is not an approved preliminary paper; see
+`NEXT_SESSION.md`. A genuinely public host has not been configured yet, and the
+current live route remains the authenticated hub.
 
 The hub is a separate repo (`project-hub`) that clones every project and
 publishes them as one site. Two things that matter here:
@@ -391,6 +400,8 @@ Smaller, well-defined work if you want something self-contained:
 
 ---
 
-*Last verified 2026-08-09: 86 tests pass; engine validation, map QA, paper
-build/render review, and public-payload staging pass. The currently deployed map
-and its new paper/navigation surface are live on the authenticated hub.*
+*Last verified 2026-08-09: 86 tests pass; engine validation, map QA, the paper
+scaffold build/render check, and public-payload staging pass. The currently
+deployed map and scaffold navigation are live on the authenticated hub. Dylan's
+clarified output goal and the exact local paths were recorded on 2026-08-10 in
+`NEXT_SESSION.md` and `LOCAL_TOOLS.md`.*

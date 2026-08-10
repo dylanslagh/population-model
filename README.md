@@ -1,13 +1,18 @@
 # World population model to 2150
 
 An interactive map, backed by a demographic projection that runs to 2150 and
-keeps score of its own predictions. The design brief is in
+keeps score of its own predictions. If you are picking the project up in a new
+session, start with [NEXT_SESSION.md](NEXT_SESSION.md); the exact local paths
+for R, Python, Tectonic, and the downloaded UW data are in
+[LOCAL_TOOLS.md](LOCAL_TOOLS.md). The design brief is in
 [spec/population-2150-spec-v0.3.md](spec/population-2150-spec-v0.3.md) and it is
 the authority on why the project exists; this file is about what has actually
-been built. If you are picking the project up to work on it, read
-[HANDOFF.md](HANDOFF.md). The companion manuscript is available as both a
-[paper landing page](paper/index.html) and a reviewed
-[PDF](paper/population-model.pdf).
+been built. [HANDOFF.md](HANDOFF.md) contains the longer technical history.
+
+The intended finished public outputs are a genuinely public webpage and a
+field-quality research paper in LaTeX and PDF. The current files under
+`paper/` are only an early scaffold, not an approved preliminary paper or the
+current work priority.
 
 The short version of the argument: by 2150 essentially nobody alive today is
 still alive, so the answer is dominated entirely by what long-run fertility

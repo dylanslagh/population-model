@@ -1,15 +1,16 @@
 # Research paper
 
-This directory is the living manuscript for the project's second public
-output. The interactive webpage is the exploratory companion; the paper is the
-formal account of the evidence, model, assumptions, results, and predetermined
-tests.
+> **Owner direction, 2026-08-10:** this directory is an early scaffold created
+> before Dylan asked for a paper draft. It is not an approved preliminary paper
+> or a current project milestone. Preserve it, but do not prioritize paper
+> polishing before the substantive model, tests, and results exist. The final
+> goal is still a field-quality research paper in LaTeX and PDF, written for a
+> relevant scholarly audience and driven by Dylan's project vision.
 
-The current manuscript is deliberately labelled an analysis protocol with
-preliminary evidence. Its backtest and deterministic-engine sections are
-supported by results already in the repository. It becomes a conventional
-working paper only after the probabilistic and mechanism-comparison analyses
-exist and pass their checks.
+The current files are useful as build infrastructure and as a possible starting
+point. Their framing and prose are not settled. A future agent should
+substantially rewrite or replace them after the probabilistic and
+mechanism-comparison analyses exist and pass their checks.
 
 ## Build
 
