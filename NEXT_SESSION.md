@@ -24,13 +24,18 @@ rewrite the scaffold rather than treating its present framing as settled.
 
 ## Where the project is
 
-- Repository: `C:\Users\dslag\Documents\Codex\2026-08-09\i\population-model`
-- Workspace: `C:\Users\dslag\Documents\Codex\2026-08-09\i`
-- Branch at handoff: `main`
-- Commit before this documentation update: `c49213e`
+- Repository: `C:\Users\dslag\Documents\GitHub\population-model`
+- Branch: `main`
 - Current live page: <https://hub.dylanslagh.com/population-model/>
 - Hosting status: the current page is behind the project's hub login. A
   genuinely public host has not been configured.
+
+Until 2026-08-10 the project was split across two working copies: this one held
+the UN data and the built engine bundle, and a scratch workspace under
+`Documents\Codex\` held the 6.2 GB of UW Bayesian data and the pinned R library.
+Neither could run phase 4 end to end. The UW data and R library were copied here
+and verified against the committed manifest, so this is now the only copy that
+matters. See [`LOCAL_TOOLS.md`](LOCAL_TOOLS.md).
 
 The authoritative map source is `scripts/build_map.py`. The root `index.html`
 is its generated, committed output. Do not hand-edit `index.html` and expect the
@@ -74,36 +79,71 @@ The committed provenance receipts are:
 - The current paper is only a scaffold; it is not the intended field-facing
   research paper.
 
-## Do this next
+## The decision made on 2026-08-10
 
-Continue Phase 4 by building a separately versioned schedule converter:
+Dylan reviewed the state of the project and chose to **finish Phase 4
+completely** before starting the mechanistic layer: all 236 locations, a full
+ensemble, uncertainty bands on the live map, stored as a scored prediction
+vintage. The alternative considered was a deliberately small Phase 4 on about
+ten argument-carrying countries, moving to Phase 5 sooner. That was declined.
+Discipline first: no mechanism until the baseline is complete and comparable.
 
-1. Define the explicit conversion from annual TFR to age-specific fertility
-   rates and from female/male e0 to age-specific survival schedules.
-2. Record the conversion method, version, source checksums, and all extension
-   assumptions in provenance.
-3. Test the conversion first on the verified Finland fixture. Demonstrate that
-   the generated schedules reconstruct the compact source quantities within
-   declared tolerances.
-4. Only after that checkpoint, export all 236 UW locations.
-5. Run prior-predictive checks through the existing projection engine before
-   fitting or publishing a posterior population range.
+One consequence has to stay visible in every write-up. **UW's posterior is a
+mean-reverting model.** Importing it imports exactly the long-run assumption
+standing instruction 8 tells this project not to adopt by default. The Phase 4
+ensemble is therefore the *UN-equivalent baseline* — the thing Phase 5 argues
+against — and it must be labelled that way wherever it is published. It is not
+this project's own uncertainty about 2150.
+
+## Do this next — the eight steps of Phase 4
+
+1. **One copy of everything.** *(done 2026-08-10.)* UW archives, unpacked
+   simulations and the pinned R library now live in this repository and verify
+   against `data/manifest/uw_wpp2024_files.json`. A second country, Nigeria
+   (566), was exported here through the R accessor to prove the reader works
+   from this path.
+2. **The fertility converter.** UW supplies one total fertility rate per
+   country-year; the engine needs births spread over mothers aged 10-54. Take
+   each country's WPP 2024 age shape from the bundle's `asfr`, normalise it, and
+   scale it to the drawn rate. State explicitly how the shape behaves after
+   2024, and record the rule in provenance rather than leaving it implicit.
+3. **The mortality converter.** UW supplies female and male life expectancy; the
+   engine needs `sx` at every age. Same relational logic, harder arithmetic: the
+   bundle's `sx` gives each country's own age pattern, and the pattern must be
+   shifted until it reproduces the drawn life expectancy. Declare the tolerance.
+   This is the one genuine modelling decision in Phase 4; everything else is
+   engineering.
+4. **Prove both on Finland.** Convert the verified 1,000-trajectory fixture and
+   show the schedules reconstruct the source TFR and e0 within the declared
+   tolerances. Nothing scales until this passes.
+5. **Export the remaining 234 locations.** Loop *inside* R. One country at a
+   time through `export_uw_fixture.py` takes about 2.5 minutes because it
+   reloads the 1.8 GB simulation object every call, which is roughly ten hours
+   for the full set; loading once and iterating is the fix. Expect about 1.4 GB
+   of exported CSV. Fingerprint the result.
+6. **Decide migration out loud.** UW also publishes `bayesMig` trajectories,
+   which are not downloaded. Either fetch them or run zero migration, but label
+   whichever is chosen; do not reuse the WPP residual and call it probabilistic.
+7. **Prior predictive checks** before believing anything, per standing
+   instruction 6.
+8. **Run the ensemble, store the vintage, put the band on the map.** UW stops at
+   2100 and this project runs to 2150. Those last fifty years are an assumption
+   of ours, not an inherited one, and must be named in the extension policy and
+   on the page.
 
 Do not put the population projection inside the sampler. Do not describe
 separately sourced fertility and mortality draws as a joint posterior. Their
-component IDs and pairing rule must remain visible. Migration must be an
-explicit assumption, and any extension after UW's 2100 endpoint must be named
-and recorded.
+component IDs and pairing rule must remain visible.
 
 ## First checks in a new session
 
 From the repository root in PowerShell:
 
 ```powershell
-$python = '.\.venv\Scripts\python.exe'
-& $python -m pytest tests -q
-& $python scripts\check_map.py
-& $python scripts\fetch_uw_posteriors.py --check
+python -m pytest tests -q
+python scripts\check_map.py
+python scripts\fetch_uw_posteriors.py --check
+python scripts\export_uw_fixture.py --check-only
 ```
 
 The R installation is deliberately local rather than system-wide. Confirm it

@@ -7,17 +7,30 @@ UW data live.
 
 ## Project and runtimes
 
+**The repository is `C:\Users\dslag\Documents\GitHub\population-model`.** That is
+where Dylan's repositories live and it is the only copy that should be worked in.
+
+A second, older working copy exists at
+`C:\Users\dslag\Documents\Codex\2026-08-09\i\population-model`. It was a
+scratch workspace, it has no UN data and cannot run the engine, and its
+`data/` was copied into the real repository on 2026-08-10. Do not work there.
+It can be deleted once Dylan confirms nothing else is using it.
+
 | Item | Exact path |
 |---|---|
-| Repository | `C:\Users\dslag\Documents\Codex\2026-08-09\i\population-model` |
-| Workspace | `C:\Users\dslag\Documents\Codex\2026-08-09\i` |
-| Project Python | `C:\Users\dslag\Documents\Codex\2026-08-09\i\population-model\.venv\Scripts\python.exe` |
+| Repository | `C:\Users\dslag\Documents\GitHub\population-model` |
+| Python 3.14 | on `PATH` as `python`; no virtualenv is required |
 | R 4.4.2 | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\R-4.4.2\bin\Rscript.exe` |
 | Rtools44 root | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\rtools44` |
 | Rtools `make` | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\rtools44\usr\bin\make.exe` |
 | Tectonic 0.17.0 | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tectonic-0.17.0\tectonic.exe` |
-| Pinned R package library | `C:\Users\dslag\Documents\Codex\2026-08-09\i\population-model\r\uw-extract\library\R-4.4.2` |
-| R package source cache | `C:\Users\dslag\Documents\Codex\2026-08-09\i\population-model\r\uw-extract\sources` |
+| Pinned R package library | `r\uw-extract\library\R-4.4.2` (inside the repository) |
+| R package source cache | `r\uw-extract\sources` (inside the repository) |
+
+R, Rtools and Tectonic are large third-party runtimes and stay outside the
+repository, which is why those three rows still point into the old workspace.
+Every script that needs R takes its path as `--rscript`, so nothing depends on
+R being installed in a particular place.
 
 R and Rtools are local, portable installations. They are not expected to appear
 in the Windows Start menu or on the normal command path. Use the exact paths
