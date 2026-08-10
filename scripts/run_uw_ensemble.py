@@ -15,11 +15,12 @@ so in its own provenance.
 Three assumptions are made explicit rather than inherited, because each one
 changes the answer:
 
-* **Migration.** Not supplied by the fertility and mortality archives. The
-  default here is zero migration, declared as a scenario knob. It is a poor
-  assumption for individual countries -- the Gulf states and small island
-  states are visibly wrong without it -- and nearly irrelevant to the world
-  total. Do not read country paths from a zero-migration run.
+* **Migration.** Not supplied by the fertility and mortality archives. It comes
+  from UW's separate bayesMig source, as a median path with a borrowed age and
+  sex composition, so the ensemble's spread carries fertility and mortality
+  uncertainty but not migration uncertainty. See `ingest/uw_mig.py` for the
+  three decisions inside that sentence. `--migration zero` runs the explicit
+  no-migration comparison instead.
 * **After 2100.** UW stops at 2100 and this project runs to 2150. Those fifty
   years hold the final rates constant. That is ours, not the UN's, and half the
   distance to 2150 rests on it.
@@ -59,7 +60,7 @@ from popmodel.bayes import (  # noqa: E402
     propagate,
 )
 from popmodel.bayes import schedules as sched  # noqa: E402
-from popmodel.ingest import uw_bundle, wpp  # noqa: E402
+from popmodel.ingest import uw_bundle, uw_mig, wpp  # noqa: E402
 
 END_YEAR = 2150
 
@@ -78,6 +79,16 @@ ZERO_MIGRATION = (
     "zero net migration for every country and year; UW's fertility and "
     "mortality archives carry no migration component and bayesMig was not used"
 )
+
+
+def loc_ids_for(iso3: tuple[str, ...]) -> np.ndarray:
+    """UN numeric codes for ISO3 codes, in the order given. Raises on any miss."""
+    reference = wpp.load_bundle()
+    index = {code: int(loc) for code, loc in zip(reference.iso3, reference.loc_id)}
+    missing = [code for code in iso3 if code not in index]
+    if missing:
+        raise SystemExit(f"no UN code for: {', '.join(missing)}")
+    return np.array([index[code] for code in iso3], dtype=np.int64)
 
 
 def build_base(bundle: uw_bundle.UwDrawBundle):
@@ -109,6 +120,10 @@ def main() -> int:
     )
     parser.add_argument("--end-year", type=int, default=END_YEAR)
     parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--migration", choices=("uw", "zero"), default="uw",
+        help="UW's bayesMig median path, or an explicit zero-migration run",
+    )
     args = parser.parse_args()
 
     bundle = uw_bundle.load()
@@ -123,17 +138,55 @@ def main() -> int:
     )
     if excluded:
         print(
-            f"excluded:  {', '.join(excluded)} — in WPP, absent from UW "
+            f"excluded:  {', '.join(excluded)} - in WPP, absent from UW "
             f"({excluded_people:,.0f} people)"
         )
 
     converter = sched.WppRelationalConverter(
         extension=RateExtensionPolicy.hold_all(POST_2100)
     )
-    migration = MigrationAssumption.zero(
-        np.arange(base.year, args.end_year), bundle.iso3
-    )
+    if args.migration == "zero":
+        migration = MigrationAssumption.zero(
+            np.arange(base.year, args.end_year), bundle.iso3
+        )
+    else:
+        source = uw_mig.load()
+        # The migration bundle is built over WPP's 237 countries and the draws
+        # cover UW's 236, so the composition and the population path are
+        # selected down rather than assumed to line up.
+        position = {code: i for i, code in enumerate(source.locations)}
+        absent = [code for code in bundle.iso3 if code not in position]
+        if absent:
+            raise SystemExit(
+                f"the migration bundle has no composition for: {', '.join(absent)}"
+            )
+        keep = np.array([position[code] for code in bundle.iso3])
+        source = uw_mig.MigrationSource(
+            rates=source.rates,
+            composition=source.composition[keep],
+            locations=bundle.iso3,
+            population=source.population[:, keep],
+            population_years=source.population_years,
+        )
+        # Only the years the UN's population path covers. Beyond that the
+        # assumption's own hold-last extension takes over, which is recorded
+        # on the assumption rather than applied silently here.
+        migration = uw_mig.build_assumption(
+            source.rates,
+            composition=source.composition,
+            population=source.population,
+            loc_id=loc_ids_for(bundle.iso3),
+            locations=bundle.iso3,
+            years=source.population_years,
+        )
+        net = migration.values.sum(axis=(1, 2, 3))
+        print(
+            f"migration: world net {net.mean() / 1e3:+.1f} thousand a year "
+            f"(should be near zero; the rest is the UN's own discrepancy)"
+        )
     print(f"migration: {migration.source}")
+    if migration.scenario_knob:
+        print(f"           scenario knob - {migration.scenario_knob}")
     print(f"post-2100: rates held constant to {args.end_year}")
     print()
 
@@ -227,7 +280,9 @@ def main() -> int:
     out = args.output or (paths.OUT / "uw_ensemble.json")
     out.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
 
-    totals = paths.OUT / "uw_ensemble_country_totals.npz"
+    # Derived from the receipt's name so two runs cannot overwrite each
+    # other's country totals while leaving both JSON files looking fine.
+    totals = out.with_name(out.stem + "_country_totals.npz")
     np.savez_compressed(
         totals,
         years=years,

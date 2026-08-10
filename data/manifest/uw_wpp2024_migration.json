@@ -1,0 +1,24 @@
+{
+  "source_label": "UW bayesMig annual net-migration-rate trajectories aligned to WPP 2024 (Azose and Raftery 2015)",
+  "archive": {
+    "filename": "mig1trajWPP2024.tgz",
+    "url": "https://bayespop.csss.washington.edu/data/bayesMig/mig1trajWPP2024.tgz",
+    "bytes": 94281648,
+    "sha256": "47ee50ecb34551041ab5105f3d5e6bcb118c8651dca78b07ac0afcd4e653553f",
+    "checksum_origin": "computed locally; UW publishes none"
+  },
+  "reduction": "median across trajectories, per country and year",
+  "denominator_check": {
+    "year": 2024,
+    "countries": [
+      "Canada",
+      "India",
+      "Japan",
+      "UAE",
+      "United States"
+    ],
+    "tolerance": 0.05,
+    "result": "rate x 1 January population reproduces WPP net migration"
+  },
+  "age_sex_composition": "per-country shares from the UN's own medium-path migration residual, normalised over absolute flows; not independent evidence"
+}
