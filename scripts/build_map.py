@@ -18,6 +18,7 @@ Europe shrinking.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -95,6 +96,34 @@ def load_band():
 def band_for(iso):
     """Band arrays for one country, or nothing if the ensemble does not cover it."""
     return BAND.get(iso) or {}
+
+def inline_figure(name: str) -> str:
+    """A committed figure, embedded so the page stays a single file.
+
+    Matplotlib writes width and height attributes on its root element, which
+    pin the figure to the size it was drawn at and make it overflow a phone.
+    They are removed so the viewBox alone governs, which scales. Done by
+    splitting the tag rather than by a regular expression, because a
+    substitution that silently eats the opening tag produces a page with no
+    figure and no error.
+    """
+    path = paths.REPO_ROOT / "docs" / f"{name}.svg"
+    if not path.exists():
+        return ""
+    markup = path.read_text(encoding="utf-8")
+    open_at = markup.index("<svg")
+    close_at = markup.index(">", open_at)
+    tag, rest = markup[open_at:close_at], markup[close_at:]
+
+    kept = ['<svg class="figure" preserveAspectRatio="xMidYMid meet"']
+    for attribute in re.findall(r'[\w:.-]+="[^"]*"', tag):
+        if not attribute.startswith(("width=", "height=")):
+            kept.append(attribute)
+    rebuilt = " ".join(kept) + rest
+    if 'viewBox="' not in rebuilt:
+        raise SystemExit(f"{name}.svg has no viewBox; it would not scale")
+    return rebuilt
+
 
 def project_shapes(shapes: dict[int, dict]):
     """Simplify, project, and scale into a fixed viewBox. Returns paths + size."""
@@ -205,6 +234,11 @@ def main() -> int:
         payload["worldBand"] = list(BAND_META["world"])
 
     html = TEMPLATE.replace("__DATA__", json.dumps(payload, separators=(",", ":")))
+    for token, figure in (("__DECOMPOSITION__", "decomposition"), ("__MECHANISMS__", "phase5")):
+        markup = inline_figure(figure)
+        if not markup:
+            print(f"  note: {figure}.svg is missing; the page will omit it")
+        html = html.replace(token, markup)
     out = SITE / "index.html"
     out.write_text(html, encoding="utf-8")
     print(f"  {len(shapes_by_iso)} shapes, {len(data)} countries")
@@ -266,6 +300,12 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .tip{position:fixed;pointer-events:none;background:var(--panel);color:var(--ink);
   border:1px solid var(--line);border-radius:7px;padding:5px 8px;font-size:12.5px;
   opacity:0;transition:opacity .12s;z-index:9}
+.figures{max-width:1400px;margin:0 auto;padding:8px 22px 10px}
+.figures h2{font-size:17px;margin:26px 0 8px}
+.figures p{max-width:80ch;color:var(--muted);font-size:13.5px;margin:0 0 10px}
+.figures .figure{width:100%;height:auto;display:block;margin:6px 0 4px;background:#fff;border-radius:4px}
+.readout{margin:6px 0 0;font-size:12.5px;color:var(--ink);min-height:1.2em}
+.readout b{font-variant-numeric:tabular-nums}
 footer{max-width:1400px;margin:0 auto;padding:0 22px 34px;color:var(--muted);font-size:12.5px}
 footer p{max-width:80ch}
 .kind{display:inline-block;padding:1px 7px;border-radius:99px;font-size:11px;
@@ -306,6 +346,7 @@ footer p{max-width:80ch}
     <svg id="pyr" role="img" aria-label="Population pyramid"></svg>
     <label>Total population, 1950 to 2150</label>
     <svg id="traj" role="img" aria-label="Population over time, hover to read a year"></svg>
+    <p class="readout" id="trajread"></p>
     <p class="note"><b>Hover the chart</b> to read any year: the guide line
     names the year, the dotted line carries the median across to the axis, and
     the shape beside it is how the 1,000 draws are distributed at that moment.
@@ -318,6 +359,40 @@ footer p{max-width:80ch}
     it leaves out uncertainty about migration.</p>
   </div>
 </main>
+
+
+<section class="figures">
+  <h2>What the uncertainty is made of</h2>
+  <p>The band above says the answer is uncertain. It does not say what about,
+  and those are different claims. Each bar below is how wide the 90% range gets
+  when one source is varied across its own draws and everything else is held at
+  its median.</p>
+  <p>Two results worth the space. For the world, <b>fertility is almost the
+  whole answer</b> and migration barely registers &mdash; it has to cancel
+  globally, one person leaves and one arrives. For individual countries that
+  reverses completely: migration is <b>seventeen times</b> fertility for the
+  United Arab Emirates and a twentieth of it for Nigeria. And the band drawn on
+  this page contains <b>no migration uncertainty at all</b>, because the
+  projection uses a single median migration path.</p>
+  __DECOMPOSITION__
+  <h2>The two mechanisms</h2>
+  <p>Underneath any long-run projection are two forces pulling opposite ways.
+  <b>Selection and transmission</b>: people who have more children pass on
+  some of whatever produced that, so the composition of the population shifts
+  toward them. <b>Development pressure</b>: the opportunity cost of parenthood
+  keeps rising &mdash; longer education, steeper careers, costlier housing,
+  later partnership &mdash; so a person of any given disposition has fewer
+  children than the same person would have had a generation earlier.</p>
+  <p>The right-hand panel is the question the whole project exists to ask:
+  whether selection ever overtakes the environment moving underneath it. In
+  this model it does not, by 2150. It offsets about half of what continued
+  development pressure removes, and no more.</p>
+  __MECHANISMS__
+  <p class="note">Every mechanism parameter is <b>unverified</b>: recorded from
+  the published literature by hand rather than fetched by a script, and five of
+  the thirteen have no independent support at all. The shape of the argument is
+  the claim; the heights are illustrative until that table is checked.</p>
+</section>
 
 <footer>
   <p><b>What you are looking at.</b> Figures to 2023 are the UN's estimates of what
@@ -694,6 +769,32 @@ footer p{max-width:80ch}
     out += hoverLayer(c, s);
     svg.setAttribute("viewBox", "0 0 " + g.W + " " + g.H);
     svg.innerHTML = out;
+    writeReadout(c);
+  }
+
+  // The numbers, which survive any screen width. The shape is a bonus; this is
+  // the payload, and on a phone it is the only part that can be read at all.
+  function writeReadout(c){
+    var box = document.getElementById("trajread");
+    if (!box) return;
+    if (hoverYear === null){
+      box.innerHTML = "Hover or drag across the chart to read any year.";
+      return;
+    }
+    var i = hoverYear - D.annualFrom;
+    if (i < 0 || i >= c.t.length){ box.innerHTML = ""; return; }
+    var bandIndex = (D.bandFrom === undefined) ? -1 : hoverYear - D.bandFrom;
+    var parts = ["<b>" + hoverYear + "</b>"];
+    if (bandIndex >= 0 && c.qm && bandIndex < c.qm.length){
+      var q = bandQuantiles(c, bandIndex);
+      parts.push(shortNumber(q[3]) + " median");
+      parts.push(shortNumber(q[2]) + "-" + shortNumber(q[4]) + " middle half");
+      parts.push(shortNumber(q[0]) + "-" + shortNumber(q[6]) + " of 90% of draws");
+    } else {
+      parts.push(shortNumber(c.t[i]));
+      parts.push(hoverYear < 2024 ? "UN estimate" : "projection");
+    }
+    box.innerHTML = parts.join(" &middot; ");
   }
 
   function trajYearFromEvent(event){
@@ -723,6 +824,19 @@ footer p{max-width:80ch}
         drawTrajectory(selected ? D.countries[selected] : WORLD);
       }
     });
+    function touch(event){
+      if (!event.touches.length) return;
+      var year = trajYearFromEvent(event.touches[0]);
+      if (year !== hoverYear){
+        hoverYear = year;
+        drawTrajectory(selected ? D.countries[selected] : WORLD);
+      }
+      // Only once the finger is on the chart, so the page still scrolls
+      // normally everywhere else.
+      event.preventDefault();
+    }
+    svg.addEventListener("touchstart", touch, {passive: false});
+    svg.addEventListener("touchmove", touch, {passive: false});
   }
 
   function show(iso){

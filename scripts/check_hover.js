@@ -14,13 +14,21 @@ const end = script.indexOf("function trajYearFromEvent");
 if (start < 0 || end < 0) { console.error("could not find the chart code"); process.exit(1); }
 const chartCode = script.slice(start, end);
 
-const captured = {svg: ""};
+// One stub element per id. Sharing one meant the readout text overwrote the
+// captured SVG, and the check reported "no path drawn" for a page that draws
+// one perfectly well.
+const elements = {};
+const captured = {get svg(){ return (elements.traj || {}).html || ""; }};
 const document = {
-  getElementById: () => ({
-    setAttribute: () => {},
-    set innerHTML(v){ captured.svg = v; },
-    get innerHTML(){ return captured.svg; },
-  }),
+  getElementById: (id) => {
+    if (!elements[id]) elements[id] = {
+      html: "",
+      setAttribute: () => {},
+      set innerHTML(v){ this.html = v; },
+      get innerHTML(){ return this.html; },
+    };
+    return elements[id];
+  },
 };
 const D = payload;
 let hoverYear = null;
