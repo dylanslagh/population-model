@@ -161,25 +161,72 @@ The pieces, in the order they run:
 - `scripts/write_uw_vintage.py`, `scripts/plot_ensemble.py` — the write-once
   record and the figure.
 
+### Phase 5 — the mechanistic layer (complete)
+
+The thing the project is actually about. Selection and transmission on one side,
+a changing fertility environment on the other, and observed fertility as the
+output of both rather than an input to either.
+
+`src/popmodel/mech/` keeps spec section 5.3's two questions apart:
+`composition.py` decides who becomes more common, `environment.py` decides what
+a given disposition produces, `engine.py` is the cohort engine with a
+composition axis and no opinions, `runs.py` maps spec section 8's declared
+scenarios onto those settings.
+
+**What makes it trustworthy.** With every propensity set to one, the typed
+engine reproduces the ordinary engine to 3e-16 relative, and the UN-equivalent
+cell of the grid lands at 8.78 billion in 2150 - the deterministic run's own
+figure. Any difference between Phase 4 and Phase 5 is therefore the mechanism
+and not a second implementation of the arithmetic. One generation of selection
+also matches the breeder's equation to nine decimal places, which is the
+mechanism agreeing with its own theory.
+
+**What it says.** Against the UN environment, selection adds about 2.1 billion
+by 2150. Continued development pressure removes about 2.4 billion. Together they
+reach 7.75 billion. Selection materially offsets continued pressure and does not
+overcome it by 2150 - and spec section 6.8 is explicit that never is a
+legitimate answer.
+
+**What it rests on.** `data/reference/mechanism_parameters.csv`, thirteen
+parameters, every one currently marked unverified and five of them scenario
+knobs with no independent support. The loader refuses a row with no provenance,
+a "sourced" row with no evidence, and a knob that claims to be verified. Every
+output repeats the caveat. **The architecture is sound and the magnitudes are
+illustrative** until that table is checked against the papers it cites.
+
+### The uncertainty decomposition
+
+`scripts/decompose_uncertainty.py` varies one source at a time across its own
+draws and holds the rest at a median trajectory. World 90% width at 2150, in
+billions: **fertility 7.26, the mechanism 5.79, migration 1.75, our own
+hold-constant rule after 2100 0.73, mortality 0.52.**
+
+The country panel matters more than the world one because it disagrees with it.
+At 2100, migration is **16.9 times** fertility for the United Arab Emirates and
+**0.05 times** it for Nigeria. Which uncertainty dominates is a fact about where
+you look, and the band published on the map contains no migration uncertainty at
+all - one shared median path per run.
+
+This is the page's organising idea now, on Dylan's direction: what earns trust
+is showing the kinds of uncertainty represented correctly, not grading somebody
+else's forecasts. See `NEXT_SESSION.md`.
+
 ## 4. What is not built
 
-- **Phase 5, the mechanistic layer.** Selection and transmission competing with
-  a falling fertility environment. This is the project's actual thesis and none
-  of it is implemented. `scenarios.py` declares those scenarios with the phase
-  that owes them, so the gap is visible in code rather than only in prose;
-  asking for one raises.
-- **Phase 6, scoring runs.** The formats are fixed and tested, and the Phase 4
-  baseline is now stored, but nothing has resolved. The first genuinely
-  scoreable quantity is completed cohort fertility for the early-1990s birth
-  cohorts, around **2038**.
-- **Migration uncertainty in the ensemble.** The engine takes one shared
-  migration path, so the band carries fertility and mortality uncertainty only.
-  Stated rather than hidden; see §8.
+- **Verified mechanism parameters.** The largest outstanding item, and it is
+  reading rather than coding. All thirteen rows of the parameter table are
+  recollections of the literature; none has been checked against its source.
+- **Phase 6, scoring runs.** Formats are fixed, two vintages are stored, and
+  nothing resolves before about 2038. WPP 2027 is the next data event.
+- **Migration uncertainty in the published band.** Measured at 1.75 billion of
+  world width and most of the answer for the Gulf states, and still excluded,
+  because the engine takes one shared migration path per run.
+- **Per-country uncertainty decomposition.** Computed for the world and six
+  watch countries; widening it to all 236 is small work.
 - **Survey coverage and vital-registration completeness** in the confidence
   layer. Only census recency is sourced. Do not invent the other two.
 - **A genuinely public host.** The live page is still the authenticated hub.
-- **The paper.** `paper/` is an early scaffold written before there were
-  results worth writing up, not an approved draft.
+- **The paper.** `paper/` is an early scaffold, not an approved draft.
 
 ## 5. Rules that must not break
 
@@ -228,6 +275,16 @@ python scripts\plot_ensemble.py
 ```
 
 All local runtime paths are recorded in `LOCAL_TOOLS.md`.
+
+Phase 5, the mechanism, and the decomposition. Neither needs R.
+
+```bash
+python scripts/run_phase5.py                    # the two-axis grid
+python scripts/run_phase5.py --ensemble 200     # with parameter uncertainty
+python scripts/plot_phase5.py
+python scripts/decompose_uncertainty.py --draws 200   # about 25 minutes
+python scripts/plot_decomposition.py
+```
 
 Backtest (needs the archives, ~590 MB):
 
@@ -328,6 +385,24 @@ been, which is why `ScheduleDiagnostics` reports the size of that adjustment.
 The ISO3 code now comes from the committed crosswalk and the export validator
 rejects a mismatched pair.
 
+**The bayesMig export is ordered by that model's own region order, not by
+country code.** Reshaping it without reordering hands one country another
+country's migration and produces a world total that looks like a result - the
+first run showed migration as a wider world band than fertility, which is
+impossible because migration cancels globally. The reader now checks that the
+median of the reshaped draws reproduces the median grid built independently by a
+groupby, which catches it in one line.
+
+**A regular expression that loses its backreference deletes what it matched.**
+The figure inliner's substitution ate the opening svg tag and produced a page
+with no figure and no error. Anything that strips attributes from markup now
+splits the tag rather than substituting into it.
+
+**A test harness that shares one stub element across ids will lie to you.**
+`check_hover.js` returned the same fake element for every `getElementById`, so
+the readout text overwrote the captured SVG and the check reported "no path
+drawn" for a page that draws one perfectly well.
+
 **Never sum country quantiles to get a world quantile.** Adding up every
 country's 5th percentile assumes all 236 land in their own bad tail in the same
 draw. The world's 2150 5th percentile is 6.97 billion; summing the countries'
@@ -415,24 +490,24 @@ publishes them as one site. Two things that matter here:
 
 ## 12. What to do next
 
-**Phase 5, the mechanistic layer.** The project's actual thesis, the only part
-that can be wrong *diagnostically* rather than numerically, and the reason the
-Phase 4 baseline was stored before it existed. Spec section 6 is the design,
-section 8 the scenario grid, section 6.10 the anti-epicycle rule. The hard part
-is not the code: it is sourcing the parameters independently. Anything that
-cannot be is a scenario knob and must be labelled one.
+**Verify the mechanism parameter table.** Thirteen rows, none checked against
+its source, and the whole Phase 5 result hangs on them. This is the highest
+value work available and most of it is reading.
 
-`NEXT_SESSION.md` has the suggested order and the smaller self-contained jobs,
-of which the best is cohort fertility from the Human Fertility Database - the
-empirical spine of the disagreement with the UN, and the thing that actually
-resolves around 2038.
+**Then cohort fertility from the Human Fertility Database.** Spec section 4.3
+calls it the highest-value dataset after WPP. It would let the spread of
+completed family size be measured rather than recalled, which is one of the two
+parameters selection is most sensitive to, and it resolves around 2038.
 
+`NEXT_SESSION.md` carries the rest, including Dylan's editorial direction for
+the page and the scoped pieces of it that are not built.
 
 ---
 
-*Last verified 2026-08-10: 125 tests pass; engine validation, map QA including
-the new band checks, and the schedule-converter checkpoint all pass. Phase 4 is
-complete and its ensemble is stored as vintage `2026-08-10-phase4-uw-baseline`.
-The map with its uncertainty band is live on the authenticated hub. The
-duplicate working copy under `Documents\Codex\` was deleted once its data had
-been moved here; this repository is now the only copy.*
+*Last verified 2026-08-11: 152 tests pass; engine validation, the
+schedule-converter checkpoint, and map QA including the band checks and the
+headless hover-rendering check all pass. Phases 1 to 5 are complete. The live
+page carries the uncertainty band, the hover readout with touch support, the
+uncertainty decomposition and the two mechanisms. Phase 4's ensemble is stored
+as vintage `2026-08-10-phase4-uw-baseline` with every quantity marked as not a
+project claim.*
