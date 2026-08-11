@@ -14,7 +14,7 @@ if the first two hold:
    must reproduce WPP's own published net migration figures, and this asserts
    that it does for the large migration countries before anything is written.
 
-    python scripts/build_uw_migration.py --archive ~/Downloads/mig1trajWPP2024.tgz
+    python scripts/build_uw_migration.py
 """
 
 from __future__ import annotations
@@ -42,6 +42,9 @@ from popmodel.sources import fetch  # noqa: E402
 ARCHIVE_URL = "https://bayespop.csss.washington.edu/data/bayesMig/mig1trajWPP2024.tgz"
 ARCHIVE_BYTES = 94_281_648
 MEMBER = "mig1traj/ascii_trajectories.csv"
+# All three UW archives live together, so the project is complete in one place
+# and nothing depends on where a browser happened to put a download.
+DEFAULT_ARCHIVE = paths.RAW / "UW_WPP2024" / "mig1trajWPP2024.tgz"
 
 # The countries the denominator check is asserted on: large absolute net
 # migration, so the comparison is not dominated by rounding, and a mix of
@@ -92,10 +95,13 @@ def published_net_migration(year: int) -> dict[int, float]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--archive", type=Path, required=True)
+    parser.add_argument(
+        "--archive", type=Path,
+        help="defaults to the copy kept beside the other two UW archives",
+    )
     args = parser.parse_args()
 
-    archive = args.archive.expanduser()
+    archive = (args.archive or DEFAULT_ARCHIVE).expanduser()
     if not archive.is_file():
         raise SystemExit(f"archive not found: {archive}")
     size = archive.stat().st_size

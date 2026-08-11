@@ -66,9 +66,17 @@ python -m pytest tests/ -q           # fast, no data needed
 
 ## Where the project is
 
-Phases 1 and 2 of spec section 10 are done and tested. Phases 3–6 are open.
-`scenarios.py` declares the unimplemented scenarios with the phase that owes
-them, so the gap is visible rather than silent.
+Phases 1 to 4 of spec section 10 are done and tested. Phase 5, the mechanistic
+layer, is the next thing and is the project's actual thesis. Phase 6 cannot
+resolve before about 2038. `scenarios.py` declares the unimplemented scenarios
+with the phase that owes them, so the gap is visible rather than silent.
+
+The Phase 4 ensemble is the **UN-equivalent baseline**, not this project's own
+view of 2150: it propagates UW's mean-reverting posterior, which is the
+assumption standing instruction 8 declines to adopt by default. It is stored as
+vintage `2026-08-10-phase4-uw-baseline` with every quantity marked
+`is_project_claim: false`, so Phase 5 has something fixed to be compared
+against.
 
 A correction worth keeping, because it was written down wrong once: archived WPP
 revisions are **not** scanned volumes. All fourteen back to 1992 are Excel

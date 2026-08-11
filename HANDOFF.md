@@ -109,55 +109,77 @@ Czechoslovakia, Sudan and Ethiopia all changed shape inside the window.
 - `src/popmodel/sources/fetch.py` — every download checksummed, manifests
   committed. A file the UN silently reissues fails loudly.
 
-### Phase 4 foundation — source and propagation boundaries
+### Phase 4 — the probabilistic baseline (complete)
 
-The Bayesian layer has started, but it does **not** produce a posterior
-population forecast yet.
+UW's Bayesian posterior for fertility and mortality, plus their separate
+migration model, propagated through the engine one draw at a time. 1,000 draws,
+236 countries, 2024 to 2150.
 
-- `src/popmodel/sources/uw_wpp2024.py` pins the exact annual UW TFR and e0
-  archives, package versions, publisher byte lengths, and creation scripts.
-- `scripts/fetch_uw_posteriors.py` downloads them resumably and records a local
-  SHA-256 because UW publishes no cryptographic checksum. It labels them as UW
-  products, not UN products.
-- Both annual archives are downloaded, fingerprinted in the committed manifest,
-  and safely unpacked. `src/popmodel/sources/uw_extract.py` verifies the archive
-  again before an atomic unpack and rejects unsafe members or stale outputs.
-- `r/uw-extract/` pins R 4.4.2, `bayesTFR` 7.4-4, and `bayesLife` 5.3-0 and reads
-  only through the packages' official accessors. `scripts/export_uw_fixture.py`
-  coordinates the first Finland export; `src/popmodel/ingest/uw.py` validates
-  the complete year grid, 1,000 trajectory IDs, fingerprints, and location set.
-- `src/popmodel/bayes/propagate.py` separates compact TFR/e0 source draws from
-  engine-ready age schedules. Every engine-ready draw retains its fertility and
-  mortality component IDs and says how those separate products were paired.
-- Prior and posterior draws use the same one-draw-at-a-time path through
-  `cohort.step`; only country totals are retained, and world totals are derived.
-  Migration and any extension beyond a source's final year must be explicit.
+**What it says.** World population median peaks at **10.31 billion in 2093** and
+reaches **9.73 billion by 2150**, with a 90% band of **6.97 to 14.36 billion**.
+57% of draws peak before 2100. Nigeria's 2150 band runs from 80 million to 1.34
+billion, which is the project's argument in one chart.
 
-The source archives contain 1,000 annual trajectories for 236 locations and a
-2023 anchor followed by 2024–2100 forecasts. The real Finland accessor fixture
-confirmed all 236 extracted LocIDs and that the sole WPP omission is Holy See
-(M49 336). The result is recorded in
-`data/manifest/uw_wpp2024_finland_fixture.json`; do not invent a trajectory to
-fill it.
+**What makes it believable.** Two checks nobody arranged: the deterministic run
+on the UN's own assumptions peaks at 10.29 billion in 2084 against the
+ensemble's 10.31 billion in 2093; and the deterministic 2100 figure lands inside
+the ensemble's 5-95% band for **97% of countries**. Those two runs share only the
+engine.
+
+**What it is not.** UW's model is mean-reverting, so this band expresses the
+conventional long-run assumption — the one standing instruction 8 declines to
+adopt by default. It is the **UN-equivalent baseline**, the thing Phase 5 argues
+against. The stored vintage marks every quantity `is_project_claim: false`, and
+recording it before Phase 5 exists is what stops the comparison being arranged
+afterwards.
+
+The pieces, in the order they run:
+
+- `sources/uw_wpp2024.py`, `scripts/fetch_uw_posteriors.py`,
+  `sources/uw_extract.py` — the two annual archives pinned, fingerprinted and
+  safely unpacked. UW publishes no checksum, so the recorded one is ours.
+- `r/uw-extract/extract_all_countries.R`, `scripts/export_uw_all.py` — all 236
+  locations through UW's own public accessors, loading the objects once instead
+  of per country. The bulk script is a second implementation of the validated
+  single-country one, so the driver re-exports Finland and Nigeria through it
+  and compares byte for byte.
+- `ingest/uw_bundle.py` — the 236 exports compacted into one array file, and the
+  statement of what makes a world total meaningful: trajectory *k* in every
+  country is one posterior sample.
+- `bayes/schedules.py` — **the modelling decision.** UW gives one fertility
+  number and two mortality numbers per country-year; the engine needs a hundred.
+  The UN's own age patterns are borrowed and only their level is moved:
+  fertility rescaled to the drawn total, mortality shifted by a single Brass
+  logit solved to the drawn life expectancy. Both reproduce their input to
+  machine precision. `scripts/check_schedules.py` proves it on the real
+  1,000-trajectory exports; `docs/schedules.svg` shows the schedules it invents.
+- `ingest/uw_mig.py`, `scripts/build_uw_migration.py` — bayesMig, plain CSV, no
+  R needed. Three stated decisions turn a national rate into migrants by age and
+  sex; see the module docstring, and §8 below for the trap in it.
+- `scripts/run_uw_ensemble.py` — predictive checks, then the run. Writes a
+  receipt naming every assumption.
+- `scripts/write_uw_vintage.py`, `scripts/plot_ensemble.py` — the write-once
+  record and the figure.
 
 ## 4. What is not built
 
-- **Phase 4, the Bayesian layer beyond its foundation.** Source definitions,
-  safe extraction, the pinned official-accessor adapter, draw contracts, and
-  probabilistic propagation are built and unit-tested. The adapter has also
-  passed a genuine 1,000-trajectory Finland export from the downloaded archives.
-  Full 236-location export, TFR/e0-to-age-schedule conversion, prior-predictive
-  checks, and real population ensemble runs are not built yet. Existing
-  published outputs are still single deterministic paths.
 - **Phase 5, the mechanistic layer.** Selection and transmission competing with
   a falling fertility environment. This is the project's actual thesis and none
   of it is implemented. `scenarios.py` declares those scenarios with the phase
   that owes them, so the gap is visible in code rather than only in prose;
   asking for one raises.
-- **Phase 6, scoring runs.** The formats are fixed and tested; nothing has been
-  scored because nothing has resolved.
+- **Phase 6, scoring runs.** The formats are fixed and tested, and the Phase 4
+  baseline is now stored, but nothing has resolved. The first genuinely
+  scoreable quantity is completed cohort fertility for the early-1990s birth
+  cohorts, around **2038**.
+- **Migration uncertainty in the ensemble.** The engine takes one shared
+  migration path, so the band carries fertility and mortality uncertainty only.
+  Stated rather than hidden; see §8.
 - **Survey coverage and vital-registration completeness** in the confidence
   layer. Only census recency is sourced. Do not invent the other two.
+- **A genuinely public host.** The live page is still the authenticated hub.
+- **The paper.** `paper/` is an early scaffold written before there were
+  results worth writing up, not an approved draft.
 
 ## 5. Rules that must not break
 
@@ -188,22 +210,24 @@ python scripts/run_to_2150.py        # scenarios to 2150
 python -m pytest tests/ -q           # fast tests, no data needed
 ```
 
-Phase 4 source inventory and downloads (2.24 GB compressed for both annual
-archives):
+Phase 4, the probabilistic baseline. The archives are already downloaded and
+their checksums committed; `--check` verifies them without re-fetching.
 
 ```powershell
-python scripts/fetch_uw_posteriors.py --list
-python scripts/fetch_uw_posteriors.py
-python scripts/fetch_uw_posteriors.py --check
-python scripts/unpack_uw_posteriors.py
-$env:RTOOLS44_HOME = 'C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\rtools44'
 $rscript = 'C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\R-4.4.2\bin\Rscript.exe'
-& $rscript --vanilla r\uw-extract\bootstrap.R
-& .\.venv\Scripts\python.exe scripts\export_uw_fixture.py --rscript $rscript
+python scripts\fetch_uw_posteriors.py --check
+python scripts\unpack_uw_posteriors.py
+python scripts\export_uw_all.py --rscript $rscript   # 236 countries, ~25 min
+python scripts\build_uw_bundle.py                    # 421 MB array bundle
+python scripts\build_uw_migration.py                 # bayesMig, no R needed
+python scripts\check_schedules.py                    # the converter checkpoint
+python scripts\run_uw_ensemble.py --draws 25         # predictive check first
+python scripts\run_uw_ensemble.py                    # all 1,000, ~30 min
+python scripts\write_uw_vintage.py
+python scripts\plot_ensemble.py
 ```
 
-All local runtime, archive, extraction, and fixture paths are recorded in
-`LOCAL_TOOLS.md`.
+All local runtime paths are recorded in `LOCAL_TOOLS.md`.
 
 Backtest (needs the archives, ~590 MB):
 
@@ -295,6 +319,29 @@ forecast would be a serious error, not a rounding problem.
 header row rather than assuming a row number, and the life-expectancy workbooks
 changed shape entirely between 2004 and 2006.
 
+**A country code and an ISO3 code that disagree do not error anywhere.**
+`export_uw_fixture.py` took both as separate arguments and defaulted the ISO3 to
+Finland's, so exporting Nigeria stamped it FIN and the schedule converter
+projected Nigeria on Finland's fertility and mortality. Every checksum passed.
+The only symptom was a mortality adjustment ten times larger than it should have
+been, which is why `ScheduleDiagnostics` reports the size of that adjustment.
+The ISO3 code now comes from the committed crosswalk and the export validator
+rejects a mismatched pair.
+
+**Never sum country quantiles to get a world quantile.** Adding up every
+country's 5th percentile assumes all 236 land in their own bad tail in the same
+draw. The world's 2150 5th percentile is 6.97 billion; summing the countries'
+would say 3.13 billion. The page is passed a world band computed from each
+draw's own world total, and `check_map.py` prints both numbers so the shortcut
+stays visibly wrong.
+
+**The bayesMig archive does not say what its rate is a rate of.** It is net
+migrants per person per year, checked rather than assumed: rate times 1 January
+population reproduces WPP's own published net migration to 0.2% for the United
+States and 0.3% for India. `build_uw_migration.py` asserts this before writing
+anything. The age and sex composition is separately borrowed from the UN's
+residual and is not independent evidence.
+
 **The census page has three separate traps** (`ingest/census.py`):
 a country that ran two censuses in one round gets a **continuation row with a
 blank name**, and the UK's own row is empty because its censuses sit under
@@ -348,12 +395,12 @@ page. The pattern that replaced it, and which is better discipline anyway:
 
 ## 11. Deploying
 
-The map is served at `hub.dylanslagh.com/population-model/`, password-gated.
-The repository contains an early LaTeX/PDF paper scaffold, a paper landing page,
-and `scripts/build_public.py`, which can stage the reviewed map and paper surface
-into `dist/`. The scaffold is not an approved preliminary paper; see
-`NEXT_SESSION.md`. A genuinely public host has not been configured yet, and the
-current live route remains the authenticated hub.
+The map is served at `hub.dylanslagh.com/population-model/`, password-gated,
+and now carries the Phase 4 uncertainty band on every country. The repository
+also contains an early LaTeX/PDF paper scaffold, a paper landing page, and
+`scripts/build_public.py`, which stages the reviewed map and paper surface into
+`dist/`. The scaffold is not an approved paper; see `NEXT_SESSION.md`. No
+genuinely public host is configured yet.
 
 The hub is a separate repo (`project-hub`) that clones every project and
 publishes them as one site. Two things that matter here:
@@ -368,40 +415,24 @@ publishes them as one site. Two things that matter here:
 
 ## 12. What to do next
 
-In the spec's order, hardest first:
+**Phase 5, the mechanistic layer.** The project's actual thesis, the only part
+that can be wrong *diagnostically* rather than numerically, and the reason the
+Phase 4 baseline was stored before it existed. Spec section 6 is the design,
+section 8 the scenario grid, section 6.10 the anti-epicycle rule. The hard part
+is not the code: it is sourcing the parameters independently. Anything that
+cannot be is a scenario knob and must be labelled one.
 
-1. **Continue Phase 4 — build the schedule converter.** The pinned archives,
-   official-accessor reader, and genuine Finland fixture are complete. Implement
-   a separately versioned TFR/e0-to-age-schedule converter, prove it reconstructs
-   the compact Finland source quantities within declared tolerances, then export
-   all 236 locations and run prior-predictive checks before any fit. Holy See is
-   confirmed absent and must remain an explicit reconciliation decision. Do not
-   put the projection inside the sampler.
-2. **Phase 5 — the mechanistic layer.** The project's actual thesis, and the
-   only part that could be wrong *diagnostically* rather than numerically. Pin
-   every parameter to independent evidence; anything that cannot be is a
-   scenario knob and must be labelled one.
-3. **Phase 6 — scoring.** Formats are ready. The first genuinely scoreable
-   quantity is completed cohort fertility for the early-1990s birth cohorts,
-   around **2038**. Nothing resolves before then. WPP 2027 is the next data
-   event and the first scoring opportunity for the backtest.
+`NEXT_SESSION.md` has the suggested order and the smaller self-contained jobs,
+of which the best is cohort fertility from the Human Fertility Database - the
+empirical spine of the disagreement with the UN, and the thing that actually
+resolves around 2038.
 
-Smaller, well-defined work if you want something self-contained:
-
-- Extend the backtest to the 2010–2019 revisions (larger files, shorter
-  horizons, but it fills in the recent record).
-- Per-country backtest, which needs an explicit successor-state map for the
-  USSR, Yugoslavia, Czechoslovakia, Sudan/South Sudan and Ethiopia/Eritrea.
-- Add survey coverage or vital-registration completeness to the confidence
-  layer — but only from a real source, and labelled as its own dimension rather
-  than folded into a score.
-- Historical pyramids on the map before 1950 are not possible from WPP; do not
-  try.
 
 ---
 
-*Last verified 2026-08-09: 86 tests pass; engine validation, map QA, the paper
-scaffold build/render check, and public-payload staging pass. The currently
-deployed map and scaffold navigation are live on the authenticated hub. Dylan's
-clarified output goal and the exact local paths were recorded on 2026-08-10 in
-`NEXT_SESSION.md` and `LOCAL_TOOLS.md`.*
+*Last verified 2026-08-10: 125 tests pass; engine validation, map QA including
+the new band checks, and the schedule-converter checkpoint all pass. Phase 4 is
+complete and its ensemble is stored as vintage `2026-08-10-phase4-uw-baseline`.
+The map with its uncertainty band is live on the authenticated hub. The
+duplicate working copy under `Documents\Codex\` was deleted once its data had
+been moved here; this repository is now the only copy.*
