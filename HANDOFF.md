@@ -37,6 +37,37 @@ is everything.
 3. This file, §7 and §8 especially.
 4. The header comment of `src/popmodel/engine/cohort.py` before touching the engine.
 
+### Whose words these are
+
+The spec takes strong positions, and most of them were argued by an assistant
+and accepted by Dylan rather than stated by him. That distinction is easy to
+lose and worth keeping, because a model that reads them as his convictions will
+defend them on his behalf, and he would rather they were argued with.
+
+Named examples, all of them assistant reasoning that he agreed to, not his
+stated preferences:
+
+- **Section 3.1, "Gelman, not Jaynes."** Dylan likes Jaynes. The judgement that
+  Jaynes's approach was the wrong fit for this project is the assistant's; he
+  decided to trust it. If the evidence points the other way, say so.
+- **Section 3.3, that the UN's programme is degenerating in Lakatos's sense.**
+- **Section 3.5, that accuracy is not the criterion.**
+- **Section 6.1, that simple ecological population biology is a dead end here.**
+
+This is not an invitation to relitigate everything. It is a warning about a
+specific failure this project has already suffered once: spec section 8's
+244-billion test came from an offhand remark in the chat that produced the spec,
+hardened into a stated requirement, and was wrong (see section 8 below). The
+same mechanism turns an opinion into an instruction.
+
+**The standing rules in `CLAUDE.md` are different and do bind.** The discipline
+around checking figures, tracing values to sources and marking preliminary data
+lives there deliberately: Dylan removed those lines from his own global
+instructions in August 2026 because they were never his words, and confirmed he
+wants them kept for this project because they have earned their place. They
+caught the empty pyramids, the country export labelled with the wrong ISO code,
+and the migration reshape that gave one country another country's migrants.
+
 ## 3. What is built, and what verifies it
 
 Phases 1, 2 and 3 of the spec's six are done. Every number below is regenerated

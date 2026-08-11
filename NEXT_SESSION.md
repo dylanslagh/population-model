@@ -28,6 +28,14 @@ fact about published ranges being too narrow.
 Build in that spirit. Prefer showing the model's own ignorance to showing
 somebody else's error.
 
+## Whose opinions are whose
+
+Dylan's global instructions file is his own words, and he prunes anything an
+assistant wrote and attributed to him. Apply the same care here: several strong
+positions in the spec are assistant reasoning he accepted, not preferences he
+holds. `HANDOFF.md` section 2 lists the notable ones. The standing rules in
+`CLAUDE.md` are the opposite case and do bind.
+
 ## Where everything lives
 
 - Repository: `C:\Users\dslag\Documents\GitHub\population-model`. The only copy.
