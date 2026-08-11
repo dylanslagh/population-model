@@ -205,6 +205,73 @@ def main() -> int:
         print(f"     {iso}  {c['t'][i2024]/1e6:>9,.1f}m -> {c['t'][i2100]/1e6:>9,.1f}m  "
               f"{pct:>+7.0f}%")
 
+    # 4. The uncertainty band, checked the same way as everything else: parsed
+    # back out of the page and redrawn from the page's own numbers.
+    if "bandFrom" in data:
+        band_years = list(range(data["bandFrom"], data["annualTo"] + 1))
+        with_band = [iso for iso, c in data["countries"].items() if "lo" in c]
+        print(f"\n4. uncertainty band on {len(with_band)} of "
+              f"{len(data['countries'])} countries, "
+              f"{band_years[0]}-{band_years[-1]}")
+        inside = 0
+        for iso in with_band:
+            c = data["countries"][iso]
+            if len(c["lo"]) != len(band_years) or len(c["hi"]) != len(band_years):
+                problems.append(f"{iso}: band is {len(c['lo'])} years, "
+                                f"expected {len(band_years)}")
+                continue
+            if any(lo > hi for lo, hi in zip(c["lo"], c["hi"])):
+                problems.append(f"{iso}: the 5th percentile exceeds the 95th")
+            if any(v < 0 for v in c["lo"]):
+                problems.append(f"{iso}: the band goes below zero people")
+            k = 2100 - data["bandFrom"]
+            if c["lo"][k] <= c["t"][i2100] <= c["hi"][k]:
+                inside += 1
+        share = inside / max(len(with_band), 1)
+        print(f"   the deterministic 2100 line sits inside the band for "
+              f"{share:.0%} of countries")
+        # The line is a different run from the band - the UN's own assumptions
+        # with residual migration - so it is not obliged to sit inside. A low
+        # share would mean the two runs disagree about something structural,
+        # which is worth stopping for.
+        if share < 0.5:
+            problems.append(
+                f"only {share:.0%} of deterministic 2100 values fall inside the "
+                f"ensemble band; the two runs disagree structurally"
+            )
+        if "worldBand" not in data:
+            problems.append("countries carry a band but the world does not")
+        else:
+            lo, hi = data["worldBand"]
+            if any(a > b for a, b in zip(lo, hi)):
+                problems.append("the world band's 5th percentile exceeds its 95th")
+            country_lo = sum(data["countries"][i]["lo"][-1] for i in with_band)
+            print(f"   world 2150 band {lo[-1]/1e9:.2f}-{hi[-1]/1e9:.2f}bn; "
+                  f"summing country 5th percentiles would say "
+                  f"{country_lo/1e9:.2f}bn, which is why it is not done that way")
+
+        fig, ax = plt.subplots(figsize=(7.6, 4.2))
+        for iso, line_colour in (("USA", "#4575b4"), ("NGA", "#1a9850"), ("JPN", "#d73027")):
+            c = data["countries"].get(iso)
+            if not c or "lo" not in c:
+                continue
+            ax.fill_between(band_years, [v / 1e6 for v in c["lo"]],
+                            [v / 1e6 for v in c["hi"]], color=line_colour, alpha=0.18, lw=0)
+            ax.plot(range(data["annualFrom"], data["annualTo"] + 1),
+                    [v / 1e6 for v in c["t"]], color=line_colour, lw=1.6, label=iso)
+        ax.set_xlim(1950, data["annualTo"])
+        ax.set_ylim(bottom=0)
+        ax.set_xlabel("year")
+        ax.set_ylabel("population, millions")
+        ax.set_title("Redrawn from the page's own numbers: line and band", fontsize=10)
+        ax.legend(fontsize=8, frameon=False)
+        ax.spines[["top", "right"]].set_visible(False)
+        fig.tight_layout()
+        out3 = paths.OUT / "map-check-band.png"
+        fig.savefig(out3, dpi=140)
+        plt.close(fig)
+        print(f"   wrote {out3.relative_to(paths.REPO_ROOT)} - open it and look at it")
+
     if problems:
         print("\nPROBLEMS:")
         for p in problems:

@@ -21,6 +21,7 @@ import json
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -36,7 +37,50 @@ PYRAMID_YEARS = [1950, 1975, 2000, 2024, 2050, 2075, 2100, 2125, 2150]
 # the repo root, so that is where the page goes. Relative asset paths only,
 # which is free here because everything is embedded in the one file.
 SITE = paths.REPO_ROOT
+BAND = {}
+BAND_META = None
 
+
+
+def load_band():
+    """The Phase 4 ensemble's 5th and 95th percentiles, per country and year.
+
+    Optional on purpose. The map was useful before the ensemble existed and
+    must keep building if the ensemble has not been run, so a missing file
+    means no band rather than a failure. What must never happen is a band that
+    is silently wrong, so the years are checked rather than assumed.
+    """
+    path = paths.OUT / "uw_ensemble_country_totals.npz"
+    if not path.exists():
+        print("  no ensemble found; the page will have no uncertainty band")
+        return {}, None
+    z = np.load(path, allow_pickle=False)
+    years = z["years"]
+    levels = z["quantile_levels"]
+    if not (abs(levels[0] - 0.05) < 1e-9 and abs(levels[-1] - 0.95) < 1e-9):
+        raise SystemExit(f"the ensemble's quantiles are {levels}, expected 5% and 95%")
+    q = z["location_quantiles"]  # (Q, Y, L)
+    codes = [str(c) for c in z["locations"]]
+    band = {
+        code: (
+            [int(round(v)) for v in q[0, :, j]],
+            [int(round(v)) for v in q[-1, :, j]],
+        )
+        for j, code in enumerate(codes)
+    }
+    world = (
+        [int(round(v)) for v in np.quantile(z["world"], 0.05, axis=0)],
+        [int(round(v)) for v in np.quantile(z["world"], 0.95, axis=0)],
+    )
+    print(f"  uncertainty band for {len(band)} countries, "
+          f"{int(years[0])}-{int(years[-1])}")
+    return band, {"years": years, "world": world}
+
+
+def band_for(iso):
+    """Band arrays for one country, or nothing if the ensemble does not cover it."""
+    pair = BAND.get(iso)
+    return {} if pair is None else {"lo": pair[0], "hi": pair[1]}
 
 def project_shapes(shapes: dict[int, dict]):
     """Simplify, project, and scale into a fixed viewBox. Returns paths + size."""
@@ -86,6 +130,9 @@ def main() -> int:
     # kind of object.
     conf = census.load_table().set_index("iso3")
 
+    global BAND, BAND_META
+    BAND, BAND_META = load_band()
+
     site_dir = export.out_dir()
     index = json.loads((site_dir / "index.json").read_text(encoding="utf-8"))
     by_iso = {c["iso3"]: c for c in index["countries"]}
@@ -107,6 +154,7 @@ def main() -> int:
         totals = payload["annual_total"]
         meta = by_iso[iso]
         entry = {
+            **band_for(iso),
             "n": payload["name"],
             "f": female,
             "m": male,
@@ -138,6 +186,9 @@ def main() -> int:
         "shapes": shapes_by_iso,
         "countries": data,
     }
+    if BAND_META is not None:
+        payload["bandFrom"] = int(BAND_META["years"][0])
+        payload["worldBand"] = list(BAND_META["world"])
 
     html = TEMPLATE.replace("__DATA__", json.dumps(payload, separators=(",", ":")))
     out = SITE / "index.html"
@@ -241,6 +292,11 @@ footer p{max-width:80ch}
     <svg id="pyr" role="img" aria-label="Population pyramid"></svg>
     <label>Total population, 1950 to 2150</label>
     <svg id="traj" role="img" aria-label="Population over time"></svg>
+    <p class="note">The line is this project's engine run on the UN's own
+    assumptions. The shaded band is the 5th to 95th percentile of 1,000 draws
+    from the University of Washington's Bayesian posterior, projected the same
+    way. It is the conventional view's own uncertainty, not this project's, and
+    it leaves out uncertainty about migration.</p>
   </div>
 </main>
 
@@ -403,8 +459,14 @@ footer p{max-width:80ch}
     });
     var peak = 0;
     for (var i=1;i<t.length;i++) if (t[i] > t[peak]) peak = i;
+    // The world band is NOT the sum of the country bands. Summing 5th
+    // percentiles would assume every country lands in its own tail at the same
+    // time, which is far narrower than the truth. It is computed from each
+    // draw's own world total instead, and passed in already done.
+    var lo = D.worldBand ? D.worldBand[0] : null;
+    var hi = D.worldBand ? D.worldBand[1] : null;
     return {n:"World", t:t, f:f, m:m, pk:D.annualFrom+peak, pkp:t[peak]*1000,
-            grew: peak < t.length-1};
+            lo:lo, hi:hi, grew: peak < t.length-1};
   }
   var WORLD = worldSeries();
 
@@ -458,13 +520,27 @@ footer p{max-width:80ch}
     var svg = document.getElementById("traj");
     var W = 340, H = 110, padL = 4, padB = 16, padT = 6;
     var t = c.t, n = t.length;
-    var max = Math.max.apply(null, t), min = 0;
+    var hasBand = !!(c.lo && c.hi && D.bandFrom !== undefined);
+    // The band's top can sit above the deterministic line, so the vertical
+    // scale has to know about it before anything is drawn or the band gets
+    // clipped without any error.
+    var max = Math.max.apply(null, t), min = 0, i;
+    if (hasBand) max = Math.max(max, Math.max.apply(null, c.hi));
     var x = function(i){ return padL + (i/(n-1)) * (W - padL*2); };
     var y = function(v){ return padT + (1 - (v-min)/(max-min)) * (H - padB - padT); };
-    var d = "", i;
+    var d = "";
     for (i=0;i<n;i++) d += (i?"L":"M") + x(i).toFixed(1) + "," + y(t[i]).toFixed(1);
     var iNow = 2024 - D.annualFrom, i2100 = 2100 - D.annualFrom;
-    var s = '<path d="' + d + '" fill="none" stroke="var(--accent)" stroke-width="1.8"></path>';
+    var s = "";
+    if (hasBand) {
+      var off = D.bandFrom - D.annualFrom, area = "", j;
+      for (j=0;j<c.hi.length;j++)
+        area += (j?"L":"M") + x(off+j).toFixed(1) + "," + y(c.hi[j]).toFixed(1);
+      for (j=c.lo.length-1;j>=0;j--)
+        area += "L" + x(off+j).toFixed(1) + "," + y(c.lo[j]).toFixed(1);
+      s += '<path d="' + area + 'Z" fill="var(--accent)" fill-opacity="0.17" stroke="none"></path>';
+    }
+    s += '<path d="' + d + '" fill="none" stroke="var(--accent)" stroke-width="1.8"></path>';
     [[iNow,"2024"],[i2100,"2100"]].forEach(function(p){
       s += '<line x1="' + x(p[0]) + '" y1="' + padT + '" x2="' + x(p[0]) + '" y2="' +
            (H-padB) + '" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"></line>';
