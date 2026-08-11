@@ -250,6 +250,123 @@ def main() -> int:
                   f"summing country 5th percentiles would say "
                   f"{country_lo/1e9:.2f}bn, which is why it is not done that way")
 
+        # The hover reads seven percentiles per country per year. They are
+        # stored as a median plus six ratios, which is compact and easy to get
+        # subtly wrong, so they are checked here in the form the page uses.
+        quantile_countries = [iso for iso in with_band if "qm" in data["countries"][iso]]
+        print(f"   per-year distribution stored for {len(quantile_countries)} countries")
+        for iso in quantile_countries:
+            c = data["countries"][iso]
+            if len(c["qm"]) != len(band_years):
+                problems.append(f"{iso}: median series is the wrong length")
+                continue
+            if len(c["qr"]) != 6:
+                problems.append(f"{iso}: expected six ratio series, got {len(c['qr'])}")
+                continue
+            if any(len(series) != len(band_years) for series in c["qr"]):
+                problems.append(f"{iso}: a ratio series is the wrong length")
+                continue
+            for k in range(0, len(band_years), 17):
+                median = c["qm"][k] * 1000
+                levels = [c["qr"][j][k] * median / 10000 for j in range(6)]
+                ordered = levels[:3] + [median] + levels[3:]
+                if any(b < a - 1 for a, b in zip(ordered, ordered[1:])):
+                    problems.append(f"{iso}: percentiles are out of order at {band_years[k]}")
+                    break
+                # The 5th and 95th here must agree with the band drawn behind
+                # the line, or the hover and the shading tell different stories.
+                if abs(ordered[0] - c["lo"][k]) > max(1000.0, 0.02 * abs(c["lo"][k])):
+                    problems.append(
+                        f"{iso}: the hover's 5th percentile disagrees with the band "
+                        f"at {band_years[k]}"
+                    )
+                    break
+                if abs(ordered[-1] - c["hi"][k]) > max(1000.0, 0.02 * abs(c["hi"][k])):
+                    problems.append(
+                        f"{iso}: the hover's 95th percentile disagrees with the band "
+                        f"at {band_years[k]}"
+                    )
+                    break
+
+        sample = data["countries"].get("USA")
+        if sample and "qm" in sample:
+            k = 2100 - data["bandFrom"]
+            median = sample["qm"][k] * 1000
+            spread = [sample["qr"][j][k] / 10000 for j in range(6)]
+            print(
+                f"   USA 2100: median {median/1e6:.0f}m, percentile ratios "
+                + ", ".join(f"{r:.2f}" for r in spread)
+            )
+
+
+        # Run the page's own chart code, with the page's own data, and confirm
+        # it draws something rather than "MNaN,NaN". node --check proves the
+        # script parses; it does not prove that hovering 2087 over Tuvalu works.
+        hover_js = paths.REPO_ROOT / "scripts" / "check_hover.js"
+        if hover_js.exists():
+            result = subprocess.run(
+                ["node", str(hover_js), str(PAGE)],
+                capture_output=True, text=True,
+            )
+            for line in result.stdout.strip().splitlines():
+                print("   " + line.strip())
+            if result.returncode != 0:
+                problems.append("the hover rendering check failed")
+
+        # And draw it, because a shape that is technically valid can still be
+        # the wrong shape, and nothing here opens a browser.
+        fig, hov = plt.subplots(1, 2, figsize=(9.6, 3.8))
+        for panel, (iso, year) in zip(hov, (("USA", 2100), ("NGA", 2150))):
+            c = data["countries"].get(iso)
+            if not c or "qm" not in c:
+                continue
+            k = min(year - data["bandFrom"], len(c["qm"]) - 1)
+            median = c["qm"][k] * 1000
+            col = [c["qr"][j][k] * median / 10000 for j in range(6)]
+            levels = [0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95]
+            values = col[:3] + [median] + col[3:]
+            panel.fill_between(band_years, [v / 1e6 for v in c["lo"]],
+                               [v / 1e6 for v in c["hi"]], color="#4575b4",
+                               alpha=0.18, lw=0)
+            panel.plot(range(data["annualFrom"], data["annualTo"] + 1),
+                       [v / 1e6 for v in c["t"]], color="#4575b4", lw=1.6)
+            # The density the page draws: probability per unit width.
+            widths, mids = [], []
+            for j in range(6):
+                span = values[j + 1] - values[j]
+                if span <= 0:
+                    continue
+                widths.append((levels[j + 1] - levels[j]) / span)
+                mids.append(0.5 * (values[j] + values[j + 1]) / 1e6)
+            if widths:
+                # The page flips the shape to the left of the guide once the
+                # year is past about three fifths of the chart, so it never
+                # runs off the edge. The redraw has to do the same or it is not
+                # checking what the page does.
+                span = data["annualTo"] - data["annualFrom"]
+                to_left = (year - data["annualFrom"]) / span > 0.62
+                scale = (-18.0 if to_left else 18.0) / max(widths)
+                panel.plot([year] + [year + w * scale for w in widths] + [year],
+                           [values[0] / 1e6] + mids + [values[-1] / 1e6],
+                           color="#4575b4", lw=1.0)
+                panel.fill([year] + [year + w * scale for w in widths] + [year],
+                           [values[0] / 1e6] + mids + [values[-1] / 1e6],
+                           color="#4575b4", alpha=0.34)
+            panel.axvline(year, color="#4575b4", lw=1)
+            panel.axhline(median / 1e6, color="#4575b4", lw=1, ls=(0, (2, 2)))
+            panel.set_xlim(1950, data["annualTo"])
+            panel.set_ylim(bottom=0)
+            panel.set_title(f"{iso}, hovering {year}", fontsize=10)
+            panel.set_ylabel("millions")
+            panel.spines[["top", "right"]].set_visible(False)
+        fig.suptitle("The hover, redrawn in Python from the page's own numbers",
+                     fontsize=10.5)
+        fig.tight_layout()
+        out4 = paths.OUT / "map-check-hover.png"
+        fig.savefig(out4, dpi=140)
+        plt.close(fig)
+        print(f"   wrote {out4.relative_to(paths.REPO_ROOT)} - open it and look at it")
+
         fig, ax = plt.subplots(figsize=(7.6, 4.2))
         for iso, line_colour in (("USA", "#4575b4"), ("NGA", "#1a9850"), ("JPN", "#d73027")):
             c = data["countries"].get(iso)

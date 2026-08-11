@@ -61,13 +61,28 @@ def load_band():
         raise SystemExit(f"the ensemble's quantiles are {levels}, expected 5% and 95%")
     q = z["location_quantiles"]  # (Q, Y, L)
     codes = [str(c) for c in z["locations"]]
-    band = {
-        code: (
-            [int(round(v)) for v in q[0, :, j]],
-            [int(round(v)) for v in q[-1, :, j]],
+    if len(levels) < 7:
+        raise SystemExit(
+            f"the ensemble stored {len(levels)} quantile levels; the page needs "
+            f"seven to reconstruct a distribution. Rerun run_uw_ensemble.py."
         )
-        for j, code in enumerate(codes)
-    }
+    median_row = int(np.argmin(np.abs(levels - 0.5)))
+    other_rows = [i for i in range(len(levels)) if i != median_row]
+    band = {}
+    for j, code in enumerate(codes):
+        median = q[median_row, :, j]
+        safe = np.maximum(median, 1.0)
+        band[code] = {
+            "lo": [int(round(v)) for v in q[0, :, j]],
+            "hi": [int(round(v)) for v in q[-1, :, j]],
+            # Thousands, because a page carrying 236 countries of these does not
+            # need the last three digits of a percentile.
+            "qm": [int(round(v / 1000.0)) for v in median],
+            "qr": [
+                [int(round(10000.0 * v / m)) for v, m in zip(q[row, :, j], safe)]
+                for row in other_rows
+            ],
+        }
     world = (
         [int(round(v)) for v in np.quantile(z["world"], 0.05, axis=0)],
         [int(round(v)) for v in np.quantile(z["world"], 0.95, axis=0)],
@@ -79,8 +94,7 @@ def load_band():
 
 def band_for(iso):
     """Band arrays for one country, or nothing if the ensemble does not cover it."""
-    pair = BAND.get(iso)
-    return {} if pair is None else {"lo": pair[0], "hi": pair[1]}
+    return BAND.get(iso) or {}
 
 def project_shapes(shapes: dict[int, dict]):
     """Simplify, project, and scale into a fixed viewBox. Returns paths + size."""
@@ -291,7 +305,12 @@ footer p{max-width:80ch}
     <input type="range" id="yr" min="0" max="8" step="1" value="3">
     <svg id="pyr" role="img" aria-label="Population pyramid"></svg>
     <label>Total population, 1950 to 2150</label>
-    <svg id="traj" role="img" aria-label="Population over time"></svg>
+    <svg id="traj" role="img" aria-label="Population over time, hover to read a year"></svg>
+    <p class="note"><b>Hover the chart</b> to read any year: the guide line
+    names the year, the dotted line carries the median across to the axis, and
+    the shape beside it is how the 1,000 draws are distributed at that moment.
+    That shape is rebuilt from seven stored percentiles rather than the raw
+    draws, so it is the right shape and an approximate one.</p>
     <p class="note">The line is this project's engine run on the UN's own
     assumptions. The shaded band is the 5th to 95th percentile of 1,000 draws
     from the University of Washington's Bayesian posterior, projected the same
@@ -516,42 +535,194 @@ footer p{max-width:80ch}
     svg.innerHTML = s;
   }
 
+  // The trajectory chart, and the hover that makes the uncertainty legible.
+  //
+  // The band alone tells you the range at 2150 is enormous. It does not tell
+  // you what the range means at any particular year, and nobody can read a
+  // value off a shaded region by eye. Hovering names the year, draws the
+  // median across to the axis, and shows the shape of the distribution the
+  // draws actually produced at that moment.
+  //
+  // That shape is reconstructed from seven stored quantiles, not from the raw
+  // 1,000 draws: six intervals of known probability, each turned into a
+  // density by dividing its probability by its width. It is the right shape
+  // and an approximate one, and the caption under the chart says so.
+  var TRAJ = {W: 340, H: 152, padL: 36, padR: 10, padT: 10, padB: 22};
+  var hoverYear = null;
+
+  function shortNumber(v){
+    if (v >= 1e9) return (v/1e9).toFixed(1) + "bn";
+    if (v >= 1e6) return Math.round(v/1e6) + "m";
+    if (v >= 1e3) return Math.round(v/1e3) + "k";
+    return Math.round(v).toString();
+  }
+
+  function bandQuantiles(c, i){
+    if (!c.qm || !c.qr) return null;
+    var median = c.qm[i] * 1000;
+    var out = [0, 0, 0, median, 0, 0, 0];
+    for (var k = 0; k < 6; k++){
+      var slot = k < 3 ? k : k + 1;
+      out[slot] = median * c.qr[k][i] / 10000;
+    }
+    return out;
+  }
+
+  function trajScales(c){
+    var t = c.t, n = t.length, g = TRAJ;
+    var max = Math.max.apply(null, t), i;
+    if (c.hi) for (i = 0; i < c.hi.length; i++) if (c.hi[i] > max) max = c.hi[i];
+    max = max * 1.04;
+    return {
+      n: n, max: max,
+      x: function(i){ return g.padL + (i/(n-1)) * (g.W - g.padL - g.padR); },
+      y: function(v){ return g.padT + (1 - v/max) * (g.H - g.padB - g.padT); }
+    };
+  }
+
+  // The density at one year, drawn sideways against the value axis. Six
+  // intervals of known probability become six densities; the curve through
+  // them is closed back to the guide line.
+  function violin(c, index, s, xAt, toLeft){
+    var q = bandQuantiles(c, index);
+    if (!q) return "";
+    var levels = [0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95];
+    var pts = [], k, width, maxWidth = 0;
+    for (k = 0; k < 6; k++){
+      var span = q[k+1] - q[k];
+      if (span <= 0) continue;
+      width = (levels[k+1] - levels[k]) / span;
+      pts.push([0.5 * (q[k] + q[k+1]), width]);
+      if (width > maxWidth) maxWidth = width;
+    }
+    if (!pts.length || maxWidth <= 0) return "";
+    var reach = (toLeft ? -1 : 1) * 26;
+    var path = "M" + xAt.toFixed(1) + "," + s.y(q[0]).toFixed(1);
+    for (k = 0; k < pts.length; k++){
+      path += "L" + (xAt + reach * pts[k][1] / maxWidth).toFixed(1) + "," +
+              s.y(pts[k][0]).toFixed(1);
+    }
+    path += "L" + xAt.toFixed(1) + "," + s.y(q[6]).toFixed(1) + "Z";
+    return '<path d="' + path + '" fill="var(--accent)" fill-opacity="0.34" ' +
+           'stroke="var(--accent)" stroke-width="0.7"></path>';
+  }
+
+  function hoverLayer(c, s){
+    if (hoverYear === null) return "";
+    var g = TRAJ;
+    var i = hoverYear - D.annualFrom;
+    if (i < 0 || i >= c.t.length) return "";
+    var xAt = s.x(i), value = c.t[i];
+    var toLeft = xAt > g.W * 0.62;
+    var out = '<line x1="' + xAt.toFixed(1) + '" y1="' + g.padT + '" x2="' +
+              xAt.toFixed(1) + '" y2="' + (g.H-g.padB) +
+              '" stroke="var(--accent)" stroke-width="1"></line>';
+
+    var bandIndex = (D.bandFrom === undefined) ? -1 : hoverYear - D.bandFrom;
+    var hasQ = bandIndex >= 0 && c.qm && bandIndex < c.qm.length;
+    if (hasQ){
+      out += violin(c, bandIndex, s, xAt, toLeft);
+      value = c.qm[bandIndex] * 1000;
+    }
+
+    var yAt = s.y(value);
+    out += '<line x1="' + g.padL + '" y1="' + yAt.toFixed(1) + '" x2="' +
+           xAt.toFixed(1) + '" y2="' + yAt.toFixed(1) +
+           '" stroke="var(--accent)" stroke-width="1" stroke-dasharray="2 2"></line>';
+    out += '<circle cx="' + xAt.toFixed(1) + '" cy="' + yAt.toFixed(1) +
+           '" r="2.4" fill="var(--accent)"></circle>';
+
+    var anchor = toLeft ? "end" : "start";
+    var tx = xAt + (toLeft ? -30 : 30);
+    out += '<text x="' + tx.toFixed(1) + '" y="' + (g.padT + 9) +
+           '" font-size="9" text-anchor="' + anchor +
+           '" fill="var(--ink)" font-weight="600">' + hoverYear + '</text>';
+    out += '<text x="' + tx.toFixed(1) + '" y="' + (g.padT + 19) +
+           '" font-size="8.5" text-anchor="' + anchor + '" fill="var(--ink)">' +
+           shortNumber(value) + '</text>';
+    if (hasQ){
+      var q = bandQuantiles(c, bandIndex);
+      out += '<text x="' + tx.toFixed(1) + '" y="' + (g.padT + 28) +
+             '" font-size="7.5" text-anchor="' + anchor + '" fill="var(--muted)">' +
+             shortNumber(q[0]) + ' to ' + shortNumber(q[6]) + '</text>';
+    }
+    return out;
+  }
+
   function drawTrajectory(c){
     var svg = document.getElementById("traj");
-    var W = 340, H = 110, padL = 4, padB = 16, padT = 6;
-    var t = c.t, n = t.length;
-    var hasBand = !!(c.lo && c.hi && D.bandFrom !== undefined);
-    // The band's top can sit above the deterministic line, so the vertical
-    // scale has to know about it before anything is drawn or the band gets
-    // clipped without any error.
-    var max = Math.max.apply(null, t), min = 0, i;
-    if (hasBand) max = Math.max(max, Math.max.apply(null, c.hi));
-    var x = function(i){ return padL + (i/(n-1)) * (W - padL*2); };
-    var y = function(v){ return padT + (1 - (v-min)/(max-min)) * (H - padB - padT); };
-    var d = "";
-    for (i=0;i<n;i++) d += (i?"L":"M") + x(i).toFixed(1) + "," + y(t[i]).toFixed(1);
-    var iNow = 2024 - D.annualFrom, i2100 = 2100 - D.annualFrom;
-    var s = "";
-    if (hasBand) {
-      var off = D.bandFrom - D.annualFrom, area = "", j;
-      for (j=0;j<c.hi.length;j++)
-        area += (j?"L":"M") + x(off+j).toFixed(1) + "," + y(c.hi[j]).toFixed(1);
-      for (j=c.lo.length-1;j>=0;j--)
-        area += "L" + x(off+j).toFixed(1) + "," + y(c.lo[j]).toFixed(1);
-      s += '<path d="' + area + 'Z" fill="var(--accent)" fill-opacity="0.17" stroke="none"></path>';
+    var g = TRAJ, s = trajScales(c), t = c.t, i, j;
+    var out = "";
+
+    var ticks = [0, s.max/2, s.max];
+    for (i = 0; i < ticks.length; i++){
+      var ty = s.y(ticks[i]);
+      out += '<line x1="' + g.padL + '" y1="' + ty.toFixed(1) + '" x2="' +
+             (g.W - g.padR) + '" y2="' + ty.toFixed(1) +
+             '" stroke="var(--faint)" stroke-width="0.7"></line>';
+      out += '<text x="' + (g.padL - 4) + '" y="' + (ty + 3).toFixed(1) +
+             '" font-size="8" text-anchor="end" fill="var(--muted)">' +
+             shortNumber(ticks[i]) + '</text>';
     }
-    s += '<path d="' + d + '" fill="none" stroke="var(--accent)" stroke-width="1.8"></path>';
-    [[iNow,"2024"],[i2100,"2100"]].forEach(function(p){
-      s += '<line x1="' + x(p[0]) + '" y1="' + padT + '" x2="' + x(p[0]) + '" y2="' +
-           (H-padB) + '" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"></line>';
-      s += '<text x="' + (x(p[0])+3) + '" y="' + (padT+9) + '" font-size="9" ' +
-           'fill="var(--muted)">' + p[1] + '</text>';
+
+    if (c.lo && c.hi && D.bandFrom !== undefined){
+      var off = D.bandFrom - D.annualFrom, area = "";
+      for (j = 0; j < c.hi.length; j++)
+        area += (j?"L":"M") + s.x(off+j).toFixed(1) + "," + s.y(c.hi[j]).toFixed(1);
+      for (j = c.lo.length-1; j >= 0; j--)
+        area += "L" + s.x(off+j).toFixed(1) + "," + s.y(c.lo[j]).toFixed(1);
+      out += '<path d="' + area + 'Z" fill="var(--accent)" fill-opacity="0.17" stroke="none"></path>';
+    }
+
+    var d = "";
+    for (i = 0; i < s.n; i++)
+      d += (i?"L":"M") + s.x(i).toFixed(1) + "," + s.y(t[i]).toFixed(1);
+    out += '<path d="' + d + '" fill="none" stroke="var(--accent)" stroke-width="1.8"></path>';
+
+    [[2024 - D.annualFrom, "2024"], [2100 - D.annualFrom, "2100"]].forEach(function(p){
+      out += '<line x1="' + s.x(p[0]).toFixed(1) + '" y1="' + g.padT + '" x2="' +
+             s.x(p[0]).toFixed(1) + '" y2="' + (g.H-g.padB) +
+             '" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"></line>';
+      out += '<text x="' + (s.x(p[0])+3).toFixed(1) + '" y="' + (g.H-g.padB-3) +
+             '" font-size="8" fill="var(--muted)">' + p[1] + '</text>';
     });
-    s += '<text x="' + padL + '" y="' + (H-3) + '" font-size="9" fill="var(--muted)">1950</text>';
-    s += '<text x="' + (W-padL) + '" y="' + (H-3) + '" font-size="9" text-anchor="end" ' +
-         'fill="var(--muted)">2150</text>';
-    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
-    svg.innerHTML = s;
+    out += '<text x="' + g.padL + '" y="' + (g.H-6) +
+           '" font-size="8" fill="var(--muted)">1950</text>';
+    out += '<text x="' + (g.W-g.padR) + '" y="' + (g.H-6) +
+           '" font-size="8" text-anchor="end" fill="var(--muted)">2150</text>';
+
+    out += hoverLayer(c, s);
+    svg.setAttribute("viewBox", "0 0 " + g.W + " " + g.H);
+    svg.innerHTML = out;
+  }
+
+  function trajYearFromEvent(event){
+    var svg = document.getElementById("traj");
+    var box = svg.getBoundingClientRect();
+    var g = TRAJ;
+    var vx = ((event.clientX - box.left) / box.width) * g.W;
+    var span01 = (vx - g.padL) / (g.W - g.padL - g.padR);
+    if (span01 < 0) span01 = 0;
+    if (span01 > 1) span01 = 1;
+    return D.annualFrom + Math.round(span01 * (D.annualTo - D.annualFrom));
+  }
+
+  function attachTrajectoryHover(){
+    var svg = document.getElementById("traj");
+    if (!svg) return;
+    svg.addEventListener("mousemove", function(event){
+      var year = trajYearFromEvent(event);
+      if (year !== hoverYear){
+        hoverYear = year;
+        drawTrajectory(selected ? D.countries[selected] : WORLD);
+      }
+    });
+    svg.addEventListener("mouseleave", function(){
+      if (hoverYear !== null){
+        hoverYear = null;
+        drawTrajectory(selected ? D.countries[selected] : WORLD);
+      }
+    });
   }
 
   function show(iso){
@@ -622,6 +793,7 @@ footer p{max-width:80ch}
   map.addEventListener("mouseleave", function(){ tip.style.opacity = 0; });
 
   repaint();
+  attachTrajectoryHover();
   show(null);
 })();
 </script>

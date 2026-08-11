@@ -67,6 +67,11 @@ END_YEAR = 2150
 # Bounds a demographic projection from an eight-billion base cannot leave
 # without something being wrong. Deliberately wide: this is an absurdity check,
 # not a plausibility opinion.
+# Enough levels to reconstruct a readable distribution on the page, rather than
+# only a band. The page draws a density from these; it is an interpolation of
+# seven known points, not the raw 1,000 draws, and the page says so.
+QUANTILE_LEVELS = (0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95)
+
 WORLD_2100_FLOOR = 3.0e9
 WORLD_2100_CEILING = 30.0e9
 
@@ -223,20 +228,21 @@ def main() -> int:
             f"absurdity bounds. Stop and find out why before trusting anything."
         )
 
-    quantiles = ensemble.quantiles((0.05, 0.5, 0.95))
+    quantiles = ensemble.quantiles(QUANTILE_LEVELS)
     print("\nworld population, billions")
     print(f"  {'year':>6}  {'5%':>7}  {'50%':>7}  {'95%':>7}")
     for year in (2050, 2075, 2100, 2125, args.end_year):
         if year not in years:
             continue
         i = int(np.where(years == year)[0][0])
-        low, mid, high = quantiles.world[:, i] / 1e9
+        column = quantiles.world[:, i] / 1e9
+        low, mid, high = column[0], column[3], column[-1]
         print(f"  {year:>6}  {low:>7.2f}  {mid:>7.2f}  {high:>7.2f}")
 
-    peak_index = np.argmax(quantiles.world[1])
+    peak_index = np.argmax(quantiles.world[3])
     peak_year = int(years[peak_index])
     print(
-        f"\nmedian path peaks at {quantiles.world[1][peak_index] / 1e9:.2f} billion "
+        f"\nmedian path peaks at {quantiles.world[3][peak_index] / 1e9:.2f} billion "
         f"in {peak_year}"
     )
     peaks = years[np.argmax(ensemble.world, axis=1)]
@@ -267,8 +273,8 @@ def main() -> int:
         "world_billions": {
             str(int(year)): {
                 "p05": float(quantiles.world[0, i] / 1e9),
-                "p50": float(quantiles.world[1, i] / 1e9),
-                "p95": float(quantiles.world[2, i] / 1e9),
+                "p50": float(quantiles.world[3, i] / 1e9),
+                "p95": float(quantiles.world[-1, i] / 1e9),
             }
             for i, year in enumerate(years)
         },
