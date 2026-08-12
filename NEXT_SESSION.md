@@ -21,12 +21,32 @@ Dylan wants three finished public outputs:
    legitimacy comes from the source rather than from us. His idea, added
    2026-08-11. `scripts/render_race.py` writes the frames.
 
-The video stops at 2100 on purpose: that is where the UN's assumptions stop, and
-everything past it is this project's own extrapolation, which does not belong in
-something whose credibility rests on the source. Through 2023 the bars are the
-UN's reconstruction; from 2024 a whisker appears on each bar and widens, which
-is the one thing every other population race video lacks. There is no encoder on
-this machine, so the frames are the deliverable and the MP4 is a separate step.
+**None of the three is in progress.** They are the finished-output list, to be
+picked up when the science underneath them is worth publishing. Do not start one
+because it is more fun than verifying a parameter table.
+
+Notes on each, so the next session does not rediscover them:
+
+- **Webpage.** The live page is the hub copy. Dylan's direction for it is above:
+  let the uncertainty do the talking. Scoped pieces that are not built are
+  listed under "Do this next".
+- **Paper.** `paper/` is a scaffold from before there were results. Rewrite,
+  do not polish.
+- **Video.** `scripts/render_race.py` renders frames and is finished enough to
+  use; nothing else about the video exists. It stops at 2100 on purpose, because
+  that is where the UN's assumptions stop and everything past it is this
+  project's own extrapolation, which does not belong in something whose
+  credibility rests on the source. Through 2023 the bars are the UN's
+  reconstruction; from 2024 a whisker appears on each bar and widens, which is
+  the one thing every other population race video lacks. There is no encoder on
+  this machine, so the frames are the deliverable and the MP4 is a separate step
+  — an editor's image-sequence import, or a portable ffmpeg the way the project
+  already keeps portable R and Tectonic.
+
+  Open question Dylan has not answered, raised 2026-08-11: whether a second act
+  on **annual births** belongs in the same video. Population falls slowly while
+  the birth flow collapses fast (spec section 7.5), which is arguably the more
+  startling chart. Ask before rendering eleven hundred frames of anything.
 
 **His view on what earns a reader's trust, which overrode mine and is the better
 call.** Not the backtest. Grading old UN forecasts is evidence about somebody
@@ -98,7 +118,8 @@ it the highest-value dataset after WPP. It is the empirical spine of the
 disagreement with the UN, it would let `mainstream_propensity_cv` be measured
 rather than recalled, and it resolves around 2038.
 
-**3. Finish the page in Dylan's direction.** Concrete pieces already scoped:
+**3. The page, when the science is ready for it.** One of the three outputs
+above rather than a separate track. Concrete pieces already scoped:
 - Per-country uncertainty decomposition, not just the six watch countries. The
   script computes world plus a fixed list; widening it to all 236 is small.
 - The violin should drop out below some screen width and let the numeric readout

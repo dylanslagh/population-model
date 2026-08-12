@@ -256,8 +256,12 @@ else's forecasts. See `NEXT_SESSION.md`.
   watch countries; widening it to all 236 is small work.
 - **Survey coverage and vital-registration completeness** in the confidence
   layer. Only census recency is sourced. Do not invent the other two.
-- **A genuinely public host.** The live page is still the authenticated hub.
-- **The paper.** `paper/` is an early scaffold, not an approved draft.
+- **The three finished outputs**, none of them started beyond scaffolding, and
+  all of them waiting on the science being worth publishing:
+  a genuinely public webpage (the live page is still the authenticated hub);
+  the paper (`paper/` is an early scaffold, not an approved draft); and a
+  YouTube bar-chart race (`scripts/render_race.py` renders frames, and that is
+  all that exists). `NEXT_SESSION.md` carries the notes on each.
 
 ## 5. Rules that must not break
 
