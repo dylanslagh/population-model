@@ -10,10 +10,23 @@ cites. See "Do this next".
 
 ## Owner's goal, and his editorial direction
 
-Dylan wants two finished public outputs: a genuinely public webpage, not only
-the password-gated hub copy; and a field-quality research paper. The files under
-`paper/` are an early scaffold written before there were results worth writing
-up — preserve them, but rewrite rather than polish when the time comes.
+Dylan wants three finished public outputs:
+
+1. **A genuinely public webpage**, not only the password-gated hub copy.
+2. **A field-quality research paper.** The files under `paper/` are an early
+   scaffold written before there were results worth writing up — preserve them,
+   but rewrite rather than polish when the time comes.
+3. **A YouTube video**, in the bar-chart-race genre: the twelve most populous
+   countries, 1950 to 2100, framed explicitly as the UN's own figures so the
+   legitimacy comes from the source rather than from us. His idea, added
+   2026-08-11. `scripts/render_race.py` writes the frames.
+
+The video stops at 2100 on purpose: that is where the UN's assumptions stop, and
+everything past it is this project's own extrapolation, which does not belong in
+something whose credibility rests on the source. Through 2023 the bars are the
+UN's reconstruction; from 2024 a whisker appears on each bar and widens, which
+is the one thing every other population race video lacks. There is no encoder on
+this machine, so the frames are the deliverable and the MP4 is a separate step.
 
 **His view on what earns a reader's trust, which overrode mine and is the better
 call.** Not the backtest. Grading old UN forecasts is evidence about somebody
