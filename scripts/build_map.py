@@ -234,7 +234,11 @@ def main() -> int:
         payload["worldBand"] = list(BAND_META["world"])
 
     html = TEMPLATE.replace("__DATA__", json.dumps(payload, separators=(",", ":")))
-    for token, figure in (("__DECOMPOSITION__", "decomposition"), ("__MECHANISMS__", "phase5")):
+    for token, figure in (
+        ("__MODEL_FLOW__", "how-the-model-works"),
+        ("__DECOMPOSITION__", "decomposition"),
+        ("__MECHANISMS__", "phase5"),
+    ):
         markup = inline_figure(figure)
         if not markup:
             print(f"  note: {figure}.svg is missing; the page will omit it")
@@ -304,6 +308,8 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .figures h2{font-size:17px;margin:26px 0 8px}
 .figures p{max-width:80ch;color:var(--muted);font-size:13.5px;margin:0 0 10px}
 .figures .figure{width:100%;height:auto;display:block;margin:6px 0 4px;background:#fff;border-radius:4px}
+.flow-wrap{overflow-x:auto;margin:6px 0 4px}
+.flow-wrap .figure{min-width:760px;margin:0}
 .readout{margin:6px 0 0;font-size:12.5px;color:var(--ink);min-height:1.2em}
 .readout b{font-variant-numeric:tabular-nums}
 footer{max-width:1400px;margin:0 auto;padding:0 22px 34px;color:var(--muted);font-size:12.5px}
@@ -362,6 +368,13 @@ footer p{max-width:80ch}
 
 
 <section class="figures">
+  <h2>How the model works</h2>
+  <p>Both approaches use the same dependable accounting: age people one year,
+  apply survival, count births, and add migration. The disagreement is upstream.
+  A conventional projection supplies a future fertility path; this project also
+  asks how the fertility environment and the changing mix of people generate
+  that path.</p>
+  <div class="flow-wrap">__MODEL_FLOW__</div>
   <h2>What the uncertainty is made of</h2>
   <p>The band above says the answer is uncertain. It does not say what about,
   and those are different claims. Each bar below is how wide the 90% range gets

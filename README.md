@@ -24,16 +24,17 @@ data is nearly irrelevant. Precision about the mechanism is everything.
 
 ![How the model works](docs/how-the-model-works.svg)
 
-The engine is the grey part: age everyone up a year, thin them by survival
-rates, count the babies, add the migrants, repeat 126 times. It is the same
-arithmetic in every population projection ever built, including the UN's, and
-there is nothing to disagree about in it.
+Both sides use the same dependable accounting: age people one year, apply
+survival, count births, and add migration. The disagreement is upstream. The
+UN-style baseline supplies future fertility, survival, and migration paths.
+This project's mechanism also asks how the fertility environment and the
+changing mix of people generate the fertility path.
 
-Everything anyone argues about is the purple part — what fertility, survival
-and migration *do* over the next century. Today those come from the UN, so the
-model currently produces UN answers, which is exactly what makes it testable.
-The project's own account of fertility, where selection competes against a
-rising cost of parenthood, plugs into the same socket and is not built yet.
+That mechanism is now built. It tracks family-size variation and parent-child
+persistence in the mainstream population, plus fertility, retention, and
+convergence for named high-fertility groups. Its extra outputs show how
+composition changes, how much selection lifts fertility, whether a rebound
+occurs, and which assumptions make the answer uncertain.
 
 ## The backtest: how wrong was the UN last time?
 

@@ -1,93 +1,251 @@
-<svg width="680" height="560" viewBox="0 0 680 560" role="img" xmlns="http://www.w3.org/2000/svg">
-<title>How the population model works</title>
-<desc>Assumptions about fertility, survival and migration feed a projection engine that ages a population forward one year at a time and loops from 2024 to 2150. The assumptions are supplied today by UN WPP 2024; the project's own mechanism is not built yet. Purple marks where theory lives, grey marks pure bookkeeping. Every element also carries light-mode presentation attributes, so the diagram still reads if a host strips the stylesheet.</desc>
-<style>
-svg{--p:#2C2C2A;--s:#5F5E5A;--b:#D3D1C7;--boxf:#FFFFFF;--boxs:#B4B2A9;
---pf:#EEEDFE;--ps:#534AB7;--pt:#3C3489;--pst:#534AB7;
---gf:#F1EFE8;--gs:#5F5E5A;--gt:#444441;--gst:#5F5E5A;
-font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
-@media (prefers-color-scheme:dark){svg{--p:#F1EFE8;--s:#B4B2A9;--b:#5F5E5A;--boxf:#2C2C2A;--boxs:#5F5E5A;
---pf:#3C3489;--ps:#AFA9EC;--pt:#CECBF6;--pst:#AFA9EC;
---gf:#444441;--gs:#B4B2A9;--gt:#D3D1C7;--gst:#B4B2A9}}
-.ts{font-size:12px;font-weight:400;fill:var(--s)}
-.th{font-size:14px;font-weight:500;fill:var(--p)}
-.box{fill:var(--boxf);stroke:var(--boxs)}
-.pur rect{fill:var(--pf);stroke:var(--ps)}
-.pur .th{fill:var(--pt)}
-.pur .ts{fill:var(--pst)}
-.gry rect{fill:var(--gf);stroke:var(--gs)}
-.gry .th{fill:var(--gt)}
-.gry .ts{fill:var(--gst)}
-.arr{stroke:var(--s)}
-.pen{stroke:var(--b)}
-</style>
-<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
-
-<g class="pur">
-<rect x="150" y="40" width="180" height="60" rx="4" fill="#EEEDFE" stroke="#534AB7" stroke-width=".5"/>
-<text class="th" x="240" y="65" text-anchor="middle" font-size="14" font-weight="500" fill="#3C3489">UN WPP 2024</text>
-<text class="ts" x="240" y="83" text-anchor="middle" font-size="12" fill="#534AB7">in use today</text>
-</g>
-<g class="pur">
-<rect x="354" y="40" width="180" height="60" rx="4" fill="#EEEDFE" stroke="#534AB7" stroke-width=".5" stroke-dasharray="5 4"/>
-<text class="th" x="444" y="65" text-anchor="middle" font-size="14" font-weight="500" fill="#3C3489">our own mechanism</text>
-<text class="ts" x="444" y="83" text-anchor="middle" font-size="12" fill="#534AB7">phase 5, not built yet</text>
-</g>
-
-<line class="arr" x1="240" y1="100" x2="240" y2="130" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
-<line class="arr" x1="444" y1="100" x2="444" y2="130" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-<rect class="pen" x="150" y="134" width="384" height="88" rx="4" fill="none" stroke="#D3D1C7" stroke-width=".5" stroke-dasharray="5 4"/>
-<text class="th" x="162" y="156" font-size="14" font-weight="500" fill="#2C2C2A">the assumptions</text>
-<text class="ts" x="162" y="173" font-size="12" fill="#5F5E5A">all the argument is here</text>
-<g class="pur">
-<rect x="162" y="182" width="112" height="32" rx="4" fill="#EEEDFE" stroke="#534AB7" stroke-width=".5"/>
-<text class="th" x="218" y="203" text-anchor="middle" font-size="14" font-weight="500" fill="#3C3489">fertility</text>
-</g>
-<g class="pur">
-<rect x="286" y="182" width="112" height="32" rx="4" fill="#EEEDFE" stroke="#534AB7" stroke-width=".5"/>
-<text class="th" x="342" y="203" text-anchor="middle" font-size="14" font-weight="500" fill="#3C3489">survival</text>
-</g>
-<g class="pur">
-<rect x="410" y="182" width="112" height="32" rx="4" fill="#EEEDFE" stroke="#534AB7" stroke-width=".5"/>
-<text class="th" x="466" y="203" text-anchor="middle" font-size="14" font-weight="500" fill="#3C3489">migration</text>
-</g>
-
-<line class="arr" x1="340" y1="222" x2="340" y2="250" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-<rect class="pen" x="196" y="250" width="288" height="212" rx="4" fill="none" stroke="#D3D1C7" stroke-width=".5" stroke-dasharray="5 4"/>
-<text class="th" x="210" y="272" font-size="14" font-weight="500" fill="#2C2C2A">the engine</text>
-<text class="ts" x="210" y="290" font-size="12" fill="#5F5E5A">no theory about the future</text>
-<g class="gry">
-<rect x="212" y="306" width="256" height="44" rx="4" fill="#F1EFE8" stroke="#5F5E5A" stroke-width=".5"/>
-<text class="th" x="340" y="325" text-anchor="middle" font-size="14" font-weight="500" fill="#444441">age everyone up one year</text>
-<text class="ts" x="340" y="342" text-anchor="middle" font-size="12" fill="#5F5E5A">thinned by survival rates</text>
-</g>
-<g class="gry">
-<rect x="212" y="360" width="256" height="44" rx="4" fill="#F1EFE8" stroke="#5F5E5A" stroke-width=".5"/>
-<text class="th" x="340" y="379" text-anchor="middle" font-size="14" font-weight="500" fill="#444441">count this year's births</text>
-<text class="ts" x="340" y="396" text-anchor="middle" font-size="12" fill="#5F5E5A">women &#215; fertility rate</text>
-</g>
-<g class="gry">
-<rect x="212" y="414" width="256" height="36" rx="4" fill="#F1EFE8" stroke="#5F5E5A" stroke-width=".5"/>
-<text class="th" x="340" y="437" text-anchor="middle" font-size="14" font-weight="500" fill="#444441">add net migrants</text>
-</g>
-
-<rect class="box" x="40" y="324" width="132" height="64" rx="4" fill="#FFFFFF" stroke="#B4B2A9" stroke-width=".5"/>
-<text class="th" x="106" y="351" text-anchor="middle" font-size="14" font-weight="500" fill="#2C2C2A">1 jan 2024</text>
-<text class="ts" x="106" y="369" text-anchor="middle" font-size="12" fill="#5F5E5A">by age and sex</text>
-<rect class="box" x="508" y="324" width="132" height="64" rx="4" fill="#FFFFFF" stroke="#B4B2A9" stroke-width=".5"/>
-<text class="th" x="574" y="351" text-anchor="middle" font-size="14" font-weight="500" fill="#2C2C2A">1 jan 2025</text>
-<text class="ts" x="574" y="369" text-anchor="middle" font-size="12" fill="#5F5E5A">by age and sex</text>
-
-<line class="arr" x1="172" y1="356" x2="196" y2="356" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
-<line class="arr" x1="484" y1="356" x2="508" y2="356" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-<path class="arr" d="M574 388 L574 496 L106 496 L106 392" fill="none" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text class="ts" x="340" y="514" text-anchor="middle" font-size="12" fill="#5F5E5A">repeat once a year &#8212; 2024 to 2150</text>
-
-<g class="pur"><rect x="180" y="528" width="12" height="12" rx="2" fill="#EEEDFE" stroke="#534AB7" stroke-width=".5"/></g>
-<text class="ts" x="198" y="538" font-size="12" fill="#5F5E5A">theory lives here</text>
-<g class="gry"><rect x="360" y="528" width="12" height="12" rx="2" fill="#F1EFE8" stroke="#5F5E5A" stroke-width=".5"/></g>
-<text class="ts" x="378" y="538" font-size="12" fill="#5F5E5A">pure bookkeeping</text>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="684pt" height="463.464pt" viewBox="0 0 684 463.464" xmlns="http://www.w3.org/2000/svg" version="1.1" role="img" aria-labelledby="model-flow-title model-flow-desc"><title id="model-flow-title">How this population model works</title><desc id="model-flow-desc">Both models start with population, fertility, survival, migration, and sex-ratio data. The UN-style baseline projects future rate paths and passes them through a demographic ledger. This project also models how fertility environment and population composition interact, then reports population, composition, selection, rebound, scenario, and uncertainty outputs.</desc>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-14T06:26:30.909024</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 463.464
+L 684 463.464
+L 684 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 54.065304 103.744421
+L 629.934696 103.744421
+Q 637.746696 103.744421 637.746696 96.151552
+L 637.746696 65.767057
+Q 637.746696 58.174187 629.934696 58.174187
+L 54.065304 58.174187
+Q 46.253304 58.174187 46.253304 65.767057
+L 46.253304 96.151552
+Q 46.253304 103.744421 54.065304 103.744421
+z
+" clip-path="url(#p411a89f544)" style="fill: #f1efe8; stroke: #bdb9ae; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 45.695304 197.028247
+L 303.504696 197.028247
+Q 311.316696 197.028247 311.316696 189.435378
+L 311.316696 148.203927
+Q 311.316696 140.611057 303.504696 140.611057
+L 45.695304 140.611057
+Q 37.883304 140.611057 37.883304 148.203927
+L 37.883304 189.435378
+Q 37.883304 197.028247 45.695304 197.028247
+z
+" clip-path="url(#p411a89f544)" style="fill: #e7f0f8; stroke: #185fa5; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 380.495304 208.959899
+L 638.304696 208.959899
+Q 646.116696 208.959899 646.116696 201.36703
+L 646.116696 148.203927
+Q 646.116696 140.611057 638.304696 140.611057
+L 380.495304 140.611057
+Q 372.683304 140.611057 372.683304 148.203927
+L 372.683304 201.36703
+Q 372.683304 208.959899 380.495304 208.959899
+z
+" clip-path="url(#p411a89f544)" style="fill: #e4f2ed; stroke: #0f6e56; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 45.695304 281.634508
+L 303.504696 281.634508
+Q 311.316696 281.634508 311.316696 274.041639
+L 311.316696 228.471405
+Q 311.316696 220.878535 303.504696 220.878535
+L 45.695304 220.878535
+Q 37.883304 220.878535 37.883304 228.471405
+L 37.883304 274.041639
+Q 37.883304 281.634508 45.695304 281.634508
+z
+" clip-path="url(#p411a89f544)" style="fill: #ffffff; stroke: #185fa5; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 380.495304 281.634508
+L 638.304696 281.634508
+Q 646.116696 281.634508 646.116696 274.041639
+L 646.116696 228.471405
+Q 646.116696 220.878535 638.304696 220.878535
+L 380.495304 220.878535
+Q 372.683304 220.878535 372.683304 228.471405
+L 372.683304 274.041639
+Q 372.683304 281.634508 380.495304 281.634508
+z
+" clip-path="url(#p411a89f544)" style="fill: #ffffff; stroke: #0f6e56; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 45.695304 365.156073
+L 303.504696 365.156073
+Q 311.316696 365.156073 311.316696 357.563204
+L 311.316696 311.99297
+Q 311.316696 304.400101 303.504696 304.400101
+L 45.695304 304.400101
+Q 37.883304 304.400101 37.883304 311.99297
+L 37.883304 357.563204
+Q 37.883304 365.156073 45.695304 365.156073
+z
+" clip-path="url(#p411a89f544)" style="fill: #e7f0f8; stroke: #185fa5; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 380.495304 372.748943
+L 638.304696 372.748943
+Q 646.116696 372.748943 646.116696 365.156073
+L 646.116696 311.99297
+Q 646.116696 304.400101 638.304696 304.400101
+L 380.495304 304.400101
+Q 372.683304 304.400101 372.683304 311.99297
+L 372.683304 365.156073
+Q 372.683304 372.748943 380.495304 372.748943
+z
+" clip-path="url(#p411a89f544)" style="fill: #eee8f3; stroke: #762a83; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 174.6 202.189403
+Q 174.6 208.953626 174.6 213.928994
+" clip-path="url(#p411a89f544)" style="fill: none; stroke: #185fa5; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 177.4 208.328994
+L 174.6 213.928994
+L 171.8 208.328994
+z
+" clip-path="url(#p411a89f544)" style="fill: #185fa5; stroke: #185fa5; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 509.4 214.122114
+Q 509.4 214.918358 509.4 213.925746
+" clip-path="url(#p411a89f544)" style="fill: none; stroke: #0f6e56; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 512.2 208.325746
+L 509.4 213.925746
+L 506.6 208.325746
+z
+" clip-path="url(#p411a89f544)" style="fill: #0f6e56; stroke: #0f6e56; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 174.6 286.800166
+Q 174.6 293.01682 174.6 297.44462
+" clip-path="url(#p411a89f544)" style="fill: none; stroke: #185fa5; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 177.4 291.84462
+L 174.6 297.44462
+L 171.8 291.84462
+z
+" clip-path="url(#p411a89f544)" style="fill: #185fa5; stroke: #185fa5; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 509.4 286.800166
+Q 509.4 293.01682 509.4 297.44462
+" clip-path="url(#p411a89f544)" style="fill: none; stroke: #762a83; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 512.2 291.84462
+L 509.4 297.44462
+L 506.6 291.84462
+z
+" clip-path="url(#p411a89f544)" style="fill: #762a83; stroke: #762a83; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 95.915304 429.153117
+L 588.084696 429.153117
+Q 595.896696 429.153117 595.896696 421.560247
+L 595.896696 387.921666
+Q 595.896696 380.328796 588.084696 380.328796
+L 95.915304 380.328796
+Q 88.103304 380.328796 88.103304 387.921666
+L 88.103304 421.560247
+Q 88.103304 429.153117 95.915304 429.153117
+z
+" clip-path="url(#p411a89f544)" style="fill: #f1efe8; stroke: #bdb9ae; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 342 372.742435
+L 342 140.617565
+" clip-path="url(#p411a89f544)" style="fill: none; stroke: #bdb9ae; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 21px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #252523" x="342" y="30.011029" transform="rotate(-0 342 30.011029)">How this population model works</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 12.5px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #62605a" x="342" y="44.073124" transform="rotate(-0 342 44.073124)">The demographic bookkeeping is shared. The theory of future fertility is not.</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 10.9px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(232.276172 68.576734)">STARTING EVIDENCE USED BY BOTH</text>
+    <text style="font-weight: 700; font-size: 10.9px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(101.86193 83.924445)">2024 population by country, age and sex  •  fertility by age  •  survival by age</text>
+    <text style="font-weight: 700; font-size: 10.9px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(200.82882 100.274445)">migration by age and sex  •  sex ratio at birth</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 13.3px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #185fa5" x="174.6" y="127.802013" transform="rotate(-0 174.6 127.802013)">UN-STYLE BASELINE USED HERE</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 13.3px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #0f6e56" x="509.4" y="127.802013" transform="rotate(-0 509.4 127.802013)">THIS PROJECT'S MECHANISM MODEL</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(126.384609 144.041105)">FUTURE RATE PATHS</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(91.936547 157.313465)">Fertility, survival and migration are</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(122.650313 171.413465)">statistically projected.</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(74.188172 185.513465)">Post-transition fertility tends to move back</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(118.562781 199.613465)">toward a long-run level.</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(421.349172 150.006931)">RATE PATHS + FERTILITY MECHANISM</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(415.806109 163.279291)">fertility environment  ×  family-size mix</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(402.123969 177.379291)">family-size spread + parent–child persistence</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(393.8035 191.479291)">named-group fertility + retention + convergence</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(388.081984 205.579291)">unresolved future choices stay explicit as scenarios</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(79.401563 237.624334)">YEARLY DEMOGRAPHIC LEDGER</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(60.37125 254.567772)">1  Age everyone   •   2  Apply survival</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(65.408438 272.567772)">3  Add births      •   4  Add migration</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 10.8px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(409.72275 230.887553)">MECHANISM CHANGES BIRTHS FIRST</text>
+    <text style="font-size: 10.8px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(426.644156 246.136647)">environment × population mix</text>
+    <text style="font-size: 10.8px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(459.034031 262.336647)">→  realized fertility</text>
+    <text style="font-size: 10.8px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(384.136031 278.536647)">then use the same yearly demographic ledger</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 9.8px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(151.519469 316.295134)">OUTPUTS</text>
+    <text style="font-size: 9.8px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(88.033078 330.132274)">Population by country, age and sex</text>
+    <text style="font-size: 9.8px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(141.319813 344.832274)">through 2150</text>
+    <text style="font-size: 9.8px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(55.674703 359.532274)">+ a conventional UW-posterior uncertainty band</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(487.261531 313.795975)">OUTPUTS</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(432.530766 327.068334)">The same population paths, plus</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(404.849969 341.168334)">population composition and selection effect,</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(422.203984 355.268334)">whether and when fertility rebounds,</text>
+    <text style="font-size: 9.4px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(398.232516 369.368334)">scenario ranges and an uncertainty breakdown</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 10.6px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(150.115984 391.765894)">UN-style question:  If these future rates occur, how many people follow?</text>
+    <text style="font-size: 10.6px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(265.011703 407.665894)">This project's extra question:</text>
+    <text style="font-size: 10.6px; font-family: 'DejaVu Sans'; fill: #252523" transform="translate(126.158328 423.565894)">How do the rates change when the environment and the population mix change?</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #62605a" x="342" y="441.195151" transform="rotate(-0 342 441.195151)">Conceptual map, not every source-file or fitting step. Official WPP projections end in 2100; this repo holds 2100 rates constant to reach 2150.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p411a89f544">
+   <rect x="7.2" y="7.2" width="669.6" height="449.064"/>
+  </clipPath>
+ </defs>
 </svg>

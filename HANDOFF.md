@@ -336,6 +336,7 @@ python scripts/fetch_geometry.py
 python scripts/build_crosswalk.py
 python scripts/build_census.py
 python scripts/build_site_data.py
+python scripts/plot_model_flow.py     # conceptual UN/model comparison
 python scripts/build_map.py
 python scripts/check_map.py          # verifies the page without a browser
 ```
