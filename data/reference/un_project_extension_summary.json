@@ -1,0 +1,104 @@
+{
+  "model_structure": {
+    "un_reproduction": "WPP 2024 medium path through 2100 only",
+    "project_extension": "starts from the WPP population on 1 January 2100 and runs to 2150",
+    "official_boundary": 2100
+  },
+  "post_2100_fertility": "final WPP age-specific fertility schedule held constant",
+  "post_2100_mortality": "final WPP age-specific survival schedule held constant",
+  "migration": {
+    "source": "UW bayesMig annual net-migration-rate trajectories aligned to WPP 2024 (Azose and Raftery 2015)",
+    "source_archive_sha256": "47ee50ecb34551041ab5105f3d5e6bcb118c8651dca78b07ac0afcd4e653553f",
+    "source_trajectories": 1000,
+    "source_end_year": 2100,
+    "continuation": "pooled country-level AR(1) fitted to UW bayesMig trajectories from 2070 through 2100; model-output emulator",
+    "equation": "r[t] = mu + phi * (r[t-1] - mu) + Normal(0, sigma)",
+    "fit_years": [
+      2070,
+      2100
+    ],
+    "seed": 20260814,
+    "rate_limit": 0.5,
+    "generated_values": 11564000,
+    "clipped_values": 0,
+    "global_balance": "each draw-year is shifted by a common rate across active countries, equivalent to redistributing the count discrepancy by current population; world net migration is zero",
+    "maximum_world_imbalance_people": 6.705522537231445e-08,
+    "age_sex_composition": "borrowed from the absolute UN medium-path migration residual; impossible emigration cells are redistributed across populated cells",
+    "redistributed_outflow_cells": 2520255,
+    "missing_location": "Holy See: retained in the population with zero migration",
+    "claim_boundary": "the public archive omits the fitted MCMC state; this is an AR(1) emulator of its late-horizon trajectories, not an official UN continuation"
+  },
+  "world_population_billions": {
+    "2100": {
+      "p05": 10.18660767,
+      "p50": 10.18660767,
+      "p95": 10.18660767
+    },
+    "2125": {
+      "p05": 9.555292748519733,
+      "p50": 9.57306878540738,
+      "p95": 9.58819948586318
+    },
+    "2150": {
+      "p05": 8.656264202650943,
+      "p50": 8.72471927677185,
+      "p95": 8.771831606565508
+    }
+  },
+  "watch_countries": {
+    "USA": {
+      "name": "United States of America",
+      "population_2100": 421007222.0,
+      "population_2150": {
+        "p05": 320538847.0931359,
+        "p50": 429399781.049268,
+        "p95": 541626718.3837105
+      }
+    },
+    "CAN": {
+      "name": "Canada",
+      "population_2100": 53524621.0,
+      "population_2150": {
+        "p05": 38542619.93296753,
+        "p50": 60243860.68509783,
+        "p95": 90855809.66270405
+      }
+    },
+    "ARE": {
+      "name": "United Arab Emirates",
+      "population_2100": 26015286.0,
+      "population_2150": {
+        "p05": 1028140.3139356088,
+        "p50": 24610034.98972041,
+        "p95": 267340098.6751348
+      }
+    },
+    "JPN": {
+      "name": "Japan",
+      "population_2100": 77038488.0,
+      "population_2150": {
+        "p05": 45424573.19263322,
+        "p50": 57359137.71327687,
+        "p95": 70042268.3098281
+      }
+    },
+    "NGA": {
+      "name": "Nigeria",
+      "population_2100": 476692581.0,
+      "population_2150": {
+        "p05": 376367344.92381406,
+        "p50": 399116668.59075856,
+        "p95": 417944256.68116623
+      }
+    },
+    "DEU": {
+      "name": "Germany",
+      "population_2100": 70917155.0,
+      "population_2150": {
+        "p05": 54148522.109753005,
+        "p50": 64366707.665763564,
+        "p95": 75345415.55393596
+      }
+    }
+  }
+}

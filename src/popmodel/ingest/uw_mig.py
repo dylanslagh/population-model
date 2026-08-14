@@ -99,6 +99,108 @@ class MigrationRates:
     provenance: dict
 
 
+@dataclass(frozen=True)
+class MigrationRateDraws:
+    """Every published migration trajectory, without inventing index coupling.
+
+    The draw axis belongs to ``bayesMig``.  It is internally coherent across
+    countries, but has no documented relationship to trajectory numbers in the
+    separately fitted fertility and mortality archives.
+    """
+
+    years: np.ndarray  # (T,)
+    loc_id: np.ndarray  # (L,)
+    trajectory_ids: np.ndarray  # (D,)
+    rates: np.ndarray  # (D, T, L), net migrants per person per year
+    provenance: dict
+
+
+def read_rate_draws(csv_path: Path, median: MigrationRates) -> MigrationRateDraws:
+    """Read all source trajectories and prove their reshape against the median.
+
+    The export is written location by location, trajectory by trajectory, with
+    year varying fastest.  That order is not the numeric UN location order.
+    A blind reshape once assigned countries one another's migration while
+    leaving plausible world totals, so the independently built median grid is
+    a required check here rather than an optional diagnostic.
+    """
+    csv_path = Path(csv_path)
+    if not csv_path.is_file():
+        raise MigrationIngestError(f"migration trajectories not found: {csv_path}")
+
+    frame = pd.read_csv(
+        csv_path,
+        usecols=["LocID", "Year", "Trajectory", "Mig"],
+        dtype={"LocID": "int32", "Year": "int32", "Trajectory": "int32", "Mig": "float32"},
+    )
+    n_years = len(median.years)
+    trajectory_ids = np.sort(frame["Trajectory"].unique())
+    file_order = frame["LocID"].drop_duplicates().to_numpy(dtype=np.int64)
+    expected_rows = len(file_order) * len(trajectory_ids) * n_years
+    if len(frame) != expected_rows:
+        raise MigrationIngestError(
+            f"the migration draw grid is incomplete: {len(frame):,} rows, "
+            f"expected {expected_rows:,}"
+        )
+    if len(file_order) != len(median.loc_id):
+        raise MigrationIngestError(
+            f"the migration file has {len(file_order)} locations; the median "
+            f"grid has {len(median.loc_id)}"
+        )
+    if not np.array_equal(trajectory_ids, np.arange(1, len(trajectory_ids) + 1)):
+        raise MigrationIngestError("migration trajectory IDs are not consecutive from one")
+
+    head = frame.iloc[: n_years + 1]
+    if not (
+        head["LocID"].nunique() == 1
+        and int(head["Trajectory"].iloc[0]) == 1
+        and int(head["Year"].iloc[0]) == int(median.years[0])
+        and int(head["Year"].iloc[n_years - 1]) == int(median.years[-1])
+    ):
+        raise MigrationIngestError("the migration export is not in the expected row order")
+
+    values = frame["Mig"].to_numpy(dtype=np.float32).reshape(
+        len(file_order), len(trajectory_ids), n_years
+    )
+    values = np.transpose(values, (1, 2, 0))  # draws, years, file-order locations
+
+    where = {int(code): i for i, code in enumerate(file_order)}
+    missing = [int(code) for code in median.loc_id if int(code) not in where]
+    if missing:
+        raise MigrationIngestError(f"the migration file is missing LocID(s): {missing[:5]}")
+    values = values[:, :, [where[int(code)] for code in median.loc_id]]
+
+    produced = np.median(values, axis=0)
+    worst = float(np.abs(produced - median.rates).max())
+    if worst > 2e-7:
+        raise MigrationIngestError(
+            f"the reshaped trajectories disagree with the median grid by "
+            f"{worst:.2e}; the row order is wrong"
+        )
+    if not np.all(np.isfinite(values)):
+        raise MigrationIngestError("migration trajectories contain non-finite values")
+    if np.any(np.abs(values) > RATE_LIMIT):
+        worst_rate = float(np.abs(values).max())
+        raise MigrationIngestError(
+            f"a migration draw rate of {worst_rate:.3f} exceeds +/-{RATE_LIMIT}"
+        )
+
+    return MigrationRateDraws(
+        years=median.years.copy(),
+        loc_id=median.loc_id.copy(),
+        trajectory_ids=trajectory_ids.astype(np.int64),
+        rates=np.ascontiguousarray(values),
+        provenance={
+            **median.provenance,
+            "reduction": "none; all source trajectories retained",
+            "draw_axis": (
+                "bayesMig trajectory identity is coherent across countries and "
+                "not coupled to fertility or mortality draw identity"
+            ),
+        },
+    )
+
+
 def read_trajectories(csv_path: Path) -> MigrationRates:
     """Read the ASCII trajectory export and reduce it to median rates.
 

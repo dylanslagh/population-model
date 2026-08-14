@@ -54,13 +54,21 @@ single year of age, so `derive_migration` backs them out of the UN's own medium
 path as a residual. That is a usable forward-model input and it is **not**
 evidence of anything: any run using it is labelled a diagnostic, not a test.
 
+The scientific outputs now have a hard boundary. The **UN reproduction** stops
+at 2100. The **UN project extension** starts from that 2100 state, holds final
+fertility and mortality schedules, and uses the stochastic migration emulator
+documented in `docs/migration-extension.md`. The **selection model** is separate
+and forks in 2024, so selection acts for the whole run. Do not collapse these
+three labels back into one "UN model to 2150".
+
 ## Running things
 
 ```bash
 python scripts/fetch_wpp.py          # ~1.1 GB, once; checksums get committed
 python scripts/build_bundle.py       # CSV -> arrays, about 90 seconds
 python scripts/validate_engine.py    # the engine test; must pass before anything else
-python scripts/run_to_2150.py        # scenarios out to 2150
+python scripts/run_un_extension.py   # stochastic project extension after 2100
+python scripts/run_to_2150.py        # older deterministic scenario diagnostics
 python scripts/fetch_cfe.py           # 45 small cohort-parity files, once
 python scripts/fetch_cdc_cohort.py    # independent U.S. cohort check, once
 python scripts/analyze_cfe_dispersion.py
@@ -79,8 +87,9 @@ and cannot be verified by definition, so Phase 5 magnitudes remain conditional
 on them and on stated empirical ranges. `scenarios.py` declares the unimplemented scenarios
 with the phase that owes them, so the gap is visible rather than silent.
 
-The Phase 4 ensemble is the **UN-equivalent baseline**, not this project's own
-view of 2150: it propagates UW's mean-reverting posterior, which is the
+The Phase 4 ensemble is a **conventional probabilistic comparator**, not the
+UN reproduction and not this project's own view of 2150: it propagates UW's
+mean-reverting posterior, which is the
 assumption standing instruction 8 declines to adopt by default. It is stored as
 vintage `2026-08-10-phase4-uw-baseline` with every quantity marked
 `is_project_claim: false`, so Phase 5 has something fixed to be compared

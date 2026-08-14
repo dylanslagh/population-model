@@ -9,8 +9,9 @@ Five sources, each isolated:
 
 * **fertility** -- UW's posterior for total fertility.
 * **mortality** -- UW's posterior for life expectancy.
-* **migration** -- UW's bayesMig trajectories, which the published run collapses
-  to a median. This is the first time they are used as a distribution.
+* **migration** -- UW's bayesMig trajectories, continued after 2100 with the
+  project's AR(1) emulator and balanced to zero world net migration in every
+  draw-year. The published run collapses these to a median.
 * **mechanism** -- Phase 5's selection and development-pressure parameters,
   taken from `out/phase5.json` rather than recomputed.
 * **after the source ends** -- our own assumption that rates hold constant
@@ -41,10 +42,9 @@ import time
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from popmodel import migration as migration_model  # noqa: E402
 from popmodel import paths  # noqa: E402
 from popmodel.bayes import (  # noqa: E402
     BasePopulation,
@@ -69,61 +69,6 @@ POST_2100 = (
 def median_component(values: np.ndarray) -> np.ndarray:
     """The median trajectory, per year and country. Not itself a draw."""
     return np.median(values, axis=2)
-
-
-def read_migration_draws(csv_path: Path, rates: uw_mig.MigrationRates) -> np.ndarray:
-    """(T, L, D) net migration rates, every trajectory rather than the median.
-
-    The file is written country by country, trajectory by trajectory, with year
-    varying fastest -- but the countries are in bayesMig's own order, which is
-    not ascending by code. Reshaping without reordering silently gives one
-    country another country's migration, and produces a world total that looks
-    like a result.
-    """
-    frame = pd.read_csv(
-        csv_path,
-        usecols=["LocID", "Year", "Trajectory", "Mig"],
-        dtype={"LocID": "int32", "Year": "int32", "Trajectory": "int32", "Mig": "float64"},
-    )
-    n_years = len(rates.years)
-    n_draws = int(frame["Trajectory"].max())
-    file_order = frame["LocID"].drop_duplicates().to_numpy()
-    n_loc = len(file_order)
-    if n_loc != len(rates.loc_id):
-        raise SystemExit(
-            f"the migration file has {n_loc} locations, the median grid has "
-            f"{len(rates.loc_id)}"
-        )
-
-    head = frame.iloc[: n_years + 1]
-    if not (
-        head["LocID"].nunique() == 1
-        and head["Trajectory"].iloc[0] == 1
-        and head["Year"].iloc[0] == int(rates.years[0])
-        and head["Year"].iloc[n_years - 1] == int(rates.years[-1])
-    ):
-        raise SystemExit("the migration export is not in the expected row order")
-
-    values = frame["Mig"].to_numpy().reshape(n_loc, n_draws, n_years)
-    values = np.transpose(values, (2, 0, 1))  # (years, file-order locations, draws)
-
-    where = {int(code): i for i, code in enumerate(file_order)}
-    missing = [int(c) for c in rates.loc_id if int(c) not in where]
-    if missing:
-        raise SystemExit(f"the migration file is missing LocID(s): {missing[:5]}")
-    values = values[:, [where[int(code)] for code in rates.loc_id], :]
-
-    # The median of these draws must reproduce the median grid, which was built
-    # independently by a groupby rather than by reshaping. This is the check
-    # that catches a wrong row order, and it caught one.
-    produced = np.median(values, axis=2)
-    worst = float(np.abs(produced - rates.rates).max())
-    if worst > 1e-9:
-        raise SystemExit(
-            f"the reshaped trajectories disagree with the median grid by "
-            f"{worst:.2e}; the row order is wrong"
-        )
-    return values
 
 
 def build_base(bundle):
@@ -180,6 +125,11 @@ def main() -> int:
             "the independently computed Phase 5 mechanism width"
         ),
     )
+    parser.add_argument(
+        "--migration-only",
+        action="store_true",
+        help="reuse the existing receipt and replace only the corrected migration component",
+    )
     args = parser.parse_args()
 
     if args.refresh_mechanism_only:
@@ -223,8 +173,12 @@ def main() -> int:
 
     print("reading every migration trajectory (the published run uses the median)")
     migration_csv = paths.INTERIM / "UW_WPP2024" / "migration" / "ascii_trajectories.csv"
-    migration_draws = read_migration_draws(migration_csv, source.rates)
-    print(f"  {migration_draws.shape[2]} migration trajectories")
+    migration_draws = uw_mig.read_rate_draws(migration_csv, source.rates)
+    migration_fit = migration_model.fit_late_ar1(migration_draws)
+    migration_future = migration_model.simulate_ar1_continuation(
+        migration_draws, migration_fit, end_rate_year=args.end_year - 1
+    )
+    print(f"  {migration_draws.rates.shape[0]} migration trajectories")
 
     loc_ids = np.array(
         [int(reference.loc_id[i]) for i in columns], dtype=np.int64
@@ -236,7 +190,7 @@ def main() -> int:
             rates = uw_mig.MigrationRates(
                 years=rates.years,
                 loc_id=rates.loc_id,
-                rates=migration_draws[:, :, draw_index],
+                rates=migration_draws.rates[draw_index],
                 provenance=rates.provenance,
             )
         return uw_mig.build_assumption(
@@ -251,29 +205,60 @@ def main() -> int:
     median_migration = migration_for(None)
     n = args.draws
     results = {}
+    if args.migration_only:
+        existing = paths.OUT / "uncertainty_decomposition.json"
+        if not existing.exists():
+            raise FileNotFoundError("no existing uncertainty decomposition to update")
+        previous = json.loads(existing.read_text(encoding="utf-8"))
+        results = previous.get("sources", {})
 
-    for name in SOURCES:
+    median_projection = converter.convert(make_draw(
+        template,
+        tfr=median_tfr,
+        e0f=median_e0f,
+        e0m=median_e0m,
+        draw_id="median-rates-for-migration-decomposition",
+    ))
+
+    names = ("migration",) if args.migration_only else SOURCES
+    for name in names:
         started = time.time()
         if name == "migration":
-            # Migration is one shared path per run, so isolating it means one
-            # run per trajectory rather than one run with many draws.
-            worlds, country_totals = [], []
-            for d in range(n):
-                draw = make_draw(
-                    template, tfr=median_tfr, e0f=median_e0f, e0m=median_e0m,
-                    draw_id=f"median-rates-mig-{d:04d}",
-                )
-                ensemble = propagate(
-                    base, [converter.convert(draw)],
-                    end_year=args.end_year, migration=migration_for(d),
-                )
-                worlds.append(ensemble.world[0])
-                country_totals.append(ensemble.location_totals[0])
-                if (d + 1) % 50 == 0:
-                    print(f"  migration {d + 1}/{n}")
-            world = np.array(worlds)
-            totals = np.array(country_totals)
-            years = ensemble.years
+            # The public bayesMig paths are not globally balanced draw by draw.
+            # Applying their counts as fixed arrays created/destroyed millions
+            # of people in some trajectories and made the old 1.75bn world
+            # width an artefact.  Rates are now applied to each path's evolving
+            # population and population-weight balanced every year.
+            source_before_boundary = (
+                (migration_draws.years >= base.year)
+                & (migration_draws.years < migration_future.years[0])
+            )
+            combined_years = np.concatenate(
+                [migration_draws.years[source_before_boundary], migration_future.years]
+            )
+            combined_rates = np.concatenate(
+                [migration_draws.rates[:, source_before_boundary, :], migration_future.rates],
+                axis=1,
+            )
+            source_col = {int(code): i for i, code in enumerate(migration_draws.loc_id)}
+            order = np.array([source_col[int(code)] for code in loc_ids])
+            rate_paths = combined_rates[:n, :, order]
+            dynamic = migration_model.project_extension(
+                base.values,
+                start_year=base.year,
+                end_year=args.end_year,
+                sx=median_projection.sx,
+                asfr=median_projection.asfr,
+                srb=median_projection.srb,
+                rate_years=combined_years,
+                rate_paths=rate_paths,
+                composition=source.composition[keep],
+                locations=bundle.iso3,
+                trajectory_ids=migration_draws.trajectory_ids[:n],
+            )
+            world = dynamic.world
+            totals = dynamic.location_totals
+            years = dynamic.years
         else:
             # Stopping at 2090 uses the same draws and simply hands the engine
             # ten fewer years of rates, so the difference between it and
@@ -326,6 +311,13 @@ def main() -> int:
             "seconds": round(time.time() - started, 1),
             "draws": n,
         }
+        if name == "migration":
+            entry["global_balance"] = (
+                "zero world net migration in every draw-year, redistributed by "
+                "each path's evolving population"
+            )
+            entry["maximum_world_imbalance_people"] = dynamic.maximum_world_imbalance_people
+            entry["post_2100"] = migration_fit.source
         index_2100 = int(np.where(years == 2100)[0][0])
         for iso3 in WATCH:
             if iso3 not in bundle.iso3:

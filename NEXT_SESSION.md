@@ -83,11 +83,28 @@ holds. `HANDOFF.md` section 2 lists the notable ones. The standing rules in
 
 ## What the model now says
 
+**The agreed project structure.** (1) The official UN reproduction stops at
+2100. (2) The UN project extension begins from that state and uses stochastic,
+globally balanced migration through 2150; final fertility and mortality
+schedules are held constant and labelled as project assumptions. (3) The
+selection model is separate, forks in 2024, and is the project's main focus.
+Economic pressure is mainly a break-even sensitivity axis, not the headline
+forecast. Sticky migrant fertility propensity is deferred, possibly
+indefinitely.
+
+**The new migration extension.** The public UW archive has 1,000 `bayesMig`
+paths but omits its fitted MCMC state. The project fits the same AR(1) form to
+their 2070-2100 behavior, starts each continuation at its own 2100 rate, and
+balances every draw-year to zero world net migration. Median world population
+in 2150 is 8.725 billion; the migration-only 90% range is 8.656-8.772.
+`docs/migration-extension.md` is the durable method receipt.
+
 **Phase 4, the probabilistic baseline.** UW's posterior propagated through this
 project's engine: 1,000 draws, 236 countries, to 2150. Median peaks at 10.31
 billion in 2093 and reaches 9.73 billion by 2150, 90% band 6.97 to 14.36. It is
-the **UN-equivalent baseline** — a mean-reverting model — not this project's own
-view, and the stored vintage marks every quantity `is_project_claim: false`.
+the **conventional mean-reverting comparator** — not the UN reproduction and not
+this project's own view — and the stored vintage marks every quantity
+`is_project_claim: false`.
 
 **Phase 5, reframed selection-first.** Today's fertility already embodies its
 economic and social environment, so the primary benchmark is now stable-low
@@ -104,13 +121,22 @@ selection by 2150. `data/reference/selection_break_even_sensitivity.json` and
 `docs/selection-break-even.svg` are the reproducible analysis. The 4% path is
 retained only as an illustrative stress test.
 
-**The decomposition.** World 90% width at 2150, in billions: fertility 7.26, the
-mechanism 5.72, migration 1.75, our own post-2100 hold-constant rule 0.73,
-mortality 0.52. Per country at 2100 the ordering reverses — migration is 16.9x
-fertility for the UAE and 0.05x for Nigeria. Which uncertainty dominates is a
-fact about where you look.
+**The corrected decomposition.** World 90% width at 2150, in billions:
+fertility 7.26, the mechanism 5.72, migration 0.34, our own post-2100
+hold-constant rule 0.73, mortality 0.52. Per country at 2100 the ordering
+reverses — migration is 42.2x fertility for the UAE and 0.06x for Nigeria.
+The old 1.75bn migration result was an accounting artefact: UW's public paths
+are not globally balanced draw by draw and were creating or deleting people.
 
 ## Do this next
+
+**0. Connect the new migration extension to the selection comparison.** The
+selection model must still fork in 2024. Give its reference and selection runs
+the same globally balanced migration path so their difference isolates
+selection. Do not switch selection on at 2100. The interactive working page's
+post-2100 country line and pyramids still show the older frozen-count run and
+say so explicitly; replace them only when the paired selection/reference output
+is ready.
 
 **1. Tighten or challenge the selection-first boundary.** The sourced-parameter
 audit no longer blocks the three finished outputs. The clearest remaining model
@@ -147,8 +173,9 @@ resolves before about 2038; WPP 2027 is the next data event.
 
 ## Known limitations to state, not fix quietly
 
-- **The published band contains no migration uncertainty.** One shared migration
-  path per run. Worth 1.75bn of world width and most of the answer for the Gulf.
+- **The interactive Phase 4 band contains no migration uncertainty.** One shared
+  path per run. Corrected globally balanced width is 0.34bn for the world and
+  most of the answer for the Gulf. The separate post-2100 extension includes it.
 - **Selection and environment are separable** in the Phase 5 model: the
   environment multiplies every type equally, so it cancels out of the relative
   birth weights, and the two full-selection curves coincide exactly. Probably
@@ -156,8 +183,10 @@ resolves before about 2038; WPP 2027 is the next data event.
 - **Cross-country pairing is inferred.** Trajectory k in every country is treated
   as one posterior sample. That is how bayesTFR generates and bayesPop
   aggregates, but it is not read off UW documentation.
-- **After 2100 rates are held constant**, which is ours, not the source's, and
-  measured at 0.73bn of extra width.
+- **After 2100 fertility and mortality rates are held constant**, which is ours,
+  not the source's. Migration is now stochastic in the project extension, but
+  the older deterministic and selection runs still freeze its final count until
+  the shared-path integration above is done.
 - **Named groups start with the host country's age structure**, which understates
   their growth. Group shares from Phase 5 are lower bounds.
 - **Holy See** is excluded rather than invented — about 500 people.
@@ -187,5 +216,5 @@ Nothing blocks the work above. Before a genuinely public release: the public
 hostname and the licensing decision. Before the paper: title, author line,
 acknowledgements and release status.
 
-*Updated 2026-08-14, after the selection-first break-even analysis and model
-reduction ladder.*
+*Updated 2026-08-14, after the stochastic migration extension, global-balance
+correction, and selection regression.*

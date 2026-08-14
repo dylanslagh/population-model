@@ -110,7 +110,11 @@ def inline_figure(name: str) -> str:
     path = paths.REPO_ROOT / "docs" / f"{name}.svg"
     if not path.exists():
         return ""
-    markup = path.read_text(encoding="utf-8")
+    # Matplotlib's SVG writer leaves spaces at line ends. Strip them while
+    # embedding so a regenerated single-file page stays diff-clean.
+    markup = "\n".join(
+        line.rstrip() for line in path.read_text(encoding="utf-8").splitlines()
+    ) + "\n"
     open_at = markup.index("<svg")
     close_at = markup.index(">", open_at)
     tag, rest = markup[open_at:close_at], markup[close_at:]
@@ -236,6 +240,7 @@ def main() -> int:
     html = TEMPLATE.replace("__DATA__", json.dumps(payload, separators=(",", ":")))
     for token, figure in (
         ("__MODEL_FLOW__", "how-the-model-works"),
+        ("__UN_EXTENSION__", "un-project-extension"),
         ("__SELECTION_BOUNDARY__", "selection-break-even"),
         ("__DECOMPOSITION__", "decomposition"),
         ("__MECHANISMS__", "phase5"),
@@ -376,6 +381,23 @@ footer p{max-width:80ch}
   asks how the fertility environment and the changing mix of people generate
   that path.</p>
   <div class="flow-wrap">__MODEL_FLOW__</div>
+  <h2 id="model-boundary">Where the UN model ends</h2>
+  <p>The black line below is the published UN reproduction and stops at 2100.
+  The blue line is a separate, project-owned extension. It holds the final UN
+  fertility and mortality schedules constant, but continues migration with
+  1,000 stochastic paths from a late-horizon AR(1) emulator of UW's
+  <i>bayesMig</i> output. Every path is forced to have exactly zero world net
+  migration each year.</p>
+  <p>The narrow world band is not evidence that migration is predictable. A
+  migrant has both an origin and a destination, so the direct world total
+  cancels. Country results, especially for the Gulf, remain extremely wide.
+  This is a project extension after 2100, never an official UN projection.</p>
+  <div class="flow-wrap">__UN_EXTENSION__</div>
+  <p class="note">The interactive country line and pyramids above still use the
+  earlier deterministic working run after 2100, including its frozen final
+  migration count. They are retained for inspection while the new stochastic
+  extension is connected to the selection model; the figure in this section is
+  the current reference for post-2100 migration.</p>
   <h2 id="selection-first">Start with selection; stress-test future development</h2>
   <p>Today's fertility already contains today's economic and social environment.
   The cleaner benchmark therefore keeps the observed and already-projected
@@ -404,10 +426,11 @@ footer p{max-width:80ch}
   when one source is varied across its own draws and everything else is held at
   its median.</p>
   <p>Two results worth the space. For the world, <b>fertility is almost the
-  whole answer</b> and migration barely registers &mdash; it has to cancel
-  globally, one person leaves and one arrives. For individual countries that
-  reverses completely: migration is <b>seventeen times</b> fertility for the
-  United Arab Emirates and a twentieth of it for Nigeria. And the band drawn on
+  whole answer</b>. After correcting every migration path to balance globally,
+  migration contributes 0.34 billion of 2150 world range, versus 7.26 billion
+  from fertility. For individual countries that reverses completely: migration
+  is <b>forty-two times</b> fertility for the United Arab Emirates and about a
+  sixteenth of it for Nigeria. And the band drawn on
   this page contains <b>no migration uncertainty at all</b>, because the
   projection uses a single median migration path.</p>
   __DECOMPOSITION__
@@ -443,8 +466,10 @@ footer p{max-width:80ch}
   already happened. From 2024 they come from this project's projection engine, run on
   the UN's own fertility and mortality assumptions — it reproduces their published
   numbers to about 0.001% at 2100. After 2100 nobody publishes fertility or mortality
-  rates, so the run holds them at their 2100 values. That last stretch is an
-  assumption, not a forecast anyone stands behind.</p>
+  rates, so the run holds them at their 2100 values. The interactive line also
+  retains the older frozen-migration treatment; the separate boundary figure
+  above shows the current stochastic extension. Everything after 2100 is a
+  project assumption, not a UN forecast.</p>
   <p><b>A warning the project takes seriously.</b> Migration is close to unforecastable
   beyond a few decades. It roughly cancels out for the world as a whole, but it
   dominates results for individual rich countries. World totals at 2150 mean something.

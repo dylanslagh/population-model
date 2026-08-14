@@ -36,6 +36,28 @@ convergence for named high-fertility groups. Its extra outputs show how
 composition changes, how much selection lifts fertility, whether a rebound
 occurs, and which assumptions make the answer uncertain.
 
+## The three model objects
+
+1. **UN reproduction, through 2100.** This is the engine validation and ends
+   where WPP 2024 ends. Nothing after the boundary is labelled as an official
+   UN result.
+2. **UN project extension, 2100-2150.** This starts from the published 2100
+   population. Final UN fertility and mortality schedules are held constant;
+   migration continues through 1,000 globally balanced stochastic paths from
+   an AR(1) emulator of UW's `bayesMig` output.
+3. **Selection model, 2024-2150.** This is the project's main focus. It forks
+   in 2024 so selection operates for the whole projection. The economic or
+   environmental pressure parameter is used mainly to draw the break-even
+   boundary, not as a preferred economic forecast.
+
+![UN boundary and project migration extension](docs/un-project-extension.svg)
+
+The public migration archive omits its fitted MCMC state, so the continuation
+is explicitly a model-output emulator rather than an official UN projection.
+Every draw-year is balanced to zero world net migration. The full method and
+the correction to the old uncertainty decomposition are in
+[`docs/migration-extension.md`](docs/migration-extension.md).
+
 ## Selection first, development pressure second
 
 ![Selection and development-pressure break-even](docs/selection-break-even.svg)
@@ -120,7 +142,7 @@ inputs and nothing fitted:
 | Check | Result |
 |---|---|
 | World population at 2100, UN zero-migration variant | **0.001%** apart |
-| Any country over 10,000 people, at 2100 | worst **0.07%** (Singapore) |
+| Any country over 10,000 people, at 2100 | worst **0.13%** (Cook Islands) |
 | Any five-year age group under 100, at 2100 | worst **0.006%** |
 | Constant fertility at 2100, against the UN's own version | **0.05%** apart |
 
@@ -128,14 +150,13 @@ Reproducing the UN is not the goal — the spec is explicit that the UN will win
 at 2050 and that's fine. It is the proof that the machinery is sound before any
 of the project's own claims get loaded into it.
 
-**What the engine says, using the UN's assumptions unchanged:** world population
-peaks at **10.29 billion in 2084**, and is down to **8.78 billion by 2150**. The
-UN does not publish past 2100, so the second half of that sentence is the sort
-of thing this project exists to say — with the caveat that nobody publishes
-fertility or mortality rates past 2100 either, so the run holds both at their
-2100 values from there on. That is an assumption, not a finding, and a
-conservative one on mortality: the recurring institutional failure is that
-life expectancy gains get under-projected, decade after decade.
+**What the older deterministic diagnostic says:** world population peaks at
+**10.29 billion in 2084**, and reaches **8.78 billion by 2150**. Only the portion
+through 2100 is the UN reproduction. The older run holds fertility, mortality,
+and final migration counts after the source ends; it is retained as a test and
+legacy comparison, not the project's reference extension. The stochastic
+migration extension instead reaches a median **8.725 billion** in 2150, with a
+migration-only 90% range of **8.656-8.772 billion**.
 
 The absurdity check — every woman keeps having children at exactly the 2024 rate
 for her age and country, forever — gives **53 billion in 2150**. Nobody believes
@@ -205,7 +226,9 @@ failure instead of a silent change in results months later.
 ```bash
 python scripts/build_bundle.py       # source CSVs into compact arrays (~90s)
 python scripts/validate_engine.py    # the engine test above
-python scripts/run_to_2150.py        # scenarios out to 2150
+python scripts/run_un_extension.py   # project extension: stochastic migration
+python scripts/plot_un_extension.py  # boundary and country-range figure
+python scripts/run_to_2150.py        # older deterministic scenario diagnostics
 python -m pytest tests/ -q           # fast tests, no data needed
 ```
 

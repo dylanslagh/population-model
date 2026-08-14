@@ -86,7 +86,7 @@ is trusted:
 | Check at 2100 | Result | Limit |
 |---|---|---|
 | World population, UN zero-migration variant | **0.001%** | 0.05% |
-| Any country over 10,000 people | worst **0.07%** | 0.5% |
+| Any country over 10,000 people | worst **0.13%** | 0.5% |
 | Any five-year age group under 100 | worst **0.006%** | 0.05% |
 | Open 100+ group | 1.08% | 2% |
 | Constant fertility at 2100 vs the UN's own | **0.05%** | 0.5% |
@@ -96,9 +96,11 @@ is tuned, and any discrepancy is our arithmetic being wrong. The medium variant
 is reported as a **diagnostic, not a test**, because its migration term is a
 residual backed out of the UN's own medium path — see §8.
 
-Output on the UN's assumptions unchanged: world population peaks at **10.29
-billion in 2084**, falls to **8.78 billion by 2150**. Constant fertility gives
-**53 billion**, which is the absurdity check.
+The older deterministic diagnostic peaks at **10.29 billion in 2084** and falls
+to **8.78 billion by 2150**. Only its path through 2100 is the UN reproduction;
+after 2100 it freezes final rates and migration counts and is now a legacy
+comparison. Constant fertility gives **53 billion**, which is the absurdity
+check.
 
 ### Phase 1 — the backtest (`src/popmodel/backtest.py`)
 
@@ -159,8 +161,8 @@ engine.
 
 **What it is not.** UW's model is mean-reverting, so this band expresses the
 conventional long-run assumption — the one standing instruction 8 declines to
-adopt by default. It is the **UN-equivalent baseline**, the thing Phase 5 argues
-against. The stored vintage marks every quantity `is_project_claim: false`, and
+adopt by default. It is the **conventional mean-reverting comparator**, not the
+UN reproduction. The stored vintage marks every quantity `is_project_claim: false`, and
 recording it before Phase 5 exists is what stops the comparison being arranged
 afterwards.
 
@@ -192,6 +194,26 @@ The pieces, in the order they run:
 - `scripts/write_uw_vintage.py`, `scripts/plot_ensemble.py` — the write-once
   record and the figure.
 
+### UN project extension — the explicit 2100 boundary
+
+The official reproduction now stops at 2100. `scripts/run_un_extension.py`
+starts from the published WPP population on 1 January 2100, holds the final
+fertility and mortality age schedules, and continues migration through 1,000
+stochastic paths to 2150.
+
+UW's public migration archive contains trajectories but not the fitted MCMC
+state. `src/popmodel/migration.py` therefore fits the published AR(1) form to
+the 2070-2100 portion of those paths and is labelled a model-output emulator,
+not an official continuation. Every rate is applied to that path's evolving
+population and every draw-year is population-weight balanced to exactly zero
+world net migration. Impossible age-cell emigration is redistributed rather
+than silently clipped.
+
+The median world result is 8.725 billion in 2150, with a migration-only 90%
+range of 8.656-8.772 billion. See `docs/migration-extension.md`, the committed
+receipt `data/reference/un_project_extension_summary.json`, and
+`docs/un-project-extension.svg`.
+
 ### Phase 5 — the mechanistic layer (complete)
 
 The thing the project is actually about. Selection and transmission on one side,
@@ -205,8 +227,8 @@ composition axis and no opinions, `runs.py` maps spec section 8's declared
 scenarios onto those settings.
 
 **What makes it trustworthy.** With every propensity set to one, the typed
-engine reproduces the ordinary engine to 3e-16 relative, and the UN-equivalent
-cell of the grid lands at 8.78 billion in 2150 - the deterministic run's own
+engine reproduces the ordinary engine to 3e-16 relative, and the legacy
+deterministic cell of the grid lands at 8.78 billion in 2150 - that diagnostic's
 figure. Any difference between Phase 4 and Phase 5 is therefore the mechanism
 and not a second implementation of the arithmetic. One generation of selection
 also matches the observed parent-offspring covariance response to nine decimal
@@ -243,14 +265,20 @@ conditional** on explicit future paths, empirical ranges, and structural choices
 
 `scripts/decompose_uncertainty.py` varies one source at a time across its own
 draws and holds the rest at a median trajectory. World 90% width at 2150, in
-billions: **fertility 7.26, the mechanism 5.72, migration 1.75, our own
+billions: **fertility 7.26, the mechanism 5.72, migration 0.34, our own
 hold-constant rule after 2100 0.73, mortality 0.52.**
 
 The country panel matters more than the world one because it disagrees with it.
-At 2100, migration is **16.9 times** fertility for the United Arab Emirates and
-**0.05 times** it for Nigeria. Which uncertainty dominates is a fact about where
+At 2100, migration is **42.2 times** fertility for the United Arab Emirates and
+**0.06 times** it for Nigeria. Which uncertainty dominates is a fact about where
 you look, and the band published on the map contains no migration uncertainty at
 all - one shared median path per run.
+
+The previous 1.75-billion migration width was wrong: the public UW migration
+paths are balanced in expectation, not draw by draw, so the old calculation
+allowed some trajectories to create or delete millions of people globally.
+The corrected decomposition applies rates to evolving populations and enforces
+zero world net migration in every draw-year.
 
 This is the page's organising idea now, on Dylan's direction: what earns trust
 is showing the kinds of uncertainty represented correctly, not grading somebody
@@ -260,9 +288,10 @@ else's forecasts. See `NEXT_SESSION.md`.
 
 - **Phase 6, scoring runs.** Formats are fixed, two vintages are stored, and
   nothing resolves before about 2038. WPP 2027 is the next data event.
-- **Migration uncertainty in the published band.** Measured at 1.75 billion of
-  world width and most of the answer for the Gulf states, and still excluded,
-  because the engine takes one shared migration path per run.
+- **Migration uncertainty in the interactive Phase 4 band.** Correctly measured
+  at 0.34 billion of world width and most of the answer for the Gulf states,
+  but still excluded there because that older ensemble takes one shared median
+  path per run. The separate UN project extension does include it after 2100.
 - **Per-country uncertainty decomposition.** Computed for the world and six
   watch countries; widening it to all 236 is small work.
 - **Survey coverage and vital-registration completeness** in the confidence
@@ -562,10 +591,11 @@ the page and the scoped pieces of it that are not built.
 *Last scientific-source audit 2026-08-13: all eight sourced mechanism
 parameters verified; `mainstream_propensity_cv` is reproduced from CFE and CDC
 cohort data. The Phase 5 grid and map QA were rerun after the corrections, and
-all 158 tests pass. Engine validation and map QA were rerun 2026-08-13;
-the schedule-converter checkpoint was last rerun 2026-08-11. The band checks
+all 168 tests pass. Engine validation, Phase 5, and map QA were rerun 2026-08-14;
+the full schedule-converter checkpoint was last completed 2026-08-11. The band checks
 and headless hover-rendering check all pass. Phases 1 to 5 are complete. The live
 page carries the uncertainty band, the hover readout with touch support, the
-uncertainty decomposition and the two mechanisms. Phase 4's ensemble is stored
+corrected uncertainty decomposition, the explicit UN boundary, the stochastic
+migration-extension figure and the two mechanisms. Phase 4's ensemble is stored
 as vintage `2026-08-10-phase4-uw-baseline` with every quantity marked as not a
 project claim.*

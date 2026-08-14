@@ -28,6 +28,19 @@ def write_csv(path, *, locations=2, years=(2023, 2024), trajectories=2, value=0.
     return path
 
 
+def write_draw_csv(path, *, codes=(100, 200), years=(2023, 2024), trajectories=2):
+    """The source archive's actual order: location, trajectory, then year."""
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(uw_mig.TRAJECTORY_COLUMNS)
+        for code in codes:
+            for trajectory in range(1, trajectories + 1):
+                for year in years:
+                    value = code / 100_000 + trajectory / 10_000 + (year - years[0]) / 1_000
+                    writer.writerow((code, year, year, trajectory, value))
+    return path
+
+
 def residual(locations=2, years=3):
     """A migration residual with a recognisable young-adult peak."""
     out = np.zeros((years, locations, cohort.N_SEXES, cohort.N_AGES))
@@ -73,6 +86,33 @@ def test_a_complete_small_grid_reduces_to_medians(tmp_path, monkeypatch):
     assert rates.rates.shape == (2, 2)
     assert rates.rates == pytest.approx(0.02)
     assert rates.provenance["reduction"].startswith("median")
+
+
+def test_all_draws_are_reshaped_and_checked_against_the_median(tmp_path):
+    path = write_draw_csv(tmp_path / "mig.csv")
+    median = uw_mig.MigrationRates(
+        years=np.array([2023, 2024]),
+        loc_id=np.array([100, 200]),
+        rates=np.array([[0.00115, 0.00215], [0.00215, 0.00315]]),
+        provenance={"source": "synthetic"},
+    )
+    draws = uw_mig.read_rate_draws(path, median)
+    assert draws.rates.shape == (2, 2, 2)
+    assert draws.rates[0, :, 0] == pytest.approx([0.0011, 0.0021])
+    assert draws.rates[1, :, 1] == pytest.approx([0.0022, 0.0032])
+    assert "not coupled" in draws.provenance["draw_axis"]
+
+
+def test_draw_reader_refuses_the_wrong_row_order(tmp_path):
+    path = write_csv(tmp_path / "mig.csv")
+    median = uw_mig.MigrationRates(
+        years=np.array([2023, 2024]),
+        loc_id=np.array([100, 101]),
+        rates=np.full((2, 2), 0.01),
+        provenance={},
+    )
+    with pytest.raises(uw_mig.MigrationIngestError, match="row order"):
+        uw_mig.read_rate_draws(path, median)
 
 
 # --- the borrowed age composition --------------------------------------------
