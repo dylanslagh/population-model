@@ -12,18 +12,16 @@ Two things this module enforces
 -------------------------------
 1. **Every parameter states its basis.** A row with no evidence and no
    provenance will not load. There is no default.
-2. **Nothing claims to be verified that is not.** Every value in the table is
-   currently marked unverified: they are an assistant's recollection of the
-   published literature, not values fetched by a script in this repository.
-   That is a real limitation, it is recorded on every parameter, and anything
-   this model produces inherits it.
+2. **Nothing claims to be verified that is not.** Sourced values carry a
+   verification flag and a durable literature audit. Scenario knobs can never
+   claim verification, and a sourced row stays unverified until its numerical
+   value can be reproduced from the evidence it names.
 
 The second point is worth being blunt about. The rest of this project holds to
-"every value traces to a source, and the script that fetched it lives in the
-repo". These do not, yet. They are good-faith recollections with honest ranges,
-which is enough to demonstrate the mechanism and not enough to publish a
-number. `verified_fraction` reports how far the table has come, and it is
-currently zero.
+"every value traces to a source". The audit at
+``docs/mechanism-parameter-audit.md`` records the manual literature checks;
+machine-readable source data should still be preferred whenever available.
+`verified_fraction` reports how far the table has come.
 """
 
 from __future__ import annotations
@@ -142,9 +140,9 @@ class ParameterSet:
         return (
             f"{len(self.knobs)} of {len(self.parameters)} mechanism parameters "
             f"are scenario knobs with no independent support; "
-            f"{len(self.unverified)} are unverified, meaning recorded from "
-            f"recollection of the literature rather than fetched by a script in "
-            f"this repository"
+            f"{len(self.unverified)} remain unverified (including those knobs); "
+            "sourced rows marked verified were checked against the literature "
+            "recorded in docs/mechanism-parameter-audit.md"
         )
 
     def provenance(self) -> dict:

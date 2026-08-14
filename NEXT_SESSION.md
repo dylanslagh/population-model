@@ -4,9 +4,10 @@ This is the current, session-specific handoff. Read it before `HANDOFF.md`.
 `HANDOFF.md` is the durable technical history; this file records the owner's
 goal, what just finished, and the next piece of work.
 
-**Phases 1 to 5 are built.** The single highest-value job left is not code: it
-is verifying `data/reference/mechanism_parameters.csv` against the literature it
-cites. See "Do this next".
+**Phases 1 to 5 are built.** Seven of eight sourced mechanism parameters were
+checked against the literature on 2026-08-13. The single highest-value job left
+is measuring `mainstream_propensity_cv` from completed cohort family-size data.
+See `docs/mechanism-parameter-audit.md` and "Do this next".
 
 ## Owner's goal, and his editorial direction
 
@@ -101,22 +102,22 @@ fact about where you look.
 
 ## Do this next
 
-**1. Verify the mechanism parameter table.** `data/reference/mechanism_parameters.csv`
-carries thirteen parameters, all marked `verified=FALSE`: they are an assistant's
-recollection of the published literature, not values fetched by a script. Five
-are scenario knobs with no independent support at all. The mechanism is real and
-the architecture is sound; the magnitudes above are illustrative until each row
-is checked against the paper it cites and flipped to TRUE. This is mostly
-reading, and it is worth more than any further code.
+**1. Measure `mainstream_propensity_cv` from cohort-parity data.** The source
+audit is complete for the other seven sourced rows; the exact decisions and
+links are in `docs/mechanism-parameter-audit.md`. This row remains unverified
+because the old 0.60 value was not tied to a reproducible cohort distribution.
+Use the Human Fertility Database or comparable completed-cohort data, state how
+the open highest-parity category is handled, distinguish women from families,
+and do not fit the value to the rebound it is meant to explain.
 
-Highest leverage rows: `mainstream_persistence` and `mainstream_propensity_cv`
-set how strong selection can be; `development_decline_per_decade` is the single
-most important number in the model and cannot be looked up at all.
+The five scenario knobs stay `verified=FALSE` by definition.
+`development_decline_per_decade` is still the single most important number in
+the model and cannot be looked up as a future path.
 
-**2. Cohort fertility from the Human Fertility Database.** Spec section 4.3 calls
-it the highest-value dataset after WPP. It is the empirical spine of the
-disagreement with the UN, it would let `mainstream_propensity_cv` be measured
-rather than recalled, and it resolves around 2038.
+**2. Cohort fertility from the Human Fertility Database more broadly.** Spec
+section 4.3 calls it the highest-value dataset after WPP. It is the empirical
+spine of the disagreement with the UN, settles the remaining dispersion row,
+and resolves around 2038.
 
 **3. The page, when the science is ready for it.** One of the three outputs
 above rather than a separate track. Concrete pieces already scoped:

@@ -13,12 +13,12 @@ never.
 
 Read the caveat before the numbers
 ----------------------------------
-Every mechanism parameter here is unverified. They are recorded from
-recollection of the published literature rather than fetched by a script in
-this repository, and five of thirteen have no independent support at all and
-are labelled scenario knobs. The mechanism is real; the magnitudes are
-illustrative until `data/reference/mechanism_parameters.csv` is verified against
-the papers it cites. Every output file repeats this.
+Seven of thirteen mechanism parameters have been checked against their sources.
+Five have no independent support and are explicitly labelled scenario knobs;
+the remaining sourced gap is the dispersion of completed family size. The
+mechanism is real, but magnitudes remain conditional on those unresolved rows.
+Every output file repeats this caveat. See
+`docs/mechanism-parameter-audit.md` for the source trail.
 
     python scripts/run_phase5.py                    # the grid
     python scripts/run_phase5.py --ensemble 200     # with parameter uncertainty

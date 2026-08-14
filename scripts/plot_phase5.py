@@ -14,9 +14,10 @@ composition of the population has pushed fertility above the environment path.
 The band is what the mechanism's own parameter ranges imply, and it is wide
 because those ranges are wide.
 
-Read the caveat on the figure. Every mechanism parameter is unverified, and the
-five knobs have no independent support at all. The shape of these curves is a
-claim about a mechanism; their height is illustrative.
+Read the caveat on the figure. Seven sourced parameters have been checked, but
+five scenario knobs and the completed-family-size dispersion remain unresolved.
+The shape of these curves is a claim about a mechanism; their height is
+conditional on those assumptions.
 
     python scripts/plot_phase5.py
 """
@@ -115,7 +116,8 @@ def main() -> int:
     )
     fig.text(
         0.5, 0.012,
-        "Illustrative magnitudes. " + payload["caveat"] + ".",
+        "Conditional magnitudes: 7 of 13 parameters verified against sources; "
+        "5 are scenario knobs; completed-family-size dispersion remains unverified.",
         ha="center", fontsize=7.4, color="0.35",
     )
     fig.tight_layout(rect=(0, 0.10, 1, 0.94))

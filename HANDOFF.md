@@ -219,11 +219,13 @@ overcome it by 2150 - and spec section 6.8 is explicit that never is a
 legitimate answer.
 
 **What it rests on.** `data/reference/mechanism_parameters.csv`, thirteen
-parameters, every one currently marked unverified and five of them scenario
+parameters. Seven of the eight sourced rows were checked against their evidence
+on 2026-08-13; `docs/mechanism-parameter-audit.md` records every decision and
+link. `mainstream_propensity_cv` remains unverified, and five rows are scenario
 knobs with no independent support. The loader refuses a row with no provenance,
 a "sourced" row with no evidence, and a knob that claims to be verified. Every
-output repeats the caveat. **The architecture is sound and the magnitudes are
-illustrative** until that table is checked against the papers it cites.
+output repeats the caveat. **The architecture is sound and the magnitudes remain
+conditional** on the unresolved dispersion estimate and explicit future paths.
 
 ### The uncertainty decomposition
 
@@ -244,9 +246,11 @@ else's forecasts. See `NEXT_SESSION.md`.
 
 ## 4. What is not built
 
-- **Verified mechanism parameters.** The largest outstanding item, and it is
-  reading rather than coding. All thirteen rows of the parameter table are
-  recollections of the literature; none has been checked against its source.
+- **Mainstream completed-family-size dispersion.** The one remaining unverified
+  sourced mechanism parameter. It needs a reproducible cohort-parity
+  calculation; do not fit it to the model's fertility path. The other seven
+  sourced rows were checked on 2026-08-13. Five additional rows are scenario
+  knobs and remain unverified by definition.
 - **Phase 6, scoring runs.** Formats are fixed, two vintages are stored, and
   nothing resolves before about 2038. WPP 2027 is the next data event.
 - **Migration uncertainty in the published band.** Measured at 1.75 billion of
@@ -525,21 +529,27 @@ publishes them as one site. Two things that matter here:
 
 ## 12. What to do next
 
-**Verify the mechanism parameter table.** Thirteen rows, none checked against
-its source, and the whole Phase 5 result hangs on them. This is the highest
-value work available and most of it is reading.
+**Measure completed-family-size dispersion from cohort data.** Seven sourced
+mechanism rows are now verified and their audit is in
+`docs/mechanism-parameter-audit.md`. `mainstream_propensity_cv` is the remaining
+one and is among the two parameters selection is most sensitive to. Use Human
+Fertility Database or comparable cohort-parity data, state how the open highest
+parity is handled, and never fit the value to the rebound it is meant to explain.
 
-**Then cohort fertility from the Human Fertility Database.** Spec section 4.3
-calls it the highest-value dataset after WPP. It would let the spread of
-completed family size be measured rather than recalled, which is one of the two
-parameters selection is most sensitive to, and it resolves around 2038.
+**Then cohort fertility from the Human Fertility Database more broadly.** Spec
+section 4.3 calls it the highest-value dataset after WPP. Besides settling the
+dispersion parameter, it is the empirical spine of the disagreement with the UN
+and resolves around 2038.
 
 `NEXT_SESSION.md` carries the rest, including Dylan's editorial direction for
 the page and the scoped pieces of it that are not built.
 
 ---
 
-*Last verified 2026-08-11: 152 tests pass; engine validation, the
+*Last scientific-source audit 2026-08-13: seven of eight sourced mechanism
+parameters verified; `mainstream_propensity_cv` remains unresolved. The Phase 5
+grid and map QA were rerun after the corrections, and 152 tests pass. Last full
+engine and schedule verification 2026-08-11: engine validation, the
 schedule-converter checkpoint, and map QA including the band checks and the
 headless hover-rendering check all pass. Phases 1 to 5 are complete. The live
 page carries the uncertainty band, the hover readout with touch support, the

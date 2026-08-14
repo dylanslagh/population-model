@@ -18,7 +18,8 @@ menu or on the normal command path. Every script that needs R takes its path as
 
 | Item | Exact path |
 |---|---|
-| Python 3.14 | on `PATH` as `python`; no virtualenv needed |
+| Python 3.14 | on `PATH` as `python`; bare runtime has no project packages |
+| Project Python 3.11 | `.venv\Scripts\python.exe`; created 2026-08-13 with system scientific packages plus pytest |
 | R 4.4.2 | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\R-4.4.2\bin\Rscript.exe` |
 | Rtools44 root | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\rtools44` |
 | Tectonic 0.17.0 | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tectonic-0.17.0\tectonic.exe` |
@@ -58,12 +59,16 @@ python scripts\fetch_uw_posteriors.py --check
 From the repository root:
 
 ```powershell
+$python = '.\.venv\Scripts\python.exe'
 $rscript = 'C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\R-4.4.2\bin\Rscript.exe'
 $env:RTOOLS44_HOME = 'C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\rtools44'
 $env:TECTONIC = 'C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tectonic-0.17.0\tectonic.exe'
-python --version
+& $python --version
 & $rscript --version
 ```
+
+Use `& $python -m pytest tests -q` for the test suite. The bare Python 3.14 on
+`PATH` does not currently have NumPy, pandas, or pytest.
 
 To verify or rebuild the pinned R reader:
 

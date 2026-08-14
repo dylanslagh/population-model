@@ -278,9 +278,17 @@ def test_continued_pressure_declines_and_then_stops_at_its_floor():
 
 def test_the_committed_table_loads_and_declares_its_own_weakness():
     parameters = mech_parameters.load()
-    assert len(parameters.parameters) >= 10
-    assert parameters.knobs, "a table with no knobs is hiding something"
-    assert parameters.verified_fraction == 0.0
+    assert len(parameters.parameters) == 13
+    assert len(parameters.knobs) == 5, "a table with no knobs is hiding something"
+    assert parameters.verified_fraction == pytest.approx(7 / 13)
+    assert parameters.unverified == [
+        "defector_high_propensity_weight",
+        "development_decline_per_decade",
+        "development_floor",
+        "group_convergence_per_generation",
+        "mainstream_propensity_cv",
+        "mainstream_types",
+    ]
     assert "unverified" in parameters.caveat()
 
 

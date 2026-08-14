@@ -67,10 +67,12 @@ python -m pytest tests/ -q           # fast, no data needed
 ## Where the project is
 
 Phases 1 to 5 of spec section 10 are done and tested. Phase 6 cannot resolve
-before about 2038. The largest outstanding job is not code: the thirteen rows of
-`data/reference/mechanism_parameters.csv` are recollections of the literature
-rather than values fetched by a script, and Phase 5's magnitudes are
-illustrative until they are checked against their sources. `scenarios.py` declares the unimplemented scenarios
+before about 2038. Seven of the eight sourced rows in
+`data/reference/mechanism_parameters.csv` have now been checked against their
+sources; the durable audit is `docs/mechanism-parameter-audit.md`. The remaining
+sourced gap is `mainstream_propensity_cv`, which needs completed cohort
+family-size data. Five further rows are scenario knobs and cannot be verified by
+definition, so Phase 5 magnitudes remain conditional on them. `scenarios.py` declares the unimplemented scenarios
 with the phase that owes them, so the gap is visible rather than silent.
 
 The Phase 4 ensemble is the **UN-equivalent baseline**, not this project's own

@@ -388,10 +388,12 @@ footer p{max-width:80ch}
   this model it does not, by 2150. It offsets about half of what continued
   development pressure removes, and no more.</p>
   __MECHANISMS__
-  <p class="note">Every mechanism parameter is <b>unverified</b>: recorded from
-  the published literature by hand rather than fetched by a script, and five of
-  the thirteen have no independent support at all. The shape of the argument is
-  the claim; the heights are illustrative until that table is checked.</p>
+  <p class="note">Seven of the eight sourced mechanism parameters have been
+  <b>checked against their evidence</b>. The completed-family-size dispersion
+  still needs a reproducible cohort-data estimate, and five of the thirteen
+  parameters are explicit scenario knobs with no independent support. The
+  source trail is recorded in the repository; the heights remain conditional
+  on those unresolved assumptions.</p>
 </section>
 
 <footer>
