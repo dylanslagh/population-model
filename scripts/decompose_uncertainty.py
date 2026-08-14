@@ -153,11 +153,54 @@ def make_draw(template: TrajectoryDraw, *, tfr, e0f, e0m, draw_id) -> Trajectory
     )
 
 
+def mechanism_from_phase5() -> dict | None:
+    """Read the mechanism width, which Phase 5 computes independently."""
+    phase5 = paths.OUT / "phase5.json"
+    if not phase5.exists():
+        return None
+    payload = json.loads(phase5.read_text(encoding="utf-8"))
+    band = payload.get("ensemble", {}).get("race", {}).get("world_2150_billions")
+    if not band:
+        return None
+    return {
+        "2150": band["p95"] - band["p05"],
+        "draws": payload["ensemble"]["draws"],
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--draws", type=int, default=200)
     parser.add_argument("--end-year", type=int, default=END_YEAR)
+    parser.add_argument(
+        "--refresh-mechanism-only",
+        action="store_true",
+        help=(
+            "reuse the existing demographic-source receipt and refresh only "
+            "the independently computed Phase 5 mechanism width"
+        ),
+    )
     args = parser.parse_args()
+
+    if args.refresh_mechanism_only:
+        out = paths.OUT / "uncertainty_decomposition.json"
+        if not out.exists():
+            raise FileNotFoundError(
+                "no existing uncertainty decomposition to refresh; run the full command"
+            )
+        receipt = json.loads(out.read_text(encoding="utf-8"))
+        mechanism = mechanism_from_phase5()
+        if mechanism is None:
+            raise FileNotFoundError(
+                "out/phase5.json has no parameter ensemble; run Phase 5 first"
+            )
+        receipt["mechanism"] = mechanism
+        out.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+        print(
+            "refreshed mechanism width from phase5.json: "
+            f"{mechanism['2150']:.2f}bn ({mechanism['draws']} draws)"
+        )
+        return 0
 
     bundle = uw_bundle.load()
     base, reference, columns = build_base(bundle)
@@ -313,17 +356,12 @@ def main() -> int:
         )
         results["stop-at-2090"]["median_shift_vs_everything_2150"] = shift
 
-    mechanism = None
-    phase5 = paths.OUT / "phase5.json"
-    if phase5.exists():
-        payload = json.loads(phase5.read_text(encoding="utf-8"))
-        band = payload.get("ensemble", {}).get("race", {}).get("world_2150_billions")
-        if band:
-            mechanism = {"2150": band["p95"] - band["p05"], "draws": payload["ensemble"]["draws"]}
-            print(
-                f"  {'mechanism':<11} world 90% width: 2150 "
-                f"{mechanism['2150']:.2f}bn   (from phase5.json)"
-            )
+    mechanism = mechanism_from_phase5()
+    if mechanism:
+        print(
+            f"  {'mechanism':<11} world 90% width: 2150 "
+            f"{mechanism['2150']:.2f}bn   (from phase5.json)"
+        )
 
     receipt = {
         "draws": n,

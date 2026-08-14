@@ -119,9 +119,9 @@ def main() -> int:
         chr(10).join([
             "One source varied across its own draws at a time, the others held at a "
             "median trajectory. The mechanism bar is not additive with the others:",
-            "its demographic rates are the UN medium path; seven parameters are "
-            "source-checked, five are knobs, and one sourced dispersion remains "
-            "unverified. The published band contains no migration uncertainty.",
+            "its demographic rates are the UN medium path; all eight sourced "
+            "parameters are checked and five others are scenario knobs. The "
+            "published band contains no migration uncertainty.",
         ]),
         ha="center", fontsize=7.6, color="0.4", linespacing=1.7,
     )

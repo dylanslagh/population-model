@@ -1,0 +1,21 @@
+{
+  "accessed": "2026-08-13",
+  "files": {
+    "cumulative_rates": {
+      "bytes": 348038,
+      "filename": "Table02.csv",
+      "sha256": "4de2b58a567825967ec915729d9898eb6ff9fa7fc23bdf99d85978e18dbdda96",
+      "url": "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/nvss/birth/cohort/Table02.csv"
+    },
+    "distribution": {
+      "bytes": 329852,
+      "filename": "Table03.csv",
+      "sha256": "b97e46b868862fad432ffd03e350f1187d0061199b61f5b666d19b93b2f72b2a",
+      "url": "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/nvss/birth/cohort/Table03.csv"
+    }
+  },
+  "manifest": "cdc_cohort_files",
+  "source": "CDC/NCHS Cohort Fertility Tables",
+  "source_page": "https://www.cdc.gov/nchs/nvss/cohort_fertility_tables.htm",
+  "technical_appendix": "https://www.cdc.gov/nchs/data/nvss/cohort_fertility_tables_1960_2005_appendix.pdf"
+}

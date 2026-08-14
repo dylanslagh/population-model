@@ -22,6 +22,7 @@ venv/
 paper/build/
 paper/tmp/
 tmp/
+.codex-pytest-temp/
 
 # Tooling scratch that wanders in from elsewhere on this machine
 .wrangler/

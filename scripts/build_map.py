@@ -387,13 +387,18 @@ footer p{max-width:80ch}
   whether selection ever overtakes the environment moving underneath it. In
   this model it does not, by 2150. It offsets about half of what continued
   development pressure removes, and no more.</p>
+  <p><b>The last empirical gap is now measured.</b> Across 19 low-fertility
+  countries, the median spread in completed family size is a coefficient of
+  variation of 0.57 (country range 0.44-0.79); U.S. CDC cohorts independently
+  give 0.69. The old assumed 0.60 was close by luck. The model uses this as an
+  effective spread paired with the observed parent-child correlation, not as a
+  claim that all family-size variation is an inherited latent trait.</p>
   __MECHANISMS__
-  <p class="note">Seven of the eight sourced mechanism parameters have been
-  <b>checked against their evidence</b>. The completed-family-size dispersion
-  still needs a reproducible cohort-data estimate, and five of the thirteen
-  parameters are explicit scenario knobs with no independent support. The
+  <p class="note">All eight sourced mechanism parameters have been
+  <b>checked against their evidence</b>. Five of the thirteen parameters remain
+  explicit scenario knobs with no independently established future value. The
   source trail is recorded in the repository; the heights remain conditional
-  on those unresolved assumptions.</p>
+  on those choices and the stated empirical ranges.</p>
 </section>
 
 <footer>

@@ -4,10 +4,12 @@ This is the current, session-specific handoff. Read it before `HANDOFF.md`.
 `HANDOFF.md` is the durable technical history; this file records the owner's
 goal, what just finished, and the next piece of work.
 
-**Phases 1 to 5 are built.** Seven of eight sourced mechanism parameters were
-checked against the literature on 2026-08-13. The single highest-value job left
-is measuring `mainstream_propensity_cv` from completed cohort family-size data.
-See `docs/mechanism-parameter-audit.md` and "Do this next".
+**Phases 1 to 5 are built, and all eight sourced mechanism parameters are now
+verified.** The last gap, `mainstream_propensity_cv`, was completed on
+2026-08-13 from 43 CFE countries with an independent CDC U.S. check. The value
+changed 0.60 -> 0.57, its meaning was corrected from a supposedly latent-trait
+CV to an effective completed-family-size spread, and the model was rerun. See
+`docs/mechanism-parameter-audit.md` and "Do this next".
 
 ## Owner's goal, and his editorial direction
 
@@ -88,36 +90,36 @@ the **UN-equivalent baseline** — a mean-reverting model — not this project's
 view, and the stored vintage marks every quantity `is_project_claim: false`.
 
 **Phase 5, the mechanism.** Selection and transmission against a changing
-fertility environment. Against the UN environment, selection adds about 2.1
+fertility environment. Against the UN environment, selection adds about 1.9
 billion by 2150; continued development pressure removes about 2.4 billion;
-together they land at 7.75 billion. **Selection materially offsets continued
+together they land at 7.61 billion. **Selection materially offsets continued
 pressure and does not overcome it by 2150.** "Never" was always a legitimate
 answer and this is close to it.
 
 **The decomposition.** World 90% width at 2150, in billions: fertility 7.26, the
-mechanism 5.79, migration 1.75, our own post-2100 hold-constant rule 0.73,
+mechanism 5.72, migration 1.75, our own post-2100 hold-constant rule 0.73,
 mortality 0.52. Per country at 2100 the ordering reverses — migration is 16.9x
 fertility for the UAE and 0.05x for Nigeria. Which uncertainty dominates is a
 fact about where you look.
 
 ## Do this next
 
-**1. Measure `mainstream_propensity_cv` from cohort-parity data.** The source
-audit is complete for the other seven sourced rows; the exact decisions and
-links are in `docs/mechanism-parameter-audit.md`. This row remains unverified
-because the old 0.60 value was not tied to a reproducible cohort distribution.
-Use the Human Fertility Database or comparable completed-cohort data, state how
-the open highest-parity category is handled, distinguish women from families,
-and do not fit the value to the rebound it is meant to explain.
+**1. Discuss the next scientific target with Dylan.** The sourced-parameter
+audit no longer blocks the three finished outputs. The clearest remaining model
+weakness is structural: the fertility environment multiplies every propensity
+type equally, so selection and environment are exactly separable. Researching
+whether high- and low-fertility people respond differently to economic and
+institutional pressure would be more valuable than inventing an interaction.
 
 The five scenario knobs stay `verified=FALSE` by definition.
 `development_decline_per_decade` is still the single most important number in
 the model and cannot be looked up as a future path.
 
 **2. Cohort fertility from the Human Fertility Database more broadly.** Spec
-section 4.3 calls it the highest-value dataset after WPP. It is the empirical
-spine of the disagreement with the UN, settles the remaining dispersion row,
-and resolves around 2038.
+section 4.3 calls it the highest-value dataset after WPP and the empirical spine
+of the disagreement with the UN. HFD bulk downloads now require an account and
+acceptance of its current terms. The public CFE archive already pinned here can
+support some longitudinal work without a login.
 
 **3. The page, when the science is ready for it.** One of the three outputs
 above rather than a separate track. Concrete pieces already scoped:
@@ -175,4 +177,5 @@ Nothing blocks the work above. Before a genuinely public release: the public
 hostname and the licensing decision. Before the paper: title, author line,
 acknowledgements and release status.
 
-*Updated 2026-08-11, after Phase 5 and the uncertainty decomposition.*
+*Updated 2026-08-13, after the completed-family-size audit, Phase 5 rerun, and
+uncertainty-decomposition refresh.*

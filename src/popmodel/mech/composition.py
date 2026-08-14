@@ -7,21 +7,24 @@ owns the first of them:
 * **How many children does a person of a given type have under current
   conditions?** That is `environment.py`.
 
-A "type" is a fertility propensity, expressed as a multiplier on the country's
-own fertility. Propensity 1.4 means a woman of that type has forty per cent
-more children than the national average did in the base year -- it is not a
-number of children, and it does not change when the environment does. That
-separation is the whole point: selection moves the composition, development
-moves the environment, and observed fertility is what comes out.
+A "type" is an effective fertility propensity, expressed as a multiplier on
+the country's own fertility. Propensity 1.4 means a woman of that type has forty
+per cent more children than the national average did in the base year -- it is
+not a number of children, and it does not change when the environment does.
+These are moment-matching states, not discovered biological kinds: their spread
+and persistence jointly reproduce the observed covariance in completed family
+size across generations. That separation is the whole point: selection moves
+the composition, development moves the environment, and observed fertility is
+what comes out.
 
 The mainstream is not a residual bucket
 ---------------------------------------
-Spec section 6.5. Three latent propensity types with no ethnic, religious or
-political label, drawn as quantile bins of a right-skewed distribution of
-completed family size. Children land near their parents' type more often than
-chance, which is what "intergenerational fertility persistence" means, and the
-probability of landing in the same type IS the parent-child correlation in
-propensity -- see `mainstream_transition`.
+Spec section 6.5. Three unlabelled effective propensity types with no ethnic,
+religious or political label, drawn as quantile bins of a right-skewed
+distribution that matches completed-family-size dispersion. Children land near
+their parents' type more often than chance. The pair is calibrated to observed
+family size and its parent-offspring correlation; it does not assert that all
+observed variance is a stable latent trait. See `mainstream_transition`.
 
 Named groups are transitions, not labels
 ----------------------------------------
@@ -72,12 +75,14 @@ def _normal_quantile(p: float) -> float:
 
 
 def propensity_bins(n_types: int, cv: float) -> np.ndarray:
-    """Propensities for equal-share quantile bins of completed family size.
+    """Effective propensities matching completed-family-size mean and CV.
 
-    The distribution of completed family size is right-skewed -- a floor at
-    zero children and a long upper tail -- so a lognormal is used rather than a
-    symmetric spread. Each type is the conditional mean within its own
-    equal-probability bin.
+    Completed family size is right-skewed -- a floor at zero children and a
+    long upper tail -- so a lognormal shape is used rather than a symmetric
+    spread. Each type is the conditional mean within its equal-probability bin.
+    Only the first two moments are evidence-backed; this lognormal discretisation
+    is a transparent structural approximation for carrying them through the
+    cohort engine.
 
     Discretising a continuous distribution into a handful of points loses part
     of its dispersion, so the deviations are then rescaled to reproduce the
@@ -119,14 +124,15 @@ def propensity_bins(n_types: int, cv: float) -> np.ndarray:
 def mainstream_transition(n_types: int, persistence: float, shares: np.ndarray) -> np.ndarray:
     """Parent type to child type, for the unlabelled mainstream.
 
-    A child stays in the parent's type with probability `persistence`, and
+    A child stays in the parent's effective type with probability `persistence`, and
     otherwise is drawn from the population's baseline distribution of types.
 
-    That mixture is chosen because its parameter means something measurable:
-    since propensity is a deterministic function of type and the alternative
-    draw is independent, the resulting parent-child correlation in propensity
-    is exactly `persistence`. So the number in the table is the number the
-    family studies estimate, with no translation step to get wrong.
+    Since propensity is a deterministic function of type and the alternative
+    draw is independent, the model correlation is exactly `persistence`. When
+    this is paired with the observed completed-family-size CV, the model's
+    one-generation response is persistence * CV^2 in relative terms, identical
+    to Cov(parent family size, offspring family size) / mean family size. This
+    is a covariance calibration, not a latent-trait variance decomposition.
     """
     if not 0.0 <= persistence <= 1.0:
         raise ParameterError("persistence must be a probability")

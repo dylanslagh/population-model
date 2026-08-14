@@ -209,29 +209,30 @@ engine reproduces the ordinary engine to 3e-16 relative, and the UN-equivalent
 cell of the grid lands at 8.78 billion in 2150 - the deterministic run's own
 figure. Any difference between Phase 4 and Phase 5 is therefore the mechanism
 and not a second implementation of the arithmetic. One generation of selection
-also matches the breeder's equation to nine decimal places, which is the
-mechanism agreeing with its own theory.
+also matches the observed parent-offspring covariance response to nine decimal
+places, which is the mechanism agreeing with its calibration.
 
-**What it says.** Against the UN environment, selection adds about 2.1 billion
+**What it says.** Against the UN environment, selection adds about 1.9 billion
 by 2150. Continued development pressure removes about 2.4 billion. Together they
-reach 7.75 billion. Selection materially offsets continued pressure and does not
+reach 7.61 billion. Selection materially offsets continued pressure and does not
 overcome it by 2150 - and spec section 6.8 is explicit that never is a
 legitimate answer.
 
 **What it rests on.** `data/reference/mechanism_parameters.csv`, thirteen
-parameters. Seven of the eight sourced rows were checked against their evidence
-on 2026-08-13; `docs/mechanism-parameter-audit.md` records every decision and
-link. `mainstream_propensity_cv` remains unverified, and five rows are scenario
-knobs with no independent support. The loader refuses a row with no provenance,
+parameters. All eight sourced rows were checked against their evidence on
+2026-08-13; `docs/mechanism-parameter-audit.md` records every decision and link.
+The last gap, `mainstream_propensity_cv`, is now calculated from 43 pinned CFE
+country files and independently checked against CDC U.S. cohorts. Five rows are
+scenario knobs with no independent support. The loader refuses a row with no provenance,
 a "sourced" row with no evidence, and a knob that claims to be verified. Every
 output repeats the caveat. **The architecture is sound and the magnitudes remain
-conditional** on the unresolved dispersion estimate and explicit future paths.
+conditional** on explicit future paths, empirical ranges, and structural choices.
 
 ### The uncertainty decomposition
 
 `scripts/decompose_uncertainty.py` varies one source at a time across its own
 draws and holds the rest at a median trajectory. World 90% width at 2150, in
-billions: **fertility 7.26, the mechanism 5.79, migration 1.75, our own
+billions: **fertility 7.26, the mechanism 5.72, migration 1.75, our own
 hold-constant rule after 2100 0.73, mortality 0.52.**
 
 The country panel matters more than the world one because it disagrees with it.
@@ -246,11 +247,6 @@ else's forecasts. See `NEXT_SESSION.md`.
 
 ## 4. What is not built
 
-- **Mainstream completed-family-size dispersion.** The one remaining unverified
-  sourced mechanism parameter. It needs a reproducible cohort-parity
-  calculation; do not fit it to the model's fertility path. The other seven
-  sourced rows were checked on 2026-08-13. Five additional rows are scenario
-  knobs and remain unverified by definition.
 - **Phase 6, scoring runs.** Formats are fixed, two vintages are stored, and
   nothing resolves before about 2038. WPP 2027 is the next data event.
 - **Migration uncertainty in the published band.** Measured at 1.75 billion of
@@ -529,29 +525,32 @@ publishes them as one site. Two things that matter here:
 
 ## 12. What to do next
 
-**Measure completed-family-size dispersion from cohort data.** Seven sourced
-mechanism rows are now verified and their audit is in
-`docs/mechanism-parameter-audit.md`. `mainstream_propensity_cv` is the remaining
-one and is among the two parameters selection is most sensitive to. Use Human
-Fertility Database or comparable cohort-parity data, state how the open highest
-parity is handled, and never fit the value to the rebound it is meant to explain.
+**The completed-family-size dispersion job is finished.** The reproducible CFE
+calculation, CDC cross-check, interpretation, and projection sensitivity are in
+`docs/mechanism-parameter-audit.md`; source checksums and derived outputs are
+committed. The central CV changed 0.60 -> 0.57 and the race result 7.75 -> 7.61
+billion. All eight sourced mechanism rows are now verified. Do not reopen this
+by fitting a latent-trait variance to the projection it is meant to explain.
 
-**Then cohort fertility from the Human Fertility Database more broadly.** Spec
-section 4.3 calls it the highest-value dataset after WPP. Besides settling the
-dispersion parameter, it is the empirical spine of the disagreement with the UN
-and resolves around 2038.
+**Discuss the next scientific target with Dylan before starting a finished
+output.** The strongest remaining structural assumption is that the fertility
+environment multiplies every propensity type equally, making selection and
+environment exactly separable. Testing or relaxing it needs outside evidence,
+not a convenient interaction term. Broader cohort-fertility work from HFD is
+also valuable per spec section 4.3, but HFD bulk access now requires an account;
+the public CFE archive can support some of that work without a login.
 
 `NEXT_SESSION.md` carries the rest, including Dylan's editorial direction for
 the page and the scoped pieces of it that are not built.
 
 ---
 
-*Last scientific-source audit 2026-08-13: seven of eight sourced mechanism
-parameters verified; `mainstream_propensity_cv` remains unresolved. The Phase 5
-grid and map QA were rerun after the corrections, and 152 tests pass. Last full
-engine and schedule verification 2026-08-11: engine validation, the
-schedule-converter checkpoint, and map QA including the band checks and the
-headless hover-rendering check all pass. Phases 1 to 5 are complete. The live
+*Last scientific-source audit 2026-08-13: all eight sourced mechanism
+parameters verified; `mainstream_propensity_cv` is reproduced from CFE and CDC
+cohort data. The Phase 5 grid and map QA were rerun after the corrections, and
+all 158 tests pass. Engine validation and map QA were rerun 2026-08-13;
+the schedule-converter checkpoint was last rerun 2026-08-11. The band checks
+and headless hover-rendering check all pass. Phases 1 to 5 are complete. The live
 page carries the uncertainty band, the hover readout with touch support, the
 uncertainty decomposition and the two mechanisms. Phase 4's ensemble is stored
 as vintage `2026-08-10-phase4-uw-baseline` with every quantity marked as not a

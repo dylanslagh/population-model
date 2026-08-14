@@ -1,6 +1,6 @@
 # Mechanism parameter audit
 
-Audited 2026-08-13. This is the durable source trail for
+Audited and completed 2026-08-13. This is the durable source trail for
 `data/reference/mechanism_parameters.csv`. It records what the cited evidence
 actually supports, which values changed, and which rows must remain scenario
 knobs or unverified estimates. URLs are links to the publisher, author
@@ -9,15 +9,15 @@ fit to this model's population or fertility output.
 
 ## Result
 
-Seven of the eight sourced rows are now checked. The five scenario knobs remain
-unverified by definition. `mainstream_propensity_cv` also remains unverified:
-the original evidence was only a recollection of the distribution of completed
-family size, not a reproducible calculation from cohort-parity data.
+All eight sourced rows are now checked. The five scenario knobs remain
+unverified by definition. The final gap, `mainstream_propensity_cv`, is now a
+reproducible calculation from pinned cohort-parity data rather than a recalled
+rule of thumb.
 
 | Parameter | Decision | Source-backed finding |
 |---|---|---|
 | `mainstream_persistence` | Verified; keep 0.15 | Recent parent-child fertility correlations are usually about 0.1-0.2. |
-| `mainstream_propensity_cv` | **Not verified** | Plausible, but no source in the old row permits the CV to be reproduced. |
+| `mainstream_propensity_cv` | Verified; 0.60 -> 0.57, range 0.44-0.80 | Median completed-family-size CV across 19 low-fertility countries is 0.570; an independent U.S. estimate is 0.695. |
 | `group_retention_haredi` | Verified; 0.90 -> 0.867 | 13.3% overall leaving implies 86.7% retention; faction variation is large. |
 | `group_fertility_haredi` | Verified; keep 6.40 | CBS estimate is 6.38 for 2020-2022, conventionally rounded to 6.4. |
 | `group_share_haredi` | Verified; 0.135 -> 0.139 | 1.392 million, or 13.9% of Israel in 2024. |
@@ -57,18 +57,89 @@ reported by one paper.
 
 ## Mainstream propensity dispersion
 
-This row is still the highest-leverage empirical gap. Published parity tables
-show substantial variation around mean completed family size, but the old claim
-that a mean of 1.8-2.0 and standard deviation of 1.1-1.3 imply a CV near 0.6 was
-not tied to a cohort, country, table, or reproducible transformation.
+The old 0.60 was numerically plausible but unsupported. It is replaced by 0.57,
+calculated without fitting to any model output.
 
-Do not mark it verified from a TFR series or fit it to the rebound the mechanism
-is intended to explain. Compute it from completed cohort family-size
-distributions, preferably across multiple low-fertility countries and cohorts.
-The [Human Fertility Database](https://www.humanfertility.org/) and the
-[Cohort Fertility and Education Database](https://www.eurrep.org/database/)
-are the natural next sources. The calculation should state treatment of the
-open highest-parity category and distinguish women from families or couples.
+### Primary calculation
+
+The source is the
+[Cohort Fertility and Education Database](https://www.eurrep.org/database/database/)
+(CFE). `scripts/fetch_cfe.py` pins the latest displayed source for 45 countries;
+43 have a single observation year and support the age window. France and Italy
+pool surveys across years and are excluded rather than assigned an invented
+date. The committed manifest records URLs, byte counts, and SHA-256 hashes.
+Following the [CFE terms](https://www.eurrep.org/database/about/terms-of-use/),
+the original tabulations remain gitignored and are not redistributed.
+
+`scripts/analyze_cfe_dispersion.py` applies the same declared rule everywhere:
+
+- women, not couples or only mothers;
+- children ever born, including childless women;
+- whole birth-cohort bins whose members were all aged 50-59 at observation;
+- one estimate per country, with education categories summed and country-
+  documented unknown-parity conventions retained;
+- a low-fertility comparison set declared as mean completed fertility at or
+  below 2.2 children, not selected for agreement with the model.
+
+The open highest-parity cell does not have to be pretended equal to its lower
+bound. CFE supplies exact total children, so its mean is identified. The primary
+estimate assigns geometric excess above the open parity—the maximum-entropy
+integer distribution with that mean. Across all 43 countries, using this tail
+instead of the minimum-variance integer tail changes the CV by 0.005 at the
+median and at most 0.059. A deliberately extreme sensitivity places the tail on
+its lower bound and 40 children; its larger widths are reported, not hidden.
+
+Among the 19 low-fertility countries (29.1 million reported women), the
+country-median CV is **0.570**, with observed country range **0.443-0.787** and
+country 10th-90th percentiles **0.466-0.710**. The women-weighted median is
+0.555, but the unweighted country median is the parameter center: these sources
+are a set of plausible settings, not a harmonized global sample, and weighting
+would let the Russian extract dominate. The range rounds outward to 0.44-0.80.
+
+As an independent check, paired CDC/NCHS
+[Cohort Fertility Tables 2 and 3](https://www.cdc.gov/nchs/nvss/cohort_fertility_tables.htm)
+give mean completed fertility 2.040 and CV **0.695** for U.S. cohorts 1947-1956
+at exact age 50. This is inside the declared range and above the cross-country
+median. `scripts/fetch_cdc_cohort.py` pins both official files and their hashes.
+
+### What the parameter means
+
+The parity marginals do **not** identify a latent biological or cultural trait
+with CV 0.57. Realized family-size variation includes timing chance,
+infertility, partnership histories, environment, and measurement. Hruschka and
+Burger (2016), DOI
+[10.1098/rstb.2015.0155](https://doi.org/10.1098/rstb.2015.0155), show with 200
+surveys that substantial completed-fertility variance can arise from a counting
+process without stable differences among women. They also find that the lowest-
+fertility samples often depart from Poisson toward targeted family sizes. That
+is visible here: most low-fertility CFE distributions are underdispersed
+relative to Poisson, so subtracting a Poisson variance would be an invalid way
+to manufacture a latent-trait CV.
+
+The model instead uses 0.57 as an **effective phenotypic spread**, jointly with
+the observed intergenerational correlation. Fertility-weighting changes the
+offspring generation's mean by
+
+`Cov(parent completed fertility, offspring completed fertility) / mean parent fertility`.
+
+When the marginal variances are equal, the relative change is `correlation ×
+CV²`. That is exactly the one-generation response produced by this model's
+CV-and-persistence construction. The pair therefore moment-matches an observed
+covariance; it does not claim that every source of family-size variance is
+inherited. Higher-generation behavior and the three-bin lognormal shape remain
+structural approximations, which is why `mainstream_types` stays a scenario
+knob and the broad empirical CV range is propagated.
+
+### Projection sensitivity
+
+`scripts/analyze_mainstream_cv_sensitivity.py` propagates the evidence without
+refitting anything. In the central “race” scenario, changing the superseded
+0.60 to 0.57 lowers the 2150 population from 7.749 to **7.610 billion** and the
+selection effect from 1.190 to **1.174**. Holding every other parameter fixed,
+the empirical CV endpoints 0.44 and 0.80 produce 7.104 and 8.920 billion. The
+center correction is modest; cross-setting dispersion uncertainty is not. The
+committed JSON records the same comparison for mainstream-only and full
+selection under the UN environment.
 
 ## Haredi parameters
 

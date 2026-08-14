@@ -1,0 +1,461 @@
+{
+  "accessed": "2026-08-13",
+  "files": {
+    "albania_2011": {
+      "bytes": 188359,
+      "country": "Albania",
+      "data_source": "Census 2011",
+      "filename": "albania_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "949a40d1d6699c24663767f5be945dc936a025c1888a3d65178715f0a19e7348",
+      "url": "https://zozlak.org/eurrep/Albania/Census%202011/raw"
+    },
+    "argentina_2001": {
+      "bytes": 328150,
+      "country": "Argentina",
+      "data_source": "Census 2001",
+      "filename": "argentina_2001.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2001,
+      "sha256": "534ba8ab5bd4d90db4dbd36af0f7af5abb1ca22deffb2b9e064eb344c5fcf421",
+      "url": "https://zozlak.org/eurrep/Argentina/Census%202001/raw"
+    },
+    "austria_2001": {
+      "bytes": 823178,
+      "country": "Austria",
+      "data_source": "Census 2001",
+      "filename": "austria_2001.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2001,
+      "sha256": "92ab1e3b22d20c0a791e2ca0167f1bc6d2cb818164c097954aaec6b4c739b038",
+      "url": "https://zozlak.org/eurrep/Austria/Census%202001/raw"
+    },
+    "belarus_2009": {
+      "bytes": 553549,
+      "country": "Belarus",
+      "data_source": "Census 2009",
+      "filename": "belarus_2009.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2009,
+      "sha256": "95cbdee95424e91ec1f7c55a1e1c9b9ea4a7ae0bd802102fbb0575038cbf5da6",
+      "url": "https://zozlak.org/eurrep/Belarus/Census%202009/raw"
+    },
+    "belgium_2001": {
+      "bytes": 1156880,
+      "country": "Belgium",
+      "data_source": "Census 2001",
+      "filename": "belgium_2001.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2001,
+      "sha256": "a93b2958fafdf5d639de931e7148a2b2c4d474d0f79a14f9ba4275adc801d8ef",
+      "url": "https://zozlak.org/eurrep/Belgium/Census%202001/raw"
+    },
+    "bolivia_2001": {
+      "bytes": 379200,
+      "country": "Bolivia",
+      "data_source": "Census 2001",
+      "filename": "bolivia_2001.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2001,
+      "sha256": "1340422ef964fd96dba8ebd13e9de99a24217df339e44d3767d096a9080926c4",
+      "url": "https://zozlak.org/eurrep/Bolivia/Census%202001/raw"
+    },
+    "bosnia_herzegovina_1991": {
+      "bytes": 707710,
+      "country": "Bosnia-Herzegovina",
+      "data_source": "Census 1991",
+      "filename": "bosnia_herzegovina_1991.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 1991,
+      "sha256": "2cbf7d0f4ffff68f9b4b4c2de58dfe8fe8ec6250abadbda95df985562ba4586c",
+      "url": "https://zozlak.org/eurrep/Bosnia-Herzegovina/Census%201991/raw"
+    },
+    "brazil_2010": {
+      "bytes": 429607,
+      "country": "Brazil",
+      "data_source": "Census 2010",
+      "filename": "brazil_2010.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2010,
+      "sha256": "fcf45021486a3ad3dd61751b48e355a56e9b11e637b36a8c9bc00aadb24beaa4",
+      "url": "https://zozlak.org/eurrep/Brazil/Census%202010/raw"
+    },
+    "bulgaria_2001": {
+      "bytes": 777679,
+      "country": "Bulgaria",
+      "data_source": "Census 2001",
+      "filename": "bulgaria_2001.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2001,
+      "sha256": "3e962dc8c8949afb687408fb832ff58616287696f9b48f48acbb4d157e08147e",
+      "url": "https://zozlak.org/eurrep/Bulgaria/Census%202001/raw"
+    },
+    "chile_2002": {
+      "bytes": 388568,
+      "country": "Chile",
+      "data_source": "Census 2002",
+      "filename": "chile_2002.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2002,
+      "sha256": "5260176d9fcdf664c52a0b01297daf57c7c717223670f46b79af18ab0ac039bc",
+      "url": "https://zozlak.org/eurrep/Chile/Census%202002/raw"
+    },
+    "colombia_2005": {
+      "bytes": 454001,
+      "country": "Colombia",
+      "data_source": "Census 2005",
+      "filename": "colombia_2005.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2005,
+      "sha256": "1a148c3bfc2205ce4c5c43ebd7c3e45d761fb313ba463c75bf01f089b22e5544",
+      "url": "https://zozlak.org/eurrep/Colombia/Census%202005/raw"
+    },
+    "costa_rica_2011": {
+      "bytes": 319472,
+      "country": "Costa Rica",
+      "data_source": "Census 2011",
+      "filename": "costa_rica_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "800888d529049e2e39e790d3b1118be64d1c13f14491d55f7d8cca0f7f22cc0a",
+      "url": "https://zozlak.org/eurrep/Costa%20Rica/Census%202011/raw"
+    },
+    "croatia_2011": {
+      "bytes": 971481,
+      "country": "Croatia",
+      "data_source": "Census 2011",
+      "filename": "croatia_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "65f466441bd9f11071cc5269091ee01217be2bbc711238336fa6b15a5fea35ba",
+      "url": "https://zozlak.org/eurrep/Croatia/Census%202011/raw"
+    },
+    "czech_republic_2001": {
+      "bytes": 716402,
+      "country": "Czech Republic",
+      "data_source": "Census 2001",
+      "filename": "czech_republic_2001.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2001,
+      "sha256": "a471a2803cfb85de8ac1cfbdf0cf544f187454be4d2c75d71902a148b54176c2",
+      "url": "https://zozlak.org/eurrep/Czech%20Republic/Census%202001/raw"
+    },
+    "dominican_republic_2010": {
+      "bytes": 342669,
+      "country": "Dominican Republic",
+      "data_source": "Census 2010",
+      "filename": "dominican_republic_2010.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2010,
+      "sha256": "d24a36118b4eb43ae4c84598a25d1ba3ca3d844247808bdb8e1b406e9c66c4df",
+      "url": "https://zozlak.org/eurrep/Dominican%20Republic/Census%202010/raw"
+    },
+    "ecuador_2010": {
+      "bytes": 423398,
+      "country": "Ecuador",
+      "data_source": "Census 2010",
+      "filename": "ecuador_2010.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2010,
+      "sha256": "966a372d04182bd5e43f83f84b8589eb32fcc5bc55888872d4e28d9253d61d37",
+      "url": "https://zozlak.org/eurrep/Ecuador/Census%202010/raw"
+    },
+    "el_salvador_2007": {
+      "bytes": 285371,
+      "country": "El Salvador",
+      "data_source": "Census 2007",
+      "filename": "el_salvador_2007.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2007,
+      "sha256": "868c9ecd79fa25374d75905797ffa77519f15c8d1ab36749030c745a827e23ca",
+      "url": "https://zozlak.org/eurrep/El%20Salvador/Census%202007/raw"
+    },
+    "estonia_2011": {
+      "bytes": 2199800,
+      "country": "Estonia",
+      "data_source": "Census 2011",
+      "filename": "estonia_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "ea36ef43ae65558e9d034d43f74d483f3df34d96d1c6b8783a0e60d097f65a79",
+      "url": "https://zozlak.org/eurrep/Estonia/Census%202011/raw"
+    },
+    "finland_2015": {
+      "bytes": 1965064,
+      "country": "Finland",
+      "data_source": "Population Register 2015",
+      "filename": "finland_2015.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2015,
+      "sha256": "be966ee589462eea6db9ea8ecb17b640b4bb597c653913c2cd5056451105b8df",
+      "url": "https://zozlak.org/eurrep/Finland/Population%20Register%202015/raw"
+    },
+    "france_surveys": {
+      "bytes": 128202,
+      "country": "France",
+      "data_source": "Surveys 1982-2011",
+      "filename": "france_surveys.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": null,
+      "sha256": "915a78f9a6fcb0e2e0973b5ad41a01780d5cb11e2c40a74a34a1401d1356501b",
+      "url": "https://zozlak.org/eurrep/France/Surveys%201982-2011/raw"
+    },
+    "germany_2012": {
+      "bytes": 62568,
+      "country": "Germany",
+      "data_source": "Microcensus 2012",
+      "filename": "germany_2012.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2012,
+      "sha256": "6003fb78faeb42a30dba7d1570ca884932ec12a652cdeb0e3ccd3f8891f783a8",
+      "url": "https://zozlak.org/eurrep/Germany/Microcensus%202012/raw"
+    },
+    "greece_2011": {
+      "bytes": 812310,
+      "country": "Greece",
+      "data_source": "Census 2011",
+      "filename": "greece_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "980fe0af7b7c04f3dfd9f70c56bf01c83e92627572fc4589821921900fb0e137",
+      "url": "https://zozlak.org/eurrep/Greece/Census%202011/raw"
+    },
+    "haiti_2003": {
+      "bytes": 282336,
+      "country": "Haiti",
+      "data_source": "Census 2003",
+      "filename": "haiti_2003.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2003,
+      "sha256": "2a513225612f06d85ffff8b2f1b10e5d42f453ea3677c406ab166c9fa0222e27",
+      "url": "https://zozlak.org/eurrep/Haiti/Census%202003/raw"
+    },
+    "hungary_2011": {
+      "bytes": 385112,
+      "country": "Hungary",
+      "data_source": "Census 2011",
+      "filename": "hungary_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "2b7581091b81d1947003685ae3ee5bbcee8ec3d124bec442015560f24c388751",
+      "url": "https://zozlak.org/eurrep/Hungary/Census%202011/raw"
+    },
+    "ireland_2011": {
+      "bytes": 323060,
+      "country": "Ireland",
+      "data_source": "Census 2011",
+      "filename": "ireland_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "dfc72c4bd78fff194c0ed9b061162657cca48e6480ff4c582c5887847876d393",
+      "url": "https://zozlak.org/eurrep/Ireland/Census%202011/raw"
+    },
+    "italy_surveys": {
+      "bytes": 60161,
+      "country": "Italy",
+      "data_source": "Surveys 2003-2009",
+      "filename": "italy_surveys.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": null,
+      "sha256": "a8f6f215bc80cf4961cf8eedc4cac0923efd85f2a8a62af5f85d699e1fa143c4",
+      "url": "https://zozlak.org/eurrep/Italy/Surveys%202003-2009/raw"
+    },
+    "kosovo_2011": {
+      "bytes": 666628,
+      "country": "Kosovo",
+      "data_source": "Census 2011",
+      "filename": "kosovo_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "16341c6da6e62ac6229a48b5dbb51520cb3491212d6f50afb7ca977674a81b29",
+      "url": "https://zozlak.org/eurrep/Kosovo/Census%202011/raw"
+    },
+    "macedonia_2002": {
+      "bytes": 865652,
+      "country": "Macedonia",
+      "data_source": "Census 2002",
+      "filename": "macedonia_2002.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2002,
+      "sha256": "66ba47bf9e2563fc624db344fa5dc11704e81766b821499415b4bdede5532cea",
+      "url": "https://zozlak.org/eurrep/Macedonia/Census%202002/raw"
+    },
+    "mexico_2010": {
+      "bytes": 444692,
+      "country": "Mexico",
+      "data_source": "Census 2010",
+      "filename": "mexico_2010.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2010,
+      "sha256": "3385ec28c6edcc25925e23ceed847570bd6bbd54839002ee5642bc66135f3cdd",
+      "url": "https://zozlak.org/eurrep/Mexico/Census%202010/raw"
+    },
+    "montenegro_2011": {
+      "bytes": 584346,
+      "country": "Montenegro",
+      "data_source": "Census 2011",
+      "filename": "montenegro_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "119741ab1601d9228ae24b22e4d31752da0f3c35f84b73bed62aa2aac75c8866",
+      "url": "https://zozlak.org/eurrep/Montenegro/Census%202011/raw"
+    },
+    "nicaragua_2005": {
+      "bytes": 347374,
+      "country": "Nicaragua",
+      "data_source": "Census 2005",
+      "filename": "nicaragua_2005.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2005,
+      "sha256": "f92fb5c3d12374d01cf2aed2cc8a1389c6acc43b6e2e8b7e52f043ca0e7a7c61",
+      "url": "https://zozlak.org/eurrep/Nicaragua/Census%202005/raw"
+    },
+    "panama_2010": {
+      "bytes": 356824,
+      "country": "Panama",
+      "data_source": "Census 2010",
+      "filename": "panama_2010.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2010,
+      "sha256": "67f28f8bb32dcd1e85f18de87928c79d6bcca1eb8b1f0330a25d16a117f28c7c",
+      "url": "https://zozlak.org/eurrep/Panama/Census%202010/raw"
+    },
+    "paraguay_2002": {
+      "bytes": 373266,
+      "country": "Paraguay",
+      "data_source": "Census 2002",
+      "filename": "paraguay_2002.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2002,
+      "sha256": "48d846b0dc1943363767b44f123ea51171131fdfea562aef2863a5caf5e84d1a",
+      "url": "https://zozlak.org/eurrep/Paraguay/Census%202002/raw"
+    },
+    "peru_2007": {
+      "bytes": 335578,
+      "country": "Peru",
+      "data_source": "Census 2007",
+      "filename": "peru_2007.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2007,
+      "sha256": "571509e676d32a17b0c7f5a3d792e3dd337a21f44198a5d7ccb12dac28c45bdd",
+      "url": "https://zozlak.org/eurrep/Peru/Census%202007/raw"
+    },
+    "poland_2002": {
+      "bytes": 674759,
+      "country": "Poland",
+      "data_source": "Fertility Survey 2002",
+      "filename": "poland_2002.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2002,
+      "sha256": "9d146226b6f6eb8c9ee149b12508cbcca00331fdbcbb7a99498a98a75149f99b",
+      "url": "https://zozlak.org/eurrep/Poland/Fertility%20Survey%202002/raw"
+    },
+    "romania_2002": {
+      "bytes": 379005,
+      "country": "Romania",
+      "data_source": "Census 2002",
+      "filename": "romania_2002.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2002,
+      "sha256": "94dbdf8664faf63402c09a8b48a31a4c6e170668f62bba5f1b8da7bca1f55e58",
+      "url": "https://zozlak.org/eurrep/Romania/Census%202002/raw"
+    },
+    "russia_2010": {
+      "bytes": 1141269,
+      "country": "Russia",
+      "data_source": "Census 2010",
+      "filename": "russia_2010.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2010,
+      "sha256": "80bfa14de9d64154d12a537bb87abd6ce4fa60131fc7683b03b8b64cee98da22",
+      "url": "https://zozlak.org/eurrep/Russia/Census%202010/raw"
+    },
+    "serbia_2011": {
+      "bytes": 367273,
+      "country": "Serbia",
+      "data_source": "Census 2011",
+      "filename": "serbia_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "50529e2931f90bbec35d91ed845cab990b676290f3fa40936b52483cfdb0d1a0",
+      "url": "https://zozlak.org/eurrep/Serbia/Census%202011/raw"
+    },
+    "slovakia_2011": {
+      "bytes": 791611,
+      "country": "Slovakia",
+      "data_source": "Census 2011",
+      "filename": "slovakia_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "f5f8a1b3f41f96651eaed65af55051ec422977912b698639e5be90834e42aa3d",
+      "url": "https://zozlak.org/eurrep/Slovakia/Census%202011/raw"
+    },
+    "slovenia_2011": {
+      "bytes": 427376,
+      "country": "Slovenia",
+      "data_source": "Census 2011",
+      "filename": "slovenia_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "7319dbdbd16a6ac54cfdff3285d064c55a54a9ffa45db8f25373815d25ccbabe",
+      "url": "https://zozlak.org/eurrep/Slovenia/Census%202011/raw"
+    },
+    "south_korea_2010": {
+      "bytes": 377008,
+      "country": "South Korea",
+      "data_source": "Census 2010",
+      "filename": "south_korea_2010.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2010,
+      "sha256": "4a5bde2a6771ecb3a9b56221a373dcd9df42aa9ae5996f41c57e21a8d630e73d",
+      "url": "https://zozlak.org/eurrep/South%20Korea/Census%202010/raw"
+    },
+    "spain_2011": {
+      "bytes": 742697,
+      "country": "Spain",
+      "data_source": "Census 2011",
+      "filename": "spain_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "4f64bda85707776c2f39d46fe278ec1fcd47973142ae446ab258e3898ddde420",
+      "url": "https://zozlak.org/eurrep/Spain/Census%202011/raw"
+    },
+    "switzerland_2000": {
+      "bytes": 963183,
+      "country": "Switzerland",
+      "data_source": "Census 2000",
+      "filename": "switzerland_2000.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2000,
+      "sha256": "a8053548733de84fc513507ea54537119f3a81f6d0808a7c711a6eec032336bc",
+      "url": "https://zozlak.org/eurrep/Switzerland/Census%202000/raw"
+    },
+    "uruguay_2011": {
+      "bytes": 944161,
+      "country": "Uruguay",
+      "data_source": "Census 2011",
+      "filename": "uruguay_2011.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2011,
+      "sha256": "1442935c586425de982436c4fa212aae3754c988140af8d79c525cd52751af13",
+      "url": "https://zozlak.org/eurrep/Uruguay/Census%202011/raw"
+    },
+    "venezuela_2001": {
+      "bytes": 405225,
+      "country": "Venezuela",
+      "data_source": "Census 2001",
+      "filename": "venezuela_2001.csv",
+      "first_downloaded": "2026-08-13",
+      "observation_year": 2001,
+      "sha256": "4f5f5472565634a880c4ff9fafa46c18133c0a4703a987a708e5cafbb4214637",
+      "url": "https://zozlak.org/eurrep/Venezuela/Census%202001/raw"
+    }
+  },
+  "manifest": "cfe_files",
+  "methods": "https://www.eurrep.org/wp-content/uploads/CFE_Database_Methods_Protocol_2017-09-20.pdf",
+  "redistribution": "Raw aggregate tabulations are research-only and must not be redistributed. They remain gitignored; this manifest and derived summaries contain no original cell counts.",
+  "source": "Cohort Fertility and Education Database",
+  "source_page": "https://www.eurrep.org/database/database/",
+  "terms": "https://www.eurrep.org/database/about/terms-of-use/"
+}

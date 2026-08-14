@@ -1,0 +1,114 @@
+{
+  "generated": "2026-08-13",
+  "parameter": "mainstream_propensity_cv",
+  "values": [
+    0.44,
+    0.57,
+    0.6,
+    0.8
+  ],
+  "scenarios": [
+    "mainstream-only",
+    "full-selection-un-environment",
+    "race"
+  ],
+  "interpretation": "0.44 and 0.80 bound the observed low-fertility country range; 0.57 is its median and 0.60 is the superseded assumption.",
+  "rows": [
+    {
+      "cv": 0.44,
+      "scenario": "mainstream-only",
+      "world_2150_billions": 9.866025925000717,
+      "selection_effect_2150": 1.0990683395097482,
+      "peak_year": 2096,
+      "peak_billions": 10.472951357759818
+    },
+    {
+      "cv": 0.44,
+      "scenario": "full-selection-un-environment",
+      "world_2150_billions": 9.913608924114948,
+      "selection_effect_2150": 1.112959763989581,
+      "peak_year": 2097,
+      "peak_billions": 10.478036237022934
+    },
+    {
+      "cv": 0.44,
+      "scenario": "race",
+      "world_2150_billions": 7.103689710797621,
+      "selection_effect_2150": 1.112143357475093,
+      "peak_year": 2075,
+      "peak_billions": 10.106870198111329
+    },
+    {
+      "cv": 0.57,
+      "scenario": "mainstream-only",
+      "world_2150_billions": 10.649883336772403,
+      "selection_effect_2150": 1.164493225925046,
+      "peak_year": 2105,
+      "peak_billions": 10.678639776779862
+    },
+    {
+      "cv": 0.57,
+      "scenario": "full-selection-un-environment",
+      "world_2150_billions": 10.696484073305434,
+      "selection_effect_2150": 1.1761089090427563,
+      "peak_year": 2150,
+      "peak_billions": 10.696484073305434
+    },
+    {
+      "cv": 0.57,
+      "scenario": "race",
+      "world_2150_billions": 7.610101550910984,
+      "selection_effect_2150": 1.1738545458205771,
+      "peak_year": 2078,
+      "peak_billions": 10.168268048561615
+    },
+    {
+      "cv": 0.6,
+      "scenario": "mainstream-only",
+      "world_2150_billions": 10.866136658214076,
+      "selection_effect_2150": 1.1817143447778942,
+      "peak_year": 2150,
+      "peak_billions": 10.866136658214076
+    },
+    {
+      "cv": 0.6,
+      "scenario": "full-selection-un-environment",
+      "world_2150_billions": 10.912452371207664,
+      "selection_effect_2150": 1.1927977568133288,
+      "peak_year": 2150,
+      "peak_billions": 10.912452371207664
+    },
+    {
+      "cv": 0.6,
+      "scenario": "race",
+      "world_2150_billions": 7.749431140819478,
+      "selection_effect_2150": 1.1901745221996634,
+      "peak_year": 2078,
+      "peak_billions": 10.186169842172644
+    },
+    {
+      "cv": 0.8,
+      "scenario": "mainstream-only",
+      "world_2150_billions": 12.691579310702217,
+      "selection_effect_2150": 1.3149332440087789,
+      "peak_year": 2150,
+      "peak_billions": 12.691579310702217
+    },
+    {
+      "cv": 0.8,
+      "scenario": "full-selection-un-environment",
+      "world_2150_billions": 12.73541328571095,
+      "selection_effect_2150": 1.3226645772383576,
+      "peak_year": 2150,
+      "peak_billions": 12.73541328571095
+    },
+    {
+      "cv": 0.8,
+      "scenario": "race",
+      "world_2150_billions": 8.919952538551112,
+      "selection_effect_2150": 1.3173162479118208,
+      "peak_year": 2085,
+      "peak_billions": 10.355547122483134
+    }
+  ]
+}

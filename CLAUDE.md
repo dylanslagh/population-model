@@ -61,18 +61,22 @@ python scripts/fetch_wpp.py          # ~1.1 GB, once; checksums get committed
 python scripts/build_bundle.py       # CSV -> arrays, about 90 seconds
 python scripts/validate_engine.py    # the engine test; must pass before anything else
 python scripts/run_to_2150.py        # scenarios out to 2150
+python scripts/fetch_cfe.py           # 45 small cohort-parity files, once
+python scripts/fetch_cdc_cohort.py    # independent U.S. cohort check, once
+python scripts/analyze_cfe_dispersion.py
 python -m pytest tests/ -q           # fast, no data needed
 ```
 
 ## Where the project is
 
 Phases 1 to 5 of spec section 10 are done and tested. Phase 6 cannot resolve
-before about 2038. Seven of the eight sourced rows in
+before about 2038. All eight sourced rows in
 `data/reference/mechanism_parameters.csv` have now been checked against their
-sources; the durable audit is `docs/mechanism-parameter-audit.md`. The remaining
-sourced gap is `mainstream_propensity_cv`, which needs completed cohort
-family-size data. Five further rows are scenario knobs and cannot be verified by
-definition, so Phase 5 magnitudes remain conditional on them. `scenarios.py` declares the unimplemented scenarios
+sources; the durable audit is `docs/mechanism-parameter-audit.md`.
+`mainstream_propensity_cv` is a reproducible 43-country cohort-parity
+calculation with an independent CDC check. Five further rows are scenario knobs
+and cannot be verified by definition, so Phase 5 magnitudes remain conditional
+on them and on stated empirical ranges. `scenarios.py` declares the unimplemented scenarios
 with the phase that owes them, so the gap is visible rather than silent.
 
 The Phase 4 ensemble is the **UN-equivalent baseline**, not this project's own

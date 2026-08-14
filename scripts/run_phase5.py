@@ -13,11 +13,11 @@ never.
 
 Read the caveat before the numbers
 ----------------------------------
-Seven of thirteen mechanism parameters have been checked against their sources.
-Five have no independent support and are explicitly labelled scenario knobs;
-the remaining sourced gap is the dispersion of completed family size. The
-mechanism is real, but magnitudes remain conditional on those unresolved rows.
-Every output file repeats this caveat. See
+All eight sourced mechanism parameters have been checked against their sources.
+Five others have no independent support and are explicitly labelled scenario
+knobs. The mechanism is evidence-backed where it can be, but magnitudes remain
+conditional on those scenario choices and empirical ranges. Every output file
+repeats this caveat. See
 `docs/mechanism-parameter-audit.md` for the source trail.
 
     python scripts/run_phase5.py                    # the grid

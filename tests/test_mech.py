@@ -6,10 +6,10 @@ Three of these matter more than the rest:
   not identical to the plain one when the mechanism is switched off, then any
   difference between Phase 4 and Phase 5 might be a second implementation of
   the arithmetic rather than the mechanism.
-* `test_one_generation_matches_the_breeders_equation` -- the mechanism has a
-  known closed-form answer for one generation. If the code disagrees with it,
-  the code is wrong, and it will be wrong in a direction nobody notices because
-  the output still looks like a population projection.
+* `test_one_generation_matches_observed_covariance_response` -- the mechanism
+  has a known closed-form answer for one generation. If the code disagrees with
+  it, the code is wrong, and it will be wrong in a direction nobody notices
+  because the output still looks like a population projection.
 * `test_anchored_transmission_selects_more_slowly` -- the first version of this
   module regressed children toward the base-year composition without anyone
   deciding to, and produced roughly a quarter of the selection the theory
@@ -100,14 +100,15 @@ def test_selection_switched_off_leaves_fertility_exactly_alone():
 # --- the mechanism against its own theory --------------------------------------
 
 
-def test_one_generation_matches_the_breeders_equation():
+def test_one_generation_matches_observed_covariance_response():
     """Selection should move the mean by persistence x variance / mean.
 
-    That is the standard evolutionary-demography result and the calculation
-    spec section 6.8 quotes. Doing it on the composition directly, rather than
-    through the engine, isolates the mechanism from the demography.
+    This equals Cov(parent family size, offspring family size) / parent mean
+    when persistence is their observed correlation and the marginal variances
+    are equal. Doing it on the composition directly isolates the moment match
+    from the cohort engine.
     """
-    persistence, cv = 0.15, 0.6
+    persistence, cv = 0.15, 0.57
     propensity = composition.propensity_bins(3, cv)
     shares = np.full(3, 1 / 3)
     rule = composition.TransitionRule(
@@ -126,6 +127,7 @@ def test_one_generation_matches_the_breeders_equation():
     moved = float(child_shares @ propensity) - mean
 
     assert moved == pytest.approx(persistence * variance / mean, rel=1e-9)
+    assert moved == pytest.approx(persistence * cv**2, rel=1e-9)
     assert moved > 0
 
 
@@ -280,13 +282,12 @@ def test_the_committed_table_loads_and_declares_its_own_weakness():
     parameters = mech_parameters.load()
     assert len(parameters.parameters) == 13
     assert len(parameters.knobs) == 5, "a table with no knobs is hiding something"
-    assert parameters.verified_fraction == pytest.approx(7 / 13)
+    assert parameters.verified_fraction == pytest.approx(8 / 13)
     assert parameters.unverified == [
         "defector_high_propensity_weight",
         "development_decline_per_decade",
         "development_floor",
         "group_convergence_per_generation",
-        "mainstream_propensity_cv",
         "mainstream_types",
     ]
     assert "unverified" in parameters.caveat()

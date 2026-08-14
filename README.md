@@ -185,6 +185,18 @@ python scripts/run_to_2150.py        # scenarios out to 2150
 python -m pytest tests/ -q           # fast tests, no data needed
 ```
 
+The completed-family-size dispersion used by Phase 5 is independently
+reproducible. CFE's original aggregate tabulations remain gitignored under its
+research-use terms; the repository commits URLs, hashes, readers, derived
+moments, and the audit chart. The CDC tables provide a separate U.S. check:
+
+```bash
+python scripts/fetch_cfe.py
+python scripts/fetch_cdc_cohort.py
+python scripts/analyze_cfe_dispersion.py
+python scripts/analyze_mainstream_cv_sensitivity.py
+```
+
 The Phase 4 source inventory can be inspected without downloading anything.
 The full annual UW archives total 2.24 GB compressed:
 
