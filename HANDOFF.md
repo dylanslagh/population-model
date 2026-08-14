@@ -575,20 +575,35 @@ committed. The central CV changed 0.60 -> 0.57 and the race result 7.75 -> 7.61
 billion. All eight sourced mechanism rows are now verified. Do not reopen this
 by fitting a latent-trait variance to the projection it is meant to explain.
 
-**Discuss the next scientific target with Dylan before starting a finished
-output.** The strongest remaining structural assumption is that the fertility
-environment multiplies every propensity type equally, making selection and
-environment exactly separable. Testing or relaxing it needs outside evidence,
-not a convenient interaction term. Broader cohort-fertility work from HFD is
-also valuable per spec section 4.3, but HFD bulk access now requires an account;
-the public CFE archive can support some of that work without a login.
+**Top priority: connect the stochastic migration paths to the paired selection
+comparison.** Keep the selection fork at 2024 and give each reference/selection
+pair the same source draw and post-2100 innovations, so the difference isolates
+selection. Preserve exact annual world balance, record the draw and seed, prove
+that selection-off still matches the ordinary engine, and do not replace the
+hub's explicitly labelled legacy country paths until the paired output passes.
+`NEXT_SESSION.md` has the acceptance checklist and scope boundaries.
+
+After that, discuss the next scientific target with Dylan before starting a
+finished output. The strongest remaining structural assumption is that the
+fertility environment multiplies every propensity type equally, making
+selection and environment exactly separable. Testing or relaxing it needs
+outside evidence, not a convenient interaction term. Broader cohort-fertility
+work from HFD is also valuable per spec section 4.3, but HFD bulk access now
+requires an account; the public CFE archive can support some of that work
+without a login.
+
+**Do not redesign the public site yet.** Dylan is using the authenticated hub
+page as a working document for reviewing figures. The eventual public website
+will be redesigned from the ground up and is deliberately out of scope for the
+next task.
 
 `NEXT_SESSION.md` carries the rest, including Dylan's editorial direction for
 the page and the scoped pieces of it that are not built.
 
 ---
 
-*Last scientific-source audit 2026-08-13: all eight sourced mechanism
+*Status confirmed 2026-08-14 on `main` at `299fc2f`; the authenticated hub was
+republished after that commit. Last scientific-source audit 2026-08-13: all eight sourced mechanism
 parameters verified; `mainstream_propensity_cv` is reproduced from CFE and CDC
 cohort data. The Phase 5 grid and map QA were rerun after the corrections, and
 all 168 tests pass. Engine validation, Phase 5, and map QA were rerun 2026-08-14;

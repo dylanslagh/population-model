@@ -25,8 +25,10 @@ Dylan wants three finished public outputs:
    2026-08-11. `scripts/render_race.py` writes the frames.
 
 **None of the three is in progress.** They are the finished-output list, to be
-picked up when the science underneath them is worth publishing. Do not start one
-because it is more fun than verifying a parameter table.
+picked up when the science underneath them is worth publishing. Dylan explicitly
+said on 2026-08-14 not to begin the public-site redesign yet. Treat the
+password-gated hub page as a working document where he can review figures, not
+as the design seed for the eventual public site.
 
 Notes on each, so the next session does not rediscover them:
 
@@ -130,15 +132,40 @@ are not globally balanced draw by draw and were creating or deleting people.
 
 ## Do this next
 
-**0. Connect the new migration extension to the selection comparison.** The
-selection model must still fork in 2024. Give its reference and selection runs
-the same globally balanced migration path so their difference isolates
-selection. Do not switch selection on at 2100. The interactive working page's
-post-2100 country line and pyramids still show the older frozen-count run and
-say so explicitly; replace them only when the paired selection/reference output
-is ready.
+### Top priority: connect stochastic migration to the paired selection comparison
 
-**1. Tighten or challenge the selection-first boundary.** The sourced-parameter
+This is the next implementation task. The selection model must still fork in
+2024; the new 2100 boundary belongs to the UN reproduction/extension, not to the
+selection mechanism. Run the reference and selection cases against the same
+underlying migration trajectory (common random numbers) so their difference
+continues to isolate selection rather than migration luck. Use the observed UW
+paths through 2100 and the documented AR(1) emulator after 2100. Preserve a
+zero world migration balance every year and keep the source draw ID and seed in
+the output receipt.
+
+Before replacing any working-page result, the implementation should demonstrate:
+
+1. With selection off, the typed model still reproduces the ordinary cohort
+   engine under the new time-varying migration input.
+2. In every paired run, reference and selection cases use the same source draw
+   and continuation innovations; any population-dependent balancing adjustment
+   is reported rather than hidden.
+3. Every draw-year has zero world net migration to numerical precision, with no
+   people created by clipping impossible age-cell emigration.
+4. The deterministic Phase 5 results remain available as a regression
+   comparison, and any movement in the 1.53% break-even boundary is explained.
+5. Country trajectories are regenerated before the legacy post-2100 line and
+   pyramids on the hub working page are replaced.
+
+Do not switch selection on at 2100, add sticky migrant fertility, or redesign
+the public site as part of this task. Those would change the scientific question
+or expand the scope. The current interactive page explicitly labels its older
+frozen-count post-2100 country results as legacy; that is honest until the paired
+output is ready.
+
+### After that: tighten or challenge the selection-first boundary
+
+The sourced-parameter
 audit no longer blocks the three finished outputs. The clearest remaining model
 weakness is structural: the fertility environment multiplies every propensity
 type equally, so selection and environment are exactly separable. Researching
@@ -151,13 +178,17 @@ The five scenario knobs stay `verified=FALSE` by definition.
 `development_decline_per_decade` is still the single most important number in
 the model and cannot be looked up as a future path.
 
-**2. Cohort fertility from the Human Fertility Database more broadly.** Spec
+### Later research: broader cohort fertility evidence
+
+Spec
 section 4.3 calls it the highest-value dataset after WPP and the empirical spine
 of the disagreement with the UN. HFD bulk downloads now require an account and
 acceptance of its current terms. The public CFE archive already pinned here can
 support some longitudinal work without a login.
 
-**3. The page, when the science is ready for it.** One of the three outputs
+### Later output work: the page, when the science is ready
+
+This is one of the three outputs
 above rather than a separate track. Concrete pieces already scoped:
 - Per-country uncertainty decomposition, not just the six watch countries. The
   script computes world plus a fixed list; widening it to all 236 is small.
@@ -168,7 +199,9 @@ above rather than a separate track. Concrete pieces already scoped:
   are awkward on a phone.
 - The backtest, reframed per his direction above.
 
-**4. Phase 6, scoring.** Formats are ready and two vintages are stored. Nothing
+### Eventual Phase 6 scoring
+
+Formats are ready and two vintages are stored. Nothing
 resolves before about 2038; WPP 2027 is the next data event.
 
 ## Known limitations to state, not fix quietly
@@ -216,5 +249,6 @@ Nothing blocks the work above. Before a genuinely public release: the public
 hostname and the licensing decision. Before the paper: title, author line,
 acknowledgements and release status.
 
-*Updated 2026-08-14, after the stochastic migration extension, global-balance
-correction, and selection regression.*
+*Updated 2026-08-14 after commit `299fc2f`: stochastic migration extension,
+global-balance correction, selection regression, hub publication, and an
+explicit acceptance checklist for the paired migration/selection integration.*
