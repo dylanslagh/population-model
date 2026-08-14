@@ -368,7 +368,7 @@ footer p{max-width:80ch}
 
 
 <section class="figures">
-  <h2>How the model works</h2>
+  <h2 id="how-it-works">How the model works</h2>
   <p>Both approaches use the same dependable accounting: age people one year,
   apply survival, count births, and add migration. The disagreement is upstream.
   A conventional projection supplies a future fertility path; this project also
