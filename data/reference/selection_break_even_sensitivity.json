@@ -1,0 +1,294 @@
+{
+  "generated": "2026-08-14",
+  "benchmark": "stable-low fertility environment with no additional post-2050 decline; selection is then added",
+  "boundary": "the uniform proportional decline per decade after 2050 that exactly cancels the mainstream selection multiplier in the final fertility-rate year",
+  "aggregation": "country selection effects weighted by births in the stable-low, no-selection counterfactual, so scenarios do not choose their own weights",
+  "economic_claim": "none: additional development pressure is a stress-test axis, not a forecast of GDP or social conditions",
+  "pressure_from": 2050,
+  "pressure_range_per_decade": [
+    0.0,
+    0.04
+  ],
+  "cv_values": [
+    0.44,
+    0.57,
+    0.8
+  ],
+  "persistence_values": [
+    0.05,
+    0.07500000000000001,
+    0.1,
+    0.125,
+    0.15000000000000002,
+    0.175,
+    0.2,
+    0.22500000000000003,
+    0.25,
+    0.275,
+    0.3
+  ],
+  "rows": [
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.05,
+      "selection_effect_final": 1.0332268505427866,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.0032962493066407417
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.07500000000000001,
+      "selection_effect_final": 1.0498157293306285,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.0048985338566281955
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.1,
+      "selection_effect_final": 1.0663499334972,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.006468036031097912
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.125,
+      "selection_effect_final": 1.082802014736174,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.0080033707527426
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.15000000000000002,
+      "selection_effect_final": 1.0991456677458036,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.00950336421319764
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.175,
+      "selection_effect_final": 1.1153558092155065,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.010967041430688496
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.2,
+      "selection_effect_final": 1.1314086427395609,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.012393613490930266
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.22500000000000003,
+      "selection_effect_final": 1.1472817103732884,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.013782464694387486
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.25,
+      "selection_effect_final": 1.1629539316118866,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.015133139793800487
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.275,
+      "selection_effect_final": 1.1784056306176212,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.01644533147049687
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.3,
+      "selection_effect_final": 1.1936185525497571,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.01771886816656376
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.05,
+      "selection_effect_final": 1.0556308361872104,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.005453613871969076
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.07500000000000001,
+      "selection_effect_final": 1.0832620106074788,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.008045928470714503
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.1,
+      "selection_effect_final": 1.1106702061941007,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.010546378924928712
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.125,
+      "selection_effect_final": 1.1377865655106323,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.012954227492306791
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.15000000000000002,
+      "selection_effect_final": 1.1645474507082367,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.01526935001051033
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.175,
+      "selection_effect_final": 1.1908945335054137,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.01749214738169169
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.2,
+      "selection_effect_final": 1.2167748190168082,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.01962346561983319
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.22500000000000003,
+      "selection_effect_final": 1.2421406123565297,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.021664524333613322
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.25,
+      "selection_effect_final": 1.266949436366973,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.02361685328784935
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.275,
+      "selection_effect_final": 1.2911639081943016,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.02548223653980508
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.3,
+      "selection_effect_final": 1.3147515817757967,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.027262663562598877
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.05,
+      "selection_effect_final": 1.1087784185067733,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.010375984634308444
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.07500000000000001,
+      "selection_effect_final": 1.1620419584858854,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.01505509401729288
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.1,
+      "selection_effect_final": 1.2142481874924105,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.019417598825967608
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.125,
+      "selection_effect_final": 1.265206421223902,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.02348106695241281
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.15000000000000002,
+      "selection_effect_final": 1.3147554494301614,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.027262952606388113
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.175,
+      "selection_effect_final": 1.3627615600359506,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.030780295513966882
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.2,
+      "selection_effect_final": 1.4091164681222597,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.03404952685887508
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.22500000000000003,
+      "selection_effect_final": 1.4537352131585215,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.03708635175843633
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.25,
+      "selection_effect_final": 1.4965540715329864,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.0399056859278033
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.275,
+      "selection_effect_final": 1.537528518762345,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.04252163014825072
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.3,
+      "selection_effect_final": 1.5766312659679107,
+      "final_rate_year": 2149,
+      "break_even_decline_per_decade": 0.04494747061756865
+    }
+  ],
+  "model_ladder": [
+    {
+      "key": "stable-low-no-selection",
+      "label": "Stable-low environment, no selection",
+      "world_2150_billions": 8.536369954719113,
+      "basis": "benchmark",
+      "change_from_previous_billions": null
+    },
+    {
+      "key": "selection-only-mainstream",
+      "label": "Add measured mainstream selection",
+      "world_2150_billions": 10.357879017816183,
+      "basis": "two verified sourced parameters plus a fixed three-bin approximation",
+      "change_from_previous_billions": 1.8215090630970696
+    },
+    {
+      "key": "selection-only-full",
+      "label": "Add named groups (one routing knob)",
+      "world_2150_billions": 10.403452740400555,
+      "basis": "sourced group inputs plus a defector-routing knob",
+      "change_from_previous_billions": 0.04557372258437198
+    },
+    {
+      "key": "race-four-percent",
+      "label": "Then impose 4% development pressure",
+      "world_2150_billions": 7.610101550910984,
+      "basis": "illustrative scenario knob",
+      "change_from_previous_billions": -2.793351189489571
+    }
+  ],
+  "parameter_caveat": "5 of 13 mechanism parameters are scenario knobs with no independent support; 5 remain unverified (including those knobs); sourced rows marked verified were checked against the literature recorded in docs/mechanism-parameter-audit.md"
+}

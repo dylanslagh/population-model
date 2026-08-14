@@ -212,11 +212,22 @@ and not a second implementation of the arithmetic. One generation of selection
 also matches the observed parent-offspring covariance response to nine decimal
 places, which is the mechanism agreeing with its calibration.
 
-**What it says.** Against the UN environment, selection adds about 1.9 billion
-by 2150. Continued development pressure removes about 2.4 billion. Together they
-reach 7.61 billion. Selection materially offsets continued pressure and does not
-overcome it by 2150 - and spec section 6.8 is explicit that never is a
-legitimate answer.
+**What it says, reframed selection-first on 2026-08-14.** The cleaner benchmark
+is the stable-low path with no extra post-2050 environmental decline, followed
+by measured mainstream selection. That raises the 2150 world result from 8.54
+to 10.36 billion. Named groups and one defector-routing knob add only another
+0.05 billion. The old 4% development-pressure scenario then removes 2.79
+billion and lands at 7.61 billion, so the unsourced environmental knob was
+controlling the headline.
+
+The primary result is now the break-even boundary rather than the 7.61-billion
+stress test. At the central measured family-size spread and parent-child
+persistence, an additional uniform environmental decline of **1.53% per
+decade** after 2050 cancels mainstream selection by 2150. The reproducible
+analysis is `scripts/analyze_selection_break_even.py`, its committed numbers are
+`data/reference/selection_break_even_sensitivity.json`, and the figure is
+`docs/selection-break-even.svg`. The 4% path remains available, explicitly as an
+illustrative stress test rather than a forecast of the economy.
 
 **What it rests on.** `data/reference/mechanism_parameters.csv`, thirteen
 parameters. All eight sourced rows were checked against their evidence on
@@ -317,6 +328,8 @@ Phase 5, the mechanism, and the decomposition. Neither needs R.
 python scripts/run_phase5.py                    # the two-axis grid
 python scripts/run_phase5.py --ensemble 200     # with parameter uncertainty
 python scripts/plot_phase5.py
+python scripts/analyze_selection_break_even.py  # selection-first boundary + ladder
+python scripts/plot_selection_break_even.py
 python scripts/decompose_uncertainty.py --draws 200   # about 25 minutes
 python scripts/plot_decomposition.py
 ```

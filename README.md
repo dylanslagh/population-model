@@ -36,6 +36,29 @@ convergence for named high-fertility groups. Its extra outputs show how
 composition changes, how much selection lifts fertility, whether a rebound
 occurs, and which assumptions make the answer uncertain.
 
+## Selection first, development pressure second
+
+![Selection and development-pressure break-even](docs/selection-break-even.svg)
+
+The scientifically cleaner benchmark is now **selection only**: retain the
+fertility decline already in the data and projected path, remove the assumed
+recovery, add no further post-2050 environmental decline, and let measured
+mainstream composition change. Future development pressure is then a stress-test
+axis rather than a preferred forecast.
+
+At the central measured family-size spread and parent-child persistence,
+mainstream selection reaches a 1.165 fertility multiplier by 2150. An additional
+decline of about **1.53% per decade** after 2050 cancels it. The old 4% path is
+therefore an intentionally severe stress test, not an estimate of the future
+economy.
+
+The model ladder is a reduction test. Mainstream selection, calculated from two
+verified inputs through a fixed three-type approximation, adds 1.82 billion to
+the stable-low/no-selection 2150 result. Named groups and one routing knob add
+only another 0.05 billion; the 4% development-pressure knob then removes 2.79
+billion. This is why the boundary, not the 4% scenario's population total, is
+the primary mechanism result.
+
 ## The backtest: how wrong was the UN last time?
 
 The spec's first priority, and the part it calls the actual contribution. The

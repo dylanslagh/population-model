@@ -236,6 +236,7 @@ def main() -> int:
     html = TEMPLATE.replace("__DATA__", json.dumps(payload, separators=(",", ":")))
     for token, figure in (
         ("__MODEL_FLOW__", "how-the-model-works"),
+        ("__SELECTION_BOUNDARY__", "selection-break-even"),
         ("__DECOMPOSITION__", "decomposition"),
         ("__MECHANISMS__", "phase5"),
     ):
@@ -375,6 +376,28 @@ footer p{max-width:80ch}
   asks how the fertility environment and the changing mix of people generate
   that path.</p>
   <div class="flow-wrap">__MODEL_FLOW__</div>
+  <h2 id="selection-first">Start with selection; stress-test future development</h2>
+  <p>Today's fertility already contains today's economic and social environment.
+  The cleaner benchmark therefore keeps the observed and already-projected
+  decline, removes the UN-style recovery, and adds <b>no extra decline beyond
+  that stable-low path</b>. It then lets only the mainstream composition change,
+  using the measured family-size spread and parent-child persistence through a
+  fixed three-type approximation.
+  This does not assume that economic development stops. It prevents an
+  unmeasured future economic effect from being counted as evidence.</p>
+  <p>The left panel asks how much <i>additional</i>, uniform decline after 2050
+  would be needed to cancel selection. At the central measured family-size
+  spread and parent-child persistence, the answer is about <b>1.53% per
+  decade</b>. The old 4% path sits far beyond that boundary, so it belongs as a
+  stress test rather than as this project's preferred forecast.</p>
+  <div class="flow-wrap">__SELECTION_BOUNDARY__</div>
+  <p>The model ladder on the right is also a complexity check. Mainstream
+  selection adds 1.82 billion people by 2150 relative to the stable-low
+  no-selection benchmark. Adding the named groups and one routing knob changes
+  that by only another 0.05 billion. The illustrative 4% pressure path then
+  removes 2.79 billion.
+  The headline was being controlled by the unsourced environmental knob, not by
+  the elaborate selection extension.</p>
   <h2>What the uncertainty is made of</h2>
   <p>The band above says the answer is uncertain. It does not say what about,
   and those are different claims. Each bar below is how wide the 90% range gets
@@ -396,10 +419,11 @@ footer p{max-width:80ch}
   keeps rising &mdash; longer education, steeper careers, costlier housing,
   later partnership &mdash; so a person of any given disposition has fewer
   children than the same person would have had a generation earlier.</p>
-  <p>The right-hand panel is the question the whole project exists to ask:
-  whether selection ever overtakes the environment moving underneath it. In
-  this model it does not, by 2150. It offsets about half of what continued
-  development pressure removes, and no more.</p>
+  <p>The older four-corner plot below remains useful as a stress test. Under its
+  illustrative 4% pressure path, selection does not catch the moving
+  environment by 2150. The break-even map above now makes the conditional nature
+  of that result explicit: 4% is a scenario well beyond the central 1.53%
+  boundary, not a measured future economic path.</p>
   <p><b>The last empirical gap is now measured.</b> Across 19 low-fertility
   countries, the median spread in completed family size is a coefficient of
   variation of 0.57 (country range 0.44-0.79); U.S. CDC cohorts independently

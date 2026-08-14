@@ -89,12 +89,20 @@ billion in 2093 and reaches 9.73 billion by 2150, 90% band 6.97 to 14.36. It is
 the **UN-equivalent baseline** — a mean-reverting model — not this project's own
 view, and the stored vintage marks every quantity `is_project_claim: false`.
 
-**Phase 5, the mechanism.** Selection and transmission against a changing
-fertility environment. Against the UN environment, selection adds about 1.9
-billion by 2150; continued development pressure removes about 2.4 billion;
-together they land at 7.61 billion. **Selection materially offsets continued
-pressure and does not overcome it by 2150.** "Never" was always a legitimate
-answer and this is close to it.
+**Phase 5, reframed selection-first.** Today's fertility already embodies its
+economic and social environment, so the primary benchmark is now stable-low
+fertility plus measured mainstream selection, with no additional post-2050
+environmental decline. Mainstream selection raises the 2150 world result from
+8.54 to 10.36 billion. Named groups and one defector-routing knob add only
+another 0.05 billion. The old 4% development-pressure path then lowers it to
+7.61 billion, a 2.79-billion move controlled by an unsourced scenario knob.
+
+The primary mechanism result is therefore a boundary, not 7.61 billion. At the
+central measured family-size spread and parent-child persistence, an additional
+environmental decline of about **1.53% per decade** after 2050 cancels mainstream
+selection by 2150. `data/reference/selection_break_even_sensitivity.json` and
+`docs/selection-break-even.svg` are the reproducible analysis. The 4% path is
+retained only as an illustrative stress test.
 
 **The decomposition.** World 90% width at 2150, in billions: fertility 7.26, the
 mechanism 5.72, migration 1.75, our own post-2100 hold-constant rule 0.73,
@@ -104,12 +112,14 @@ fact about where you look.
 
 ## Do this next
 
-**1. Discuss the next scientific target with Dylan.** The sourced-parameter
+**1. Tighten or challenge the selection-first boundary.** The sourced-parameter
 audit no longer blocks the three finished outputs. The clearest remaining model
 weakness is structural: the fertility environment multiplies every propensity
 type equally, so selection and environment are exactly separable. Researching
 whether high- and low-fertility people respond differently to economic and
 institutional pressure would be more valuable than inventing an interaction.
+The 1.53% boundary should move when that assumption is relaxed; the direction
+and size of the movement are now the useful scientific question.
 
 The five scenario knobs stay `verified=FALSE` by definition.
 `development_decline_per_decade` is still the single most important number in
@@ -177,5 +187,5 @@ Nothing blocks the work above. Before a genuinely public release: the public
 hostname and the licensing decision. Before the paper: title, author line,
 acknowledgements and release status.
 
-*Updated 2026-08-13, after the completed-family-size audit, Phase 5 rerun, and
-uncertainty-decomposition refresh.*
+*Updated 2026-08-14, after the selection-first break-even analysis and model
+reduction ladder.*

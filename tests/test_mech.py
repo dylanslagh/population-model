@@ -24,6 +24,7 @@ import pytest
 from popmodel.engine import cohort
 from popmodel.mech import composition, engine as mech_engine, environment
 from popmodel.mech import parameters as mech_parameters
+from popmodel.mech import sensitivity
 from popmodel.mech.parameters import Parameter, ParameterError, ParameterSet
 
 
@@ -273,6 +274,23 @@ def test_continued_pressure_declines_and_then_stops_at_its_floor():
     assert multiplier[-1] == pytest.approx(parameters.value("development_floor"))
     assert np.all(np.diff(multiplier) <= 1e-12)
     assert "development_decline_per_decade" in env.knobs
+
+
+def test_break_even_pressure_exactly_cancels_selection():
+    effect = 1.18
+    decades = 10.0
+    rate = sensitivity.break_even_rate(effect, decades)
+    assert sensitivity.net_fertility_multiplier(effect, rate, decades) == pytest.approx(1.0)
+    assert rate == pytest.approx(0.0164, abs=0.0001)
+
+
+def test_break_even_pressure_refuses_impossible_inputs():
+    with pytest.raises(ValueError, match="positive"):
+        sensitivity.break_even_rate(0.0, 10.0)
+    with pytest.raises(ValueError, match="positive number of decades"):
+        sensitivity.break_even_rate(1.1, 0.0)
+    with pytest.raises(ValueError, match=r"\[0, 1\)"):
+        sensitivity.pressure_multiplier(1.0, 10.0)
 
 
 # --- the parameter table -------------------------------------------------------
