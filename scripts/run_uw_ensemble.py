@@ -278,7 +278,18 @@ def main() -> int:
             }
             for i, year in enumerate(years)
         },
-        "median_peak": {"year": peak_year, "billions": float(world[:, peak_index].mean())},
+        # The peak of the median path, which is what "the median peaks at"
+        # means. This field held the MEAN across draws under a name that said
+        # median; the two differ by about 0.05 billion here, which is small
+        # enough to be quoted for years without anyone noticing.
+        "median_peak": {
+            "year": peak_year,
+            "billions": float(quantiles.world[3, peak_index] / 1e9),
+        },
+        "mean_at_peak_year": {
+            "year": peak_year,
+            "billions": float(world[:, peak_index].mean()),  # world is billions
+        },
         "share_peaking_before_2100": before_2100,
         "seconds": round(elapsed, 1),
     }

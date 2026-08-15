@@ -1,0 +1,147 @@
+\section{The horizon, and what is whose}
+\label{sec:horizon}
+
+A projection that runs to \ProjectionEndYear{} using inputs that stop at 2100 has
+a problem of attribution rather than of arithmetic. Everything past the last year
+of published assumptions is the modeller's own extrapolation, and if it is drawn
+as one continuous line the reader cannot tell where the source ended. This
+section states the boundary explicitly and reports what crosses it.
+
+\subsection{Three separate objects}
+
+\begin{description}[leftmargin=1.4em,style=nextline]
+  \item[The UN reproduction.] World Population Prospects 2024's medium path,
+  reproduced by this engine, through \OfficialBoundaryYear{} and no further. No
+  value after that year is labelled a UN projection.
+  \item[The project extension.] Begins from the published population on 1 January
+  \OfficialBoundaryYear{} and runs to \ProjectionEndYear{}. Fertility, mortality
+  and the sex ratio at birth are held at their final published age schedules,
+  which is our assumption and not the source's. Migration continues
+  stochastically.
+  \item[The selection model.] A separate object that forks in
+  \PhaseFiveBaseYear{}, so that selection acts over the whole projection rather
+  than being switched on after the UN's assumptions have already determined the
+  \OfficialBoundaryYear{} population.
+\end{description}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig4-boundary-2100.pdf}
+\caption{Three objects, drawn so that it is visible which is whose. The solid
+grey line is the reproduced UN medium path and stops where the UN's assumptions
+stop. The dashed line and shaded fan are this project's own continuation, in
+which fertility and mortality schedules are frozen and migration varies across
+\ExtensionPaths{} paths; the fan is narrow because migration cancels globally by
+construction. The two coloured lines are the selection model, which forks in
+\PhaseFiveBaseYear{} and is not a UN projection at any point.}
+\label{fig:horizon}
+\end{figure}
+
+\subsection{The extension, and why its band is narrow}
+
+The published Bayesian migration trajectories \citep{azose2015} run to 2100 and
+the public archive does not include the fitted posterior state, so the
+continuation refits the same autoregressive form to the
+\ExtensionFitStart{}--\ExtensionFitEnd{} portion of those trajectories and
+continues each path from its own \OfficialBoundaryYear{} rate. This is an
+emulator of a model's output, not an official continuation, and it is labelled as
+one throughout.
+
+The result is \ExtensionTwentyOneHundred{} billion in \OfficialBoundaryYear{},
+\ExtensionTwentyOneTwentyFive{} billion in 2125, and
+\ExtensionTwentyOneFifty{} billion in \ProjectionEndYear{}, with a
+migration-only 90\% range of \ExtensionTwentyOneFiftyLow{} to
+\ExtensionTwentyOneFiftyHigh{} billion. The narrowness of that band is a
+structural fact rather than a claim of precision: net migration sums to zero
+across the world in every draw-year, so it can only move a world total
+indirectly, by relocating people into countries whose fertility and mortality
+schedules differ from the ones they left.
+
+\subsection{Which uncertainty dominates depends on where you look}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig5-decomposition.pdf}
+\caption{\textbf{(a)} The 90\% width of world population in \ProjectionEndYear{}
+attributable to each source, varying one at a time across its own draws with the
+others held at a median trajectory. The post-2100 entry is what our own
+hold-constant rule \emph{adds}: it is the extra width from ending the source data
+ten years earlier, which is the cleanest available measure of how much of the
+answer is ours rather than the source's. \textbf{(b)} The same comparison inside
+individual countries at 2100, where the ordering reverses.}
+\label{fig:decomposition}
+\end{figure}
+
+Varying one source at a time across \DecompositionDraws{} draws
+(\Cref{fig:decomposition}a), the 90\% width of world population in
+\ProjectionEndYear{} is \WidthFertility{} billion for long-run fertility,
+\WidthMechanism{} billion for the selection mechanism's own parameters,
+\WidthHoldConstant{} billion for our post-2100 hold-constant rule,
+\WidthMortality{} billion for mortality and \WidthMigration{} billion for
+migration. The mechanism entry is not directly additive with the others, because
+it varies mechanism parameters against the UN's medium demographic rates rather
+than against the probabilistic posterior; it is included because a decomposition
+that omitted the paper's own subject would be a strange thing to publish.
+
+Two of these deserve comment. Our own post-2100 rule contributes more world
+spread than mortality and migration combined, which is a useful corrective: at
+this horizon the modeller's housekeeping choices are not negligible relative to
+the components everyone argues about. And the selection mechanism is second only
+to long-run fertility, which is the case for treating it as a first-class source
+of uncertainty rather than an omitted refinement.
+
+The country panel (\Cref{fig:decomposition}b) disagrees with the world panel, and
+that disagreement is the point. At 2100, migration uncertainty is
+\MigrationOverFertilityUae{} times fertility uncertainty for the United Arab
+Emirates and \MigrationOverFertilityCanada{} times for Canada, but only
+\MigrationOverFertilityNigeria{} times for Nigeria. In the project extension the
+Emirates' \ProjectionEndYear{} population ranges from
+\UaeExtensionLow{} million to \UaeExtensionHigh{} million around a median of
+\UaeExtensionMedian{} million --- a factor of more than two hundred, for a
+component that contributes almost nothing to the world total. Which uncertainty
+dominates is a fact about where you are looking, and any single summary of
+``the'' uncertainty in a population projection is answering a question about the
+world that most users of projections are not asking.
+
+\subsection{A conventional comparator, recorded in advance}
+\label{sec:comparator}
+
+For a benchmark that nobody could accuse us of arranging afterwards, the
+published Bayesian posterior for fertility and mortality
+\citep{alkema2011,raftery2012,sevcikova2016bayespop} was propagated through this
+same engine, one draw at a time: \ComparatorDraws{} draws,
+\ComparatorCountries{} countries, to \ProjectionEndYear{}. Its median peaks at
+\ComparatorPeak{} billion in \ComparatorPeakYear{} and reaches
+\ComparatorTwentyOneFifty{} billion in \ProjectionEndYear{}, with a 90\% band of
+\ComparatorTwentyOneFiftyLow{} to \ComparatorTwentyOneFiftyHigh{} billion.
+
+This is the conventional mean-reverting view, not this paper's. It was computed,
+stored as an immutable dated record, and marked as not a project claim
+\emph{before} the mechanism results existed, precisely so that the comparison
+could not be assembled to flatter the mechanism afterwards. One check on it is
+worth reporting because nobody arranged it: the wholly separate deterministic run
+on the UN's own published assumptions peaks at \UnEquivalentPeak{} billion in
+\UnEquivalentPeakYear{}, against the ensemble median's \ComparatorPeak{} billion
+in \ComparatorPeakYear{}. Those two calculations share only the engine, and they
+agree on the peak to within a fifth of a billion people and on its date to within
+a decade.
+
+\subsection{What the historical record says about published ranges}
+
+The same archive machinery grades \BacktestVintages{} archived UN revisions from
+\BacktestFirstVintage{} to \BacktestLastVintage{} against the current estimates.
+World population was under-projected by \BacktestWorldBias{} on average and in
+the same direction in every revision since 1996; African fertility was projected
+\BacktestAfricaFertility{} too low and East Asian fertility
+\BacktestEastAsiaFertility{} too high; life expectancy was
+\BacktestLifeExpectancy{} years too low.
+
+We report this not as evidence about our own model, which it is not, and not as a
+reason to prefer higher numbers. Its useful content is about ranges rather than
+central values: only \BacktestInsideRange{} of \BacktestRangeTotal{}
+world-level projections (\BacktestRangeShare{}) fell inside the low-to-high band
+printed in the revision that made them. Those bands were fertility scenarios
+without probabilities attached, so this is not a calibration failure in the
+technical sense. It is a demonstration that the intervals demography has
+historically published around long-run population have been too narrow, which is
+the case for the kind of explicit uncertainty accounting attempted here.

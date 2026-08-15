@@ -106,6 +106,13 @@ def summarise(result, provenance, parameters) -> dict:
             label: float(share)
             for label, share in zip(result.labels, composition_world[-1])
         },
+        # The whole path, not just its endpoint: what the mechanism does is
+        # move this, and a figure of the composition drifting is the clearest
+        # statement of the claim.
+        "world_composition_path": {
+            label: [float(v) for v in composition_world[:, index]]
+            for index, label in enumerate(result.labels)
+        },
         "watch_countries": {
             iso3: {
                 "population_2150_millions": float(

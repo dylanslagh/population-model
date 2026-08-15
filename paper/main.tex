@@ -8,27 +8,21 @@
 
 \maketitle
 
-\begin{center}
-\fcolorbox{DraftBorder}{DraftBackground}{%
-  \parbox{0.91\textwidth}{\small\textbf{Draft status.}
-  The historical backtest and deterministic projection architecture are
-  implemented. The UW probabilistic baseline is being assembled. Mechanism
-  estimates and long-run comparative results do not yet exist and are not
-  implied by this draft.}}
-\end{center}
-
 \input{sections/01_abstract}
+
 \input{sections/02_introduction}
-\input{sections/03_data_backtest}
-\input{sections/04_projection_architecture}
-\input{sections/05_probabilistic_baseline}
-\input{sections/06_mechanisms}
-\input{sections/07_model_checks}
-\input{sections/08_discussion}
-\input{sections/09_conclusion}
+\input{sections/03_mechanism}
+\input{sections/04_calibration}
+\input{sections/05_engine}
+\input{sections/06_results}
+\input{sections/07_boundary}
+\input{sections/08_horizon}
+\input{sections/09_discussion}
+\input{sections/10_conclusion}
 
 \appendix
-\input{appendices/reproducibility}
+\input{appendices/a_parameters}
+\input{appendices/b_reproducibility}
 
 \bibliographystyle{plainnat}
 \bibliography{bibliography/references}

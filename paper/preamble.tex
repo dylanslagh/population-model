@@ -1,38 +1,55 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=1.05in]{geometry}
 \usepackage{microtype}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{graphicx}
 \usepackage{enumitem}
 \usepackage{natbib}
 \usepackage{xcolor}
+\usepackage{caption}
 \usepackage{hyperref}
 \usepackage[nameinlink,noabbrev]{cleveref}
 
 \definecolor{LinkBlue}{HTML}{0C447C}
-\definecolor{DraftBorder}{HTML}{8A6D1D}
-\definecolor{DraftBackground}{HTML}{FFF8DF}
+\definecolor{PanelRule}{HTML}{9AA5B1}
+\definecolor{PanelFill}{HTML}{F4F6F8}
 
 \hypersetup{
   colorlinks=true,
   linkcolor=LinkBlue,
   citecolor=LinkBlue,
   urlcolor=LinkBlue,
-  pdftitle={Population Projections That Can Be Wrong for a Reason},
+  pdftitle={Selection on Fertility, and the Environmental Decline That Would Cancel It},
   pdfauthor={Dylan Slagh},
-  pdfsubject={Research design and preliminary backtest for population projection to 2150}
+  pdfsubject={A compositional fertility mechanism inside a cohort-component projection to 2150}
 }
 
 \setlist{nosep}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.55em}
-\graphicspath{{../docs/}{figures/generated/}}
+\graphicspath{{figures/}}
 
-\newcommand{\wip}[1]{%
+\captionsetup{font=small,labelfont=bf,width=0.94\textwidth}
+\captionsetup[table]{skip=6pt}
+
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.8}
+
+% A boxed aside for the statements that are load-bearing and easy to skim past:
+% what a number is not, and which rule stopped it being fitted.
+\newcommand{\caveatbox}[2]{%
   \begin{center}
-  \fcolorbox{DraftBorder}{DraftBackground}{%
-    \parbox{0.91\textwidth}{\small\textbf{Analysis pending.} #1}}
+  \setlength{\fboxsep}{9pt}%
+  \fcolorbox{PanelRule}{PanelFill}{%
+    \parbox{0.9\textwidth}{\small\textbf{#1}\\[0.25em]#2}}
   \end{center}}
+
+% Consistent shorthand for the two things the paper keeps apart.
+\newcommand{\propensity}{\ensuremath{\phi}}
+\newcommand{\envmult}{\ensuremath{E}}

@@ -1,0 +1,142 @@
+\section{How large is selection?}
+\label{sec:results}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig1-mechanism.pdf}
+\caption{The mechanism in three steps. \textbf{(a)} Completed family size is
+right-skewed with a coefficient of variation of \FamilySizeCV{}; the model stands
+three effective types in for that distribution, at the conditional means of its
+equal-probability thirds, rescaled to reproduce the dispersion exactly.
+\textbf{(b)} World composition drifts because higher-propensity women contribute
+more of the next cohort: the high type rises from \CompositionStartShare{} of the
+world population at \PhaseFiveBaseYear{} to \CompositionHighShare{} at
+\ProjectionEndYear{}. \textbf{(c)} The resulting selection multiplier, observed
+fertility divided by the environment path alone, with the band showing
+\MechanismDraws{} draws from the stated ranges of all
+\MechanismParameterCount{} mechanism parameters.}
+\label{fig:mechanism}
+\end{figure}
+
+\subsection{The size of the effect, step by step}
+
+The cleanest benchmark is not the UN's own path, because that path already
+contains an assumed fertility recovery whose justification is exactly what is in
+dispute. Instead the benchmark holds that today's fertility already embodies
+today's conditions: the decline already visible in the data continues to its
+observed floor and then stops, with no assumed rebound and no assumed further
+deterioration. Selection is then switched on against that background, and the
+components are added one at a time (\Cref{fig:ladder}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig2-ladder.pdf}
+\caption{World population in \ProjectionEndYear{} as each component is added.
+Grey is the benchmark environment with no selection. Orange steps are the
+mechanism: measured mainstream selection first, then the two named
+high-fertility groups. Red is the illustrative stress test, a further
+\PressureStressTest{} per decade decline in the fertility environment after
+\PressureFromYear{}, which is a scenario knob and not a forecast. The
+\LadderPressureLoss{}-billion size of that last step, against
+\LadderMainstreamGain{} billion for the mechanism itself, is why this paper's
+primary result is the boundary in \Cref{sec:boundary} rather than any single
+number on this chart.}
+\label{fig:ladder}
+\end{figure}
+
+Measured mainstream selection --- the two independently sourced parameters, with
+no named groups and no assumed change in conditions --- raises world population
+in \ProjectionEndYear{} from \LadderBenchmark{} billion to \LadderMainstream{}
+billion. That is \LadderMainstreamGain{} billion, or
+\LadderMainstreamGainPercent{}, from a mechanism
+that is entirely absent from conventional projections. Observed world fertility
+ends \RaceSelectionEffectPercent{} above the environment path that produced it,
+and rises above it detectably from about \SelectionOvertakesYear{}
+(\Cref{fig:mechanism}c).
+
+The mechanism is a level shift, not a return to growth. Under the benchmark
+environment with mainstream selection the world still peaks and then runs close
+to flat; selection changes where the curve settles, not its shape. This is the
+distinction \citet{arenberg2022} press against models built from heritability
+alone, and it survives here because the projection carries absolute
+age-specific fertility rather than a transmission coefficient by itself.
+
+\subsection{Named groups are a small part of the story}
+
+Adding the two named high-fertility groups --- with their measured fertility,
+their measured retention, and one scenario knob routing their leavers --- moves
+the world result by \LadderNamedGroupsGain{} billion. The world composition at
+\ProjectionEndYear{} is \CompositionGroupShare{} named-group.
+
+This deserves emphasis because it inverts the usual telling. Public discussion of
+selection on fertility is almost entirely about visible high-fertility
+minorities, and this model treats them generously: it gives them their measured
+fertility, it lets high retention compound for four generations, and its
+assumption that each group starts with its host country's age structure
+understates their growth, so the shares reported here are lower bounds. They
+still contribute \NamedGroupShareOfMechanism{} of what unlabelled variation inside
+ordinary populations contributes. The reason is arithmetic rather than sociological. A
+group at a tenth of a per cent of a national population has four generations to
+compound before it is large enough to matter to a world total, whereas the
+mainstream's dispersion acts on everybody at once from the first year.
+
+Where a group is already large it does matter, and locally it dominates. In
+Israel, whose Haredi population is \HarediShare{} of the country at the base
+year, the named group reaches \IsraelGroupShare{} of the population by
+\ProjectionEndYear{} and the country's selection multiplier reaches
+\SelectionEffectIsrael{} --- half again as much fertility as the environment path
+alone would give. In the United States the Amish reach
+\UnitedStatesGroupShare{}, contributing to a national multiplier of
+\SelectionEffectUnitedStates{}. Neither of these is a world-scale effect, and
+neither should be reported as one.
+
+\subsection{Where selection bites, and where it does not}
+
+The same run produces very different multipliers by country
+(\Cref{tab:countries}), and the ordering is informative. Selection is strongest
+where fertility is already low, because the model's response depends on the
+\emph{relative} dispersion of family size rather than its absolute level: a
+country at 0.8 children per woman has as much proportional room for
+recomposition as one at 4, and it passes through more generations in the same
+number of years.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrl}
+\toprule
+Country & Selection multiplier at \ProjectionEndYear{} & Composition of the effect \\
+\midrule
+Israel          & \SelectionEffectIsrael{}        & mainstream plus a large named group \\
+United States   & \SelectionEffectUnitedStates{}  & mainstream plus a small named group \\
+Nigeria         & \SelectionEffectNigeria{}       & mainstream only \\
+Japan           & \SelectionEffectJapan{}         & mainstream only \\
+Germany         & \SelectionEffectGermany{}       & mainstream only \\
+Korea           & \SelectionEffectKorea{}         & mainstream only \\
+\bottomrule
+\end{tabular}
+\caption{Observed fertility divided by the environment path alone, at
+\ProjectionEndYear{}, in the run that includes both selection and the
+\PressureStressTest{} stress test. The multiplier is a statement about
+composition and is unaffected by the level of the environment path, for the
+reason given in \Cref{sec:separability}.}
+\label{tab:countries}
+\end{table}
+
+\subsection{The mechanism's own uncertainty}
+
+Drawing all \MechanismParameterCount{} mechanism parameters from their stated
+ranges \MechanismDraws{} times gives a selection multiplier at
+\ProjectionEndYear{} between \RaceEnsembleEffectLow{} and
+\RaceEnsembleEffectHigh{} at 90\%, and a world population in the stress-test
+scenario between \RaceEnsembleLow{} and \RaceEnsembleHigh{} billion. Selection
+overtakes the environment in \RaceEnsembleOvertakeShare{} of those draws.
+
+The direction is therefore robust and the magnitude is not, and it is worth being
+precise about which parameter is responsible. Almost all of the width comes from
+the empirical dispersion of family size: holding everything else fixed, the
+endpoints of the measured range, \FamilySizeCVLow{} and \FamilySizeCVHigh{}, move
+the stress-test world result from \CVLowWorld{} to \CVHighWorld{} billion. That is a genuine
+empirical uncertainty in a quantity that is measurable, unlike the environment
+path, and narrowing it is tractable work: it needs completed-cohort parity
+distributions from more than the small set of countries that publish them.

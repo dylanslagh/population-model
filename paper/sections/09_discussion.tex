@@ -1,0 +1,150 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{A middle position, and why it is a position rather than a hedge}
+
+Two literatures reach opposite conclusions about what intergenerational
+transmission of fertility implies. \citet{collins2019} apply the breeder's
+equation to national fertility and conclude that global population stabilisation
+this century becomes very unlikely; the European and North American trajectories
+in their model turn from decline to growth. \citet{arenberg2022} reply that a
+model built from transmission alone contains no absolute fertility level, cannot
+represent the fact that higher-fertility subgroups are themselves converging
+downward, and therefore cannot establish that transmission produces growth at
+all.
+
+Both are right about what they are arguing. The disagreement is not really about
+the mechanism, which nobody disputes; it is about whether a model that carries
+only a transmission coefficient can support a conclusion about population size.
+It cannot, and the fix is to put the mechanism inside a projection that carries
+levels.
+
+Doing that yields a result that neither side would predict from the other's
+setup. The mechanism is real and measurable, its direction is unambiguous, and it
+is worth \LadderMainstreamGain{} billion people at \ProjectionEndYear{} --- far
+too large to leave out of a long-run projection. It is also not a return to
+growth. Under the benchmark environment with mainstream selection, the world
+still peaks and then runs close to flat; what selection changes is where the
+curve settles. The Arenberg condition is satisfied rather than violated, because
+absolute age-specific fertility is carried at every step, and the outcome is a
+level shift of about \LadderMainstreamGainPercent{}.
+
+The second finding is more surprising and cuts against the way this subject is
+usually discussed. Explicitly named high-fertility groups contribute
+\NamedGroupShareOfMechanism{} of what unlabelled variation contributes, even
+though the model is generous to them at every choice point. The compositional
+force in long-run fertility is not a story about visible minorities; it is a
+property of the ordinary dispersion of family size, acting on everybody at once.
+That is a better result than the alternative, because ordinary dispersion is a
+quantity that national statistical offices already measure.
+
+\subsection{On the environment, and why we report a threshold}
+
+The honest position on the fertility environment is that nobody knows what it
+will do. The literature contains coherent arguments in both directions: the
+low-fertility trap hypothesis \citep{lutz2006} describes self-reinforcing
+downward pressure through ideal family size and cohort experience, while the
+mean-reverting specifications used in official projections
+\citep{alkema2011,raftery2012} embed an eventual recovery. Neither is settled,
+and the sensitivity of a 2150 world total to the difference is enormous ---
+\LadderPressureLoss{} billion for the illustrative path used here.
+
+A projection whose headline is controlled by that quantity is reporting its
+author's intuition with extra steps. \Cref{eq:break-even} is the alternative:
+because both forces multiply fertility, the model can be asked for the
+environmental decline that exactly offsets the measured compositional gain, and
+that number --- \BoundaryPaired{} per decade after \PressureFromYear{}, robust to
+migration to within \BoundaryPairedLow{}--\BoundaryPairedHigh{} --- is determined
+by the two measured parameters and the arithmetic.
+
+We would defend this as the right output for a problem of this shape. It is
+falsifiable in the parameters that are measurable, it is explicit about the one
+that is not, and it turns a disagreement about the future into a disagreement
+about a rate. Someone who believes the fertility environment will keep
+deteriorating rapidly and someone who believes it has nearly bottomed out can
+now locate their disagreement on \Cref{fig:boundary} rather than trading
+projections.
+
+\subsection{Limitations}
+\label{sec:limitations}
+
+\begin{description}[leftmargin=1.4em,style=nextline]
+
+\item[The environment multiplies every type equally.] This is what makes the
+boundary a single clean number, and it is the assumption most likely to be
+wrong. Rising costs of housing, childcare and foregone earnings plausibly fall
+hardest on exactly the people whose disposition would otherwise produce large
+families, in which case the environment would interact with selection rather
+than merely oppose it and no single threshold would exist. Modelling that
+interaction requires evidence on how fertility declines have differed across the
+family-size distribution within cohorts, which we did not find at the coverage
+needed. We regard this as the most valuable single extension.
+
+\item[Three types are a discretisation, not a discovery.] The propensity
+distribution is stood in for by \MainstreamTypes{} points chosen to reproduce its
+first two moments exactly. Higher moments, and the shape of the upper tail, are
+structural approximations. The number of types is a declared scenario knob for
+that reason.
+
+\item[The dispersion parameter is an effective spread, not a latent trait.] The
+concession to \citet{hruschka2016} in \Cref{sec:calibration} is genuine. What is
+defended is the moment match to an observed covariance; what is not claimed is
+that the observed variance in completed family size is inherited. Because the
+covariance is what enters \Cref{eq:response}, this is sufficient for the
+one-generation response, and it is the extrapolation across four generations that
+the empirical range \FamilySizeCVLow{}--\FamilySizeCVHigh{} is carried to reflect.
+
+\item[Transmission is one constant, applied everywhere.] A single parent--child
+correlation is used for all 237 countries, when the underlying literature
+reports regional means ranging from 0.09 to 0.19 and does not cover most of the
+world. Countries outside Europe and North America are effectively assigned a
+parameter estimated inside them.
+
+\item[Named groups are modelled without conversion in, and with their host's age
+structure.] Both push the same way, so the reported group shares are lower
+bounds, but neither is small in principle and a group large enough to matter
+would deserve its own age structure.
+
+\item[After 2100 the demographic schedules are held constant.] This is our rule
+and not the source's, and \Cref{sec:horizon} measures what it is worth
+(\WidthHoldConstant{} billion of world spread at \ProjectionEndYear{}) rather
+than leaving it implicit.
+
+\item[Migration by age is borrowed.] The United Nations does not publish net
+migrants by single year of age. Where migration is an input it is a residual
+backed out of the UN's own path, which is usable but is not independent evidence;
+where migration is the object of study its level comes from published
+trajectories but its age and sex composition is still borrowed.
+
+\item[Selection is on fertility only.] Survival is identical across types.
+High-fertility groups often have distinctive mortality, and modelling that
+without evidence would add a parameter and subtract credibility.
+
+\end{description}
+
+\subsection{What would show this to be wrong}
+\label{sec:falsification}
+
+The mechanism's claim resolves in cohort fertility, not period fertility, and the
+distinction is not pedantry: period rates are depressed by postponement even when
+completed family sizes are unchanged \citep{bongaarts1998}, so a mechanism
+predicting a rise in completed cohort fertility could be scored as failing for
+decades by a measure that is not measuring it.
+
+The implication is uncomfortable but should be stated: the first genuinely
+informative test of this model arrives when the cohorts born around 1990 complete
+their childbearing, in the late 2030s. What can be checked before then is
+narrower --- whether the dispersion of completed family size behaves as
+\Cref{sec:cv} measures it in countries not yet in the sample, whether the
+parent--child correlation holds up outside Europe and North America, and whether
+the composition drift in \Cref{fig:mechanism}b is visible in successive cohorts
+of the same country.
+
+Because a claim that resolves in 2038 is easy to revise quietly in 2035, the
+projections behind this paper are written as immutable dated records with proper
+scoring rules attached \citep{gneiting2007}, and the storage layer raises rather
+than overwrite an existing record. The comparator of \Cref{sec:comparator} was
+deposited before the mechanism results existed, and is marked as not a claim of
+this project. We think this record-keeping, rather than any particular number in
+\Cref{sec:results}, is the part of the work most likely to still be useful in
+thirty years.

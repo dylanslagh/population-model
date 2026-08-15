@@ -93,11 +93,25 @@ python scripts\export_uw_fixture.py --check-only
 
 ## Paper files
 
-The scaffold is `paper\main.tex` with sections in `paper\sections\`,
-bibliography in `paper\bibliography\`, the built PDF at
-`paper\population-model.pdf` and a landing page at `paper\index.html`. It was
-written before there were results worth writing up and is not the intended
-research paper; see `NEXT_SESSION.md`.
+`paper\main.tex` with ten sections in `paper\sections\`, two appendices in
+`paper\appendices\`, generated macros and the parameter table in
+`paper\generated\`, figures in `paper\figures\`, bibliography in
+`paper\bibliography\`, the reviewed PDF at `paper\population-model.pdf` and a
+landing page at `paper\index.html`.
+
+The paper was rewritten from scratch on 2026-08-15; the earlier scaffold's prose
+is gone. Numbers and figures are generated, never typed:
+
+```powershell
+$env:TECTONIC = 'C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tectonic-0.17.0\tectonic.exe'
+.\.venv\Scripts\python.exe scripts\build_paper_results.py
+.\.venv\Scripts\python.exe scripts\plot_paper_figures.py
+.\.venv\Scripts\python.exe scripts\build_paper.py --publish
+```
+
+Review the rendered pages before publishing. `pymupdf` was added to the project
+venv on 2026-08-15 for exactly that; `paper\README.md` has the one-liner that
+writes every page to `out\paper-pages\`.
 
 ## Website files
 

@@ -1,18 +1,42 @@
 \begin{abstract}
-Conditional on age-specific fertility, mortality, and migration schedules,
-cohort-component projection is deterministic. Long-run results nevertheless
-depend on uncertain structural assumptions about how those schedules evolve.
-This research protocol develops a reproducible framework that keeps those two
-layers separate. It first
-backtests observable portions of archived United Nations population projection
-vintages against WPP 2024 estimates. It then validates a
-single-year cohort-component engine against published \DataVintage{} projection
-inputs and outputs. The next stage will pass probabilistic fertility and
-mortality trajectories through that same engine before comparing explicit
-accounts of post-transition fertility. The intended contribution is not a
-single preferred population total for \ProjectionEndYear{}. It is a framework
-in which competing explanations use identical demographic bookkeeping, expose
-their assumptions, preserve dated predictions, and identify nearer-term
-outcomes by which they can later be rejected or revised. Probabilistic and
-mechanism-comparison results are forthcoming and are not claimed here.
+\noindent
+Long-run population projections model the national fertility rate as a time
+series that reverts toward a long-run level. That representation has no
+composition in it. But completed family size varies widely within every
+population, and it is transmitted imperfectly from parents to children, so the
+next generation is drawn disproportionately from the larger families. This is
+selection; its direction on fertility is upward; and it is absent from the
+standard projection machinery by construction.
+
+We add a composition axis to a single-year, two-sex cohort-component projection
+covering 237 countries and validated against the United Nations' own
+zero-migration variant to \ValidationWorld{} of world population at 2100. With
+every fertility propensity set to one, the extended engine reproduces the
+ordinary one to machine precision, so any difference in what follows is the
+mechanism rather than a second implementation of the arithmetic. The mechanism's
+two mainstream parameters are taken from evidence that is not the series they
+are meant to explain: the dispersion of completed family size across
+\CVCountries{} low-fertility countries (median coefficient of variation
+\CVMedian{}) and the parent--child correlation in completed family size reported
+in the literature (\Persistence{}). Their product with the squared dispersion is
+the model's one-generation response, and it equals an observed covariance rather
+than an assumed heritability.
+
+Selection is real but modest at the century scale. It raises world population in
+\ProjectionEndYear{} from \LadderBenchmark{} to \LadderMainstream{} billion and
+lifts observed fertility \RaceSelectionEffectPercent{} above the environment path
+that produced it. Named high-fertility groups, which dominate popular discussion
+of this mechanism, add a further \LadderNamedGroupsGain{} billion: the unlabelled
+variation inside ordinary populations does almost all of the work.
+
+Because selection and the fertility environment both act multiplicatively, they
+are directly commensurable, and our primary result is a boundary rather than a
+preferred number. An additional uniform decline in the fertility environment of
+\BoundaryPaired{} per decade after \PressureFromYear{} exactly cancels measured
+mainstream selection by \ProjectionEndYear{} (90\% range \BoundaryPairedLow{} to
+\BoundaryPairedHigh{} across \PairedMigrationPaths{} paired stochastic migration
+paths); across the empirical range of the two measured parameters the threshold
+runs from \BoundaryFloor{} to \BoundaryCeiling{} per decade. The unmeasurable
+quantity in this problem is thereby converted from a free parameter that sets the
+headline into a threshold that can be argued about.
 \end{abstract}

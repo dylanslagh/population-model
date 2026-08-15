@@ -1,0 +1,112 @@
+\section{Reproducibility}
+\label{app:reproducibility}
+
+\subsection*{What produced each number in this paper}
+
+Every numerical value in the text, tables and figures is written by a script into
+a machine-readable result file, and from there into a \LaTeX{} macro or a figure.
+No headline number is typed into the prose. The generator refuses to build if a
+result file is missing, if a key it expects is absent, or if a value has moved
+outside a stated sanity bound, on the reasoning that a paper compiling with a
+silently wrong number is worse than one that does not compile.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\begin{tabular}{@{}L{4.1cm}L{4.9cm}L{5.4cm}@{}}
+\toprule
+Result & Produced by \texttt{scripts/} & Stored in \\
+\midrule
+Engine validation
+  & \texttt{validate\_engine.py}
+  & \texttt{out/validation\_wpp2024} \\
+Long-run diagnostics
+  & \texttt{run\_to\_2150.py}
+  & \texttt{out/run\_to\_2150} \\
+Selection grid and ensemble
+  & \texttt{run\_phase5.py}
+  & \texttt{out/phase5} \\
+Ladder and boundary
+  & \texttt{analyze\_selection\_} \texttt{break\_even.py}
+  & \texttt{reference/selection\_} \texttt{break\_even\_sensitivity} \\
+Paired-migration boundary
+  & \texttt{analyze\_paired\_} \texttt{selection\_boundary.py}
+  & \texttt{reference/paired\_selection\_} \texttt{boundary\_sensitivity} \\
+Family-size dispersion
+  & \texttt{analyze\_cfe\_dispersion.py}
+  & \texttt{reference/mainstream\_} \texttt{propensity\_cv} \\
+Project extension
+  & \texttt{run\_un\_extension.py}
+  & \texttt{reference/un\_project\_} \texttt{extension\_summary} \\
+Uncertainty decomposition
+  & \texttt{decompose\_uncertainty.py}
+  & \texttt{out/uncertainty\_} \texttt{decomposition} \\
+Conventional comparator
+  & \texttt{run\_uw\_ensemble.py}
+  & \texttt{out/uw\_ensemble} \\
+Historical backtest
+  & \texttt{run\_backtest.py}
+  & \texttt{out/backtest} \\
+\midrule
+This paper's macros and tables
+  & \texttt{build\_paper\_results.py}
+  & \texttt{paper/generated/} \\
+This paper's figures
+  & \texttt{plot\_paper\_figures.py}
+  & \texttt{paper/figures/} \\
+\bottomrule
+\end{tabular}
+\caption{The path from a model run to a number on the page. Stored results are
+JSON; \texttt{reference/} abbreviates \texttt{data/reference/}, which is
+committed to the repository, while \texttt{out/} is regenerable and is not.}
+\label{tab:reproducibility}
+\end{table}
+
+\subsection*{Data}
+
+Every downloaded file is checksummed and its manifest committed, so a source that
+is silently reissued fails loudly rather than changing a result. The inputs are
+World Population Prospects 2024 \citep{un2024methodology}, the archived World
+Population Prospects revisions used for the backtest \citep{unwpparchives}, the
+published Bayesian fertility, mortality and migration trajectories
+\citep{uw2024downloads,azose2015}, the Cohort Fertility and Education database
+\citep{cfe2017}, and the national cohort fertility tables \citep{cdccohort}.
+
+Two data sets are not redistributed. The cohort fertility tabulations are used
+under terms that do not permit republication, so the repository commits the
+fetching script, the checksums, the derived per-country statistics and the
+analysis --- everything needed to reproduce the number --- but not the source
+tables. The large trajectory archives are likewise fetched rather than committed.
+
+\subsection*{Conventions that produce plausible wrong answers if guessed}
+
+\begin{itemize}[leftmargin=1.2em]
+\item Ages run 0--100 where 100 is an open-ended group; sex 0 is female.
+\item Survival $s[a]$ is survival \emph{into} age $a$, following the source's own
+convention, so that no translation step stands between the published table and
+the engine. $s[0]$ is birth survival, and $s[100]$ applies to the sum of the
+99-year-olds and the existing 100+ group.
+\item Populations are people. The source publishes thousands; the multiplication
+happens exactly once, at ingest.
+\item Fertility is births per woman per year. The source publishes per thousand.
+\item Childbearing ages are 10--54. The single-age source file stops at 49 and
+the five-year file does not; the missing mothers are about 0.3\% of world births.
+\item Age-specific fertility uses mid-year women, so the denominator is the mean
+of the 1 January figure and the following one. Getting this wrong biases births
+by roughly half a year of cohort change --- negligible in one year, not
+negligible after 126.
+\item World quantiles are computed from each draw's own world total, never by
+summing country quantiles. Adding every country's 5th percentile assumes all of
+them land in their own bad tail in the same draw; at \ProjectionEndYear{} that
+shortcut gives 3.13 billion where the correct world 5th percentile is
+\ComparatorTwentyOneFiftyLow{} billion.
+\end{itemize}
+
+\subsection*{Stored predictions}
+
+Projections intended to be scored later are written as immutable dated records
+with their own checksums; the writer raises rather than overwrite an existing
+record, and has no override flag. The comparator of \Cref{sec:comparator} is
+stored with every quantity marked as not a claim of this project, and was
+deposited before the mechanism results in \Cref{sec:results} existed.

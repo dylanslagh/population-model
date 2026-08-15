@@ -296,12 +296,13 @@ else's forecasts. See `NEXT_SESSION.md`.
   watch countries; widening it to all 236 is small work.
 - **Survey coverage and vital-registration completeness** in the confidence
   layer. Only census recency is sourced. Do not invent the other two.
-- **The three finished outputs**, none of them started beyond scaffolding, and
-  all of them waiting on the science being worth publishing:
-  a genuinely public webpage (the live page is still the authenticated hub);
-  and the paper (`paper/` is an early scaffold, not an approved draft).
-  The third, the YouTube bar-chart race, is now rendered and encoded — see
-  §13. `NEXT_SESSION.md` carries the notes on each.
+- **A genuinely public webpage.** The live page is still the authenticated hub,
+  and Dylan's direction is that the public site be designed from scratch rather
+  than derived from it. This is the only one of the three central outputs that
+  has not been started. `NEXT_SESSION.md` carries the scoped pieces.
+
+  The other two are done: the YouTube bar-chart race is rendered and encoded
+  (§13), and the paper is written (§14).
 
 ## 5. Rules that must not break
 
@@ -589,13 +590,18 @@ the world annually, and record the required receipts. The central universal
 pressure boundary is 1.52% per decade (90% migration-path range 1.51%–1.53%).
 The reproducible receipt is `data/reference/paired_selection_boundary_sensitivity.json`.
 
-The science is now ready for the three finished outputs: a public webpage, a
-rewritten field-quality paper, and the source-led 1950–2100 video. Keep the
-economic-pressure parameter universal as the transparent boundary sensitivity
-axis Dylan chose; do not add a type-specific interaction as a new project track.
+**The paper is written** (§14) and **the video is rendered** (§13). What remains
+of the three central outputs is the **genuinely public webpage**, which should be
+redesigned from the ground up rather than derived from the authenticated hub
+working page.
 
-The public website should be redesigned from the ground up rather than derived
-from the authenticated hub working page.
+Keep the economic-pressure parameter universal as the transparent boundary
+sensitivity axis Dylan chose; do not add a type-specific interaction as a new
+project track. The paper names it as the most valuable single extension and
+states why it is not attempted: it would destroy the clean threshold that makes
+the boundary figure readable, and the evidence on how fertility declines have
+differed across the family-size distribution within cohorts was not found at the
+coverage needed.
 
 `NEXT_SESSION.md` carries the rest, including Dylan's editorial direction for
 the page and the scoped pieces of it that are not built.
@@ -632,10 +638,63 @@ legitimacy comes from the source, misattributing the band is the most damaging
 error available, and it is invisible unless somebody reads the caption against
 `build_map.py`.
 
+## 14. The paper
+
+The second of the three outputs to be finished, written 2026-08-15. It is a
+complete rewrite: the earlier `paper/` scaffold was written before there were
+results, and none of its prose survives.
+
+**Title.** *Selection on Fertility, and the Environmental Decline That Would
+Cancel It.* The order of the argument is Dylan's ranking: the selection model
+leads, the boundary is how selection is made quantitative, and the UN project
+extension is the section that draws the 2100 line.
+
+**The three things it claims, in order of how much they rest on evidence.**
+
+1. Measured mainstream selection is worth **1.82 billion** at 2150 (8.54 → 10.36),
+   from two independently sourced parameters. It shifts the level of the curve
+   and does not restore growth.
+2. Named groups contribute **2.5%** of what unlabelled mainstream variation
+   contributes, despite the model being generous to them at every choice point.
+   This is the counterintuitive finding and it is worth defending.
+3. The primary result is the **break-even boundary**, 1.52% per decade, not any
+   population total.
+
+**How it is kept honest, and what will break if you change it.**
+
+- `scripts/build_paper_results.py` writes every number in the manuscript into
+  `paper/generated/results_macros.tex`. Nothing is typed. It raises on a missing
+  file, a missing key, or a value outside a stated sanity bound. It also
+  generates the parameter table from the CSV.
+- `tests/test_paper.py` enforces this: it reads the headline values back out of
+  the macros and fails if any appears as a literal in the prose, checks every
+  macro used is defined, and checks every cited work is in the source audit.
+  Those tests replaced the old ones, which checked that the scaffold *admitted*
+  to being unfinished and became unenforceable the moment it was finished.
+- `scripts/plot_paper_figures.py` writes vector PDFs into `paper/figures/` and a
+  PNG of each into `out/paper-figures/`. Open the PNGs. Doing so caught bar
+  lengths drawn on a log axis, a label sitting on top of a curve, and two
+  literal `×` escapes that had leaked into a figure.
+
+**One claim that was overstated in this repo and is now stated correctly.**
+Several places, including `plot_phase5.py`'s own footnote, say the two
+full-selection curves coincide *exactly* because the environment cancels out of
+the relative birth weights. The cancellation is exact in the birth weights and
+very nearly exact in the outcome: the world selection multipliers are 1.176 and
+1.174, a gap of 0.22%, because a harsher environment changes the age structure
+over which propensity is averaged and changes how forcefully a fixed migrant
+count mixes in. The paper says this; the figure footnote still does not.
+
+**What Dylan still owns:** title wording, the author line and affiliation,
+acknowledgements, the licence, and whether and where it is released.
+
 ---
 
-*Status updated 2026-08-15 on `main` after `133ccc9`: all eight sourced mechanism
-parameters verified; paired stochastic migration and the selection-boundary
-robustness receipt passed; 170 tests pass; the project is ready to begin its
-central outputs. Phase 6 scoring remains planned for WPP 2027 and later
-completed-cohort-fertility data around 2038. The hub remains a working page.*
+*Status updated 2026-08-15 on `main`: the paper is written and published to
+`paper/population-model.pdf` (27 pages); all eight sourced mechanism parameters
+verified; paired stochastic migration and the selection-boundary robustness
+receipt passed; 173 tests pass. Two bugs were fixed along the way — a strict
+migration-feasibility check that had broken `run_phase5.py` on `main`, and a
+field named `median_peak` that held a mean. Phase 6 scoring remains planned for
+WPP 2027 and later completed-cohort-fertility data around 2038. The hub remains
+a working page and the public site is not built.*

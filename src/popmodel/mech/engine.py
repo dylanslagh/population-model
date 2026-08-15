@@ -129,7 +129,16 @@ def step(
     ) * sx[:, None, :, cohort.MAX_AGE]
 
     if migration is not None:
-        if hasattr(migration, "movement"):
+        # A state-aware policy promises a feasible flow, so an infeasible one is
+        # a bug in the policy and must stop the run: silently clipping it would
+        # create people and unbalance the world, which is the accounting error
+        # the paired-migration work exists to prevent. A plain array is the UN's
+        # own residual, which does occasionally ask a thin age cell for more
+        # emigrants than it holds; `engine/cohort.py` clips that to zero, and the
+        # typed engine has to do the same or it stops reproducing the ordinary
+        # one exactly, which is the check that makes the mechanism attributable.
+        feasibility_required = hasattr(migration, "movement")
+        if feasibility_required:
             movement = migration.movement(
                 pop.sum(axis=(1, 2, 3)), aged.sum(axis=1)
             )
@@ -154,7 +163,7 @@ def step(
             where=total > 0,
         )
         aged = aged + share * movement[:, None, :, :]
-        if np.any(aged < -1e-7):
+        if feasibility_required and np.any(aged < -1e-7):
             raise ValueError("migration removed more people than a typed age/sex cell contained")
 
     exposure = 0.5 * (pop[:, :, cohort.FEMALE, :] + aged[:, :, cohort.FEMALE, :])

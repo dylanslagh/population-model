@@ -1,41 +1,134 @@
 \section{Introduction}
+\label{sec:introduction}
 
-Population projections are often discussed as if disagreement centered on the
-arithmetic. At long horizons, it does not. Once age-specific fertility,
-mortality, and migration rates have been supplied, cohort-component projection
-is deterministic bookkeeping. The scientifically consequential uncertainty is
-upstream: what processes generate those rates, especially after fertility has
-fallen below replacement.
+At a 150-year horizon, almost nobody alive at the start is alive at the end. A
+projection to \ProjectionEndYear{} from a \PhaseFiveBaseYear{} base year is
+therefore not really a statement about today's population. It is a statement
+about the process that generates fertility, iterated four or five times, and
+almost everything else washes out. Freezing today's fertility rates and letting
+the arithmetic run produces about \ConstantFertilityTwentyOneFifty{} billion
+people; the United Nations' medium assumptions produce about
+\UnEquivalentTwentyOneFifty{} billion. The base data are the same in both cases.
+The difference is entirely a claim about what fertility does next.
 
-This distinction matters more as the horizon lengthens. By
-\ProjectionEndYear{}, nearly everyone alive will have been born after the
-\ProjectionBaseYear{} base year. Small but persistent
-differences in fertility therefore compound through both cohort size and later
-births. Mortality and migration remain important, but neither removes the need
-to state why long-run fertility should stabilize, rebound, or continue to fall.
+Conventional long-run projections make that claim in a specific form. Total
+fertility is treated as a national time series with a random walk down through
+the demographic transition and a probabilistic reversion toward a long-run level
+afterwards \citep{alkema2011,raftery2012,sevcikova2016}. The United Nations
+\citep{un2024methodology} and the Institute for Health Metrics and Evaluation
+\citep{vollset2020} differ in their estimated levels, but they agree on the shape
+of the object being modelled: one number per country per year, evolving by its
+own history.
 
-The United Nations now produces deterministic and probabilistic population
-projections using a cohort-component engine and Bayesian trajectories for the
-components of demographic change \citep{un2024methodology}. The underlying
-probabilistic framework is well established
-\citep{alkema2011,raftery2012,raftery2023}. The contribution is not a new
-cohort-component engine, but a transparent comparison of alternative
-rate-generating models through a common validated accounting layer, with
-predictions preserved in a form that can be scored later.
+That object has no composition in it, and composition is not a detail here. In
+every population that has been measured, women differ a great deal in how many
+children they end up having. Across \CVCountries{} low-fertility countries with
+completed cohort data, the coefficient of variation of completed family size has
+a median of \CVMedian{}, meaning the standard deviation is more than half the
+mean. And that variation is transmitted: adult children of larger families have
+somewhat larger families themselves, with reported parent--child correlations
+usually between 0.1 and 0.2 \citep{murphy1999,murphy2013}.
 
-Three questions will organize the completed study:
-\begin{enumerate}
-  \item What signed and regional error patterns recur in observable portions of
-  past World Population Prospects (WPP) projection vintages?
-  \item How much do long-run outcomes change when alternative fertility
-  mechanisms are passed through identical demographic accounting?
-  \item Which nearer-term cohort outcomes distinguish those mechanisms soon
-  enough to provide a meaningful test?
+Put those two facts together and something follows that a national-rate model
+cannot express. The parents of the next generation are not a random sample of
+this generation --- they are sampled in proportion to how many children they
+have. Whatever disposition made a woman have four children rather than one is
+therefore over-represented among the people who raise the next cohort, and if
+that disposition is partly transmitted, the composition of the population shifts
+toward it. This is selection in the plain sense used since \citet{fisher1930},
+and its direction on fertility is always upward, because fertility is
+simultaneously the trait and the fitness measure. A model that projects only the
+national mean assumes this force away rather than estimating it to be small.
+
+\subsection*{What is new here}
+
+That selection acts on fertility is not a new observation. \citet{kolk2014} show
+that intergenerational fertility correlations can prevent low fertility from
+persisting; \citet{burger2016} argue that treating the fertility decline as
+permanent is unjustifiable on evolutionary grounds; and \citet{collins2019}
+apply the breeder's equation to national fertility and conclude that global
+population stabilisation this century is unlikely. There is also direct evidence
+that contemporary human populations are under measurable selection on
+fertility-linked traits \citep{byars2010,beauchamp2016,kong2017}.
+
+The sharpest objection to that literature is also the most useful.
+\citet{arenberg2022} point out that a model built only from heritability has no
+absolute fertility level in it: it can describe who becomes more common without
+being able to say whether the population grows, and the empirical fact that
+higher-fertility subgroups are themselves trending toward replacement has
+nowhere to enter. Their condition is clean --- a high-fertility type shrinks
+whenever its retention times its fertility falls below one --- and it cannot be
+evaluated in a model that carries no fertility levels.
+
+This paper's contribution is to make that evaluation possible, and then to make
+the result useful despite the parameter nobody can measure. Specifically:
+
+\begin{enumerate}[label=\arabic*., leftmargin=1.6em]
+  \item \textbf{The mechanism runs inside a real projection.} Selection is added
+  as an extra axis on a single-year, two-sex cohort-component engine for 237
+  countries carrying the UN's own age-specific fertility, survival and migration
+  schedules (\Cref{sec:engine}). Absolute levels are present throughout, so the
+  \citet{arenberg2022} condition is enforced by the arithmetic rather than
+  assumed away. With every propensity set to one the extended engine reproduces
+  the ordinary one to machine precision, which is what makes any difference in
+  the results attributable to the mechanism.
+
+  \item \textbf{The mechanism's parameters are not fitted to the series they
+  explain.} The two mainstream parameters are the dispersion of completed family
+  size and the parent--child correlation in it, both taken from independent
+  sources (\Cref{sec:calibration}). We show that their combination reproduces an
+  \emph{observed covariance}, which is a much weaker and more defensible claim
+  than a latent-trait heritability. Parameters that could not be sourced
+  independently are labelled scenario knobs and are never allowed to carry a
+  headline.
+
+  \item \textbf{The headline is a boundary, not a number.} The other half of the
+  problem --- how the fertility \emph{environment} moves, meaning how many
+  children a person of fixed disposition has under prevailing conditions --- is
+  not measurable in advance and is where a projection can be made to say
+  anything at all. Because selection and the environment both enter
+  multiplicatively, they are directly commensurable, so we report the additional
+  environmental decline that would exactly cancel measured selection
+  (\Cref{sec:boundary}). That converts the free parameter into a threshold.
 \end{enumerate}
 
-The final question is central. Because a 2150 endpoint cannot be evaluated
-within a useful horizon, the study pre-specifies nearer-term cohort outcomes
-that distinguish the competing mechanisms. The workflow therefore treats
-prior predictive checking, retrospective testing, and future scorekeeping as
-part of the research design rather than presentation added afterward
-\citep{gelman2013,gneiting2007}.
+\subsection*{What we find}
+
+Measured mainstream selection raises world population in \ProjectionEndYear{}
+from \LadderBenchmark{} to \LadderMainstream{} billion, a shift of
+\LadderMainstreamGain{} billion, and raises observed fertility
+\RaceSelectionEffectPercent{} above the environment path. Adding the two named
+high-fertility groups with enough published demography to model separately ---
+Haredi Jews in Israel and the Amish in the United States --- adds only
+\LadderNamedGroupsGain{} billion more. The mechanism that popular discussion
+attaches to visible religious minorities is overwhelmingly a property of
+unlabelled variation inside ordinary populations.
+
+The break-even environmental decline is \BoundaryPaired{} per decade after
+\PressureFromYear{} at the central measured parameters, with a 90\% range of
+\BoundaryPairedLow{} to \BoundaryPairedHigh{} across \PairedMigrationPaths{}
+paired stochastic migration paths, and a range of \BoundaryFloor{} to
+\BoundaryCeiling{} per decade across the empirical uncertainty in the two
+measured parameters. Whether the world population in \ProjectionEndYear{} is
+nearer eight billion or nearer eleven depends on which side of roughly one and a
+half per cent per decade the real fertility environment falls, and we do not
+claim to know which.
+
+\subsection*{What this is not}
+
+\caveatbox{Three claims this paper does not make}{%
+\emph{It is not a forecast.} The comparisons here are conditional on stated
+paths, and \Cref{sec:boundary} exists precisely because the decisive quantity is
+unknown. We report where the model's answer changes sign, not what the answer
+is.\\[0.4em]
+\emph{It is not a claim about genes.} The transmission parameter is a
+parent--child correlation in realised family size. It combines whatever genetic,
+material and cultural continuity exists between generations, and no part of the
+argument requires separating them. \citet{hruschka2016} show that much of the
+observed variation in completed family size can arise from a counting process
+rather than from stable differences between women; \Cref{sec:calibration}
+explains why the calibration used here survives that objection and what it
+concedes to it.\\[0.4em]
+\emph{It is not an economic model.} The fertility environment is a stated
+multiplier path, not a projection of income, housing or childcare costs. We
+describe its direction and report thresholds in it; we do not forecast it.}

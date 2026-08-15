@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Research design and preliminary backtest for a transparent, mechanism-explicit population projection framework to 2150.">
-  <title>Paper - Population projections that can be wrong for a reason</title>
+  <meta name="description" content="A compositional fertility mechanism inside a validated 237-country cohort-component projection to 2150, and the environmental decline that would exactly cancel it.">
+  <title>Selection on fertility, and the environmental decline that would cancel it</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -28,8 +28,8 @@
       background:var(--soft); border-radius:99px; padding:5px 10px;
       font:12px/1.2 ui-sans-serif,system-ui,sans-serif; }
     header { padding:58px 0 38px }
-    h1 { font-size:clamp(34px,6vw,62px); line-height:1.03; letter-spacing:-.035em;
-      max-width:14ch; margin:18px 0 16px; font-weight:600; }
+    h1 { font-size:clamp(32px,5.4vw,54px); line-height:1.06; letter-spacing:-.032em;
+      max-width:18ch; margin:18px 0 16px; font-weight:600; }
     .subtitle { color:var(--muted); font-size:clamp(18px,2.4vw,23px);
       line-height:1.4; max-width:64ch; margin:0 0 24px; }
     .meta { color:var(--muted); font:14px/1.5 ui-sans-serif,system-ui,sans-serif }
@@ -44,10 +44,14 @@
     h3 { font:600 15px/1.3 ui-sans-serif,system-ui,sans-serif; margin:24px 0 5px }
     p { max-width:74ch }
     ul { padding-left:22px; max-width:72ch }
+    li { margin-bottom:6px }
     .grid { display:grid; grid-template-columns:1fr 1fr; gap:22px }
     @media (max-width:680px) { .grid { grid-template-columns:1fr } header { padding-top:36px } }
     code { background:var(--panel); border:1px solid var(--line); border-radius:4px;
       padding:2px 5px; font-size:.88em }
+    .headline { background:var(--panel); border:1px solid var(--line); border-radius:9px;
+      padding:18px 20px; margin:22px 0 0 }
+    .headline strong { font-size:19px }
     .citation { background:var(--panel); border:1px solid var(--line); border-radius:9px;
       padding:16px 18px; overflow-wrap:anywhere }
     footer { color:var(--muted); border-top:1px solid var(--line); padding:24px 0 40px;
@@ -62,62 +66,70 @@
     </nav>
 
     <header>
-      <span class="status">Analysis protocol and preliminary evidence</span>
-      <h1>Population projections that can be wrong for a reason</h1>
-      <p class="subtitle">Research design and preliminary backtest for a mechanism-explicit framework to 2150.</p>
-      <p class="meta">Dylan Slagh · Draft version 0.1.0 · August 2026</p>
+      <span class="status">Working paper &middot; version 1.0.0</span>
+      <h1>Selection on fertility, and the environmental decline that would cancel it</h1>
+      <p class="subtitle">A compositional mechanism inside a validated 237-country cohort-component projection to 2150.</p>
+      <p class="meta">Dylan Slagh &middot; 15 August 2026</p>
       <div class="actions">
         <a class="button primary" href="population-model.pdf">Read the paper (PDF)</a>
-        <a class="button" href="#status">What is finished</a>
+        <a class="button" href="#findings">The findings</a>
       </div>
     </header>
 
     <main>
       <section aria-labelledby="abstract">
-        <h2 id="abstract">Abstract</h2>
-        <p>Conditional on age-specific fertility, mortality, and migration schedules, cohort-component projection is deterministic. Long-run results nevertheless depend on uncertain structural assumptions about how those schedules evolve. This project separates those layers, backtests archived United Nations projection vintages, validates an independent demographic engine, and defines a framework in which competing explanations of post-transition fertility can be compared through identical accounting and scored against nearer-term outcomes.</p>
+        <h2 id="abstract">The argument in short</h2>
+        <p>Long-run population projections model the national fertility rate as a time series that reverts toward a long-run level. That representation has no composition in it. But completed family size varies widely within every population, and it is transmitted imperfectly from parents to children, so the next generation is drawn disproportionately from the larger families. That is selection, its direction on fertility is upward, and it is absent from the standard projection machinery by construction.</p>
+        <p>This paper adds a composition axis to a cohort-component engine that reproduces the United Nations' own published projection to 0.001% of world population at 2100. With every fertility propensity set to one, the extended engine reproduces the ordinary one to machine precision &mdash; so any difference in the results is the mechanism, not a second implementation of the arithmetic.</p>
       </section>
 
-      <section id="status" aria-labelledby="status-heading">
-        <h2 id="status-heading">Current status</h2>
+      <section id="findings" aria-labelledby="findings-heading">
+        <h2 id="findings-heading">The findings</h2>
+        <div class="headline">
+          <p><strong>Selection is real but modest.</strong> It raises world population in 2150 from 8.54 to 10.36 billion, and lifts observed fertility 17.4% above the environment path that produced it. It shifts the level of the long-run curve; it does not restore growth.</p>
+        </div>
+        <div class="headline">
+          <p><strong>Named high-fertility groups are a small part of it.</strong> The Haredi and Amish populations, which dominate popular discussion of this mechanism, contribute 2.5% of what unlabelled variation inside ordinary populations contributes &mdash; even though the model is generous to them at every choice point.</p>
+        </div>
+        <div class="headline">
+          <p><strong>The headline result is a boundary, not a number.</strong> An additional uniform decline in the fertility environment of 1.52% per decade after 2050 exactly cancels measured selection by 2150 (90% range 1.51%&ndash;1.53% across 50 paired stochastic migration paths). Across the empirical range of the two measured parameters the threshold runs from 0.33% to 4.49% per decade.</p>
+        </div>
+        <p>That last result is the point of the exercise. The decisive quantity in a 150-year projection &mdash; how the conditions of parenthood keep changing &mdash; cannot be measured in advance, and a projection that sets it by judgement is reporting its author's intuition with extra steps. Reporting the threshold instead converts a free parameter into a rate that could in principle be observed.</p>
+      </section>
+
+      <section aria-labelledby="honest">
+        <h2 id="honest">What the paper does not claim</h2>
         <div class="grid">
           <div>
-            <h3>Supported now</h3>
-            <ul>
-              <li>An eight-vintage historical WPP backtest.</li>
-              <li>A single-year, age-by-sex cohort-component engine.</li>
-              <li>Independent implementation checks against WPP 2024.</li>
-              <li>A verified official-accessor UW fixture for Finland.</li>
-              <li>A reproducible source and prediction-vintage design.</li>
-            </ul>
+            <h3>It is not a forecast</h3>
+            <p>Every comparison is conditional on a stated path. The paper reports where the model's answer changes sign, not what the answer is.</p>
+            <h3>It is not a claim about genes</h3>
+            <p>The transmission parameter is an observed parent&ndash;child correlation in realised family size, combining whatever genetic, material and cultural continuity exists. No part of the argument requires separating them.</p>
           </div>
           <div>
-            <h3>Still under construction</h3>
-            <ul>
-              <li>Bulk UW extraction and age-schedule conversion.</li>
-              <li>Conversion from compact trajectories to age schedules.</li>
-              <li>The mechanism-explicit fertility comparison.</li>
-              <li>The final probabilistic results to 2150.</li>
-            </ul>
+            <h3>It is not an economic model</h3>
+            <p>The fertility environment is a stated multiplier path, not a projection of income, housing or childcare costs.</p>
+            <h3>Five of thirteen parameters are unmeasured</h3>
+            <p>They are labelled scenario knobs, the loader refuses to let one claim to be verified, and none is allowed to carry a headline result.</p>
           </div>
         </div>
-        <p>The PDF marks unfinished sections visibly. It does not present placeholder simulations as findings.</p>
       </section>
 
-      <section aria-labelledby="versions">
-        <h2 id="versions">Data and versions</h2>
-        <p>The preliminary analysis uses WPP 2024 as its comparison and base-data vintage. The probabilistic source archives are University of Washington products aligned to WPP 2024, not official UN posterior draws. Their exact byte lengths and SHA-256 fingerprints are pinned in <code>data/manifest/uw_wpp2024_files.json</code>.</p>
-        <p>Paper version and model-data vintage are kept separate: a prose revision does not silently become a new forecast, and a new forecast does not overwrite an older paper.</p>
+      <section aria-labelledby="repro">
+        <h2 id="repro">Reproducibility</h2>
+        <p>No headline number in the paper is typed into the prose. Every value in the text, tables and figures is written by a script into a machine-readable result file and from there into a LaTeX macro or a figure; the generator refuses to build if a result file is missing, if an expected key is absent, or if a value has moved outside a stated sanity bound.</p>
+        <p>Every downloaded source file is checksummed and its manifest committed, so a source that is silently reissued fails loudly rather than changing a result. Two data sets are fetched rather than redistributed: the cohort fertility tabulations, whose terms do not permit republication, and the large trajectory archives. The scripts, checksums and derived statistics for both are committed.</p>
+        <p>Projections meant to be scored later are written as immutable dated records; the writer raises rather than overwrite an existing one, and has no override flag. The conventional mean-reverting comparator was deposited before the mechanism results existed, and is marked as not a claim of this project.</p>
       </section>
 
       <section aria-labelledby="citation">
         <h2 id="citation">Citation</h2>
-        <div class="citation">Slagh, Dylan. 2026. “Population Projections That Can Be Wrong for a Reason: Research Design and Preliminary Backtest for a Mechanism-Explicit Framework to 2150.” Analysis protocol and preliminary evidence, version 0.1.0.</div>
+        <div class="citation">Slagh, Dylan. 2026. &ldquo;Selection on Fertility, and the Environmental Decline That Would Cancel It: A Compositional Mechanism Inside a Validated 237-Country Projection to 2150.&rdquo; Working paper, version 1.0.0, 15 August 2026.</div>
       </section>
     </main>
 
     <footer>
-      This page and the PDF are companion outputs of the same project. A stable release archive and formal citation metadata will be added before the manuscript is described as a completed working paper.
+      This page and the PDF are companion outputs of the same project, and share their figures and result files with the interactive model. A stable release archive and formal citation metadata will be added before the manuscript is submitted anywhere.
     </footer>
   </div>
 </body>

@@ -1,0 +1,168 @@
+\section{The mechanism}
+\label{sec:mechanism}
+
+The model keeps two questions apart and answers them separately, because
+conflating them is what makes long-run fertility arguments irresolvable:
+
+\begin{description}[leftmargin=1.4em,style=nextline]
+  \item[Who is becoming more common?] The composition of the population by
+  fertility disposition. This is what selection moves.
+  \item[How many children does a person of a given disposition have?] The
+  fertility environment. This is what social and economic change moves.
+\end{description}
+
+Observed fertility is the product of the two. It is an output of the model, not
+an input to it, and that is the structural difference from a conventional
+projection, where observed fertility is the modelled object itself.
+
+\subsection{Types, propensities and transmission}
+
+Each country's population is divided along an extra axis into $K$ fertility
+\emph{types}. A type is not an ethnic, religious or political label; it is an
+effective fertility propensity $\propensity_k$, a multiplier on the country's own
+base-year age-specific fertility schedule. A woman of propensity $1.4$ has forty
+per cent more children than the national average did in the base year, at every
+age, and that number does not change when conditions do. The propensities are
+normalised so that the base-year composition reproduces each country's published
+fertility exactly, which anchors the model to the present rather than fitting it
+to the future.
+
+Writing $\ell$ for country, $t$ for year, $a$ for single year of age, $k$ for
+type, $f_t[\ell,a]$ for the baseline age-specific fertility schedule and
+$\envmult_t[\ell]$ for the environment multiplier, births are counted by the
+mother's type and then reassigned to the child's:
+\begin{align}
+  B_t[\ell,k] &= \sum_a \bar{P}_t[\ell,k,\mathrm{F},a]\;
+                 f_t[\ell,a]\;\envmult_t[\ell]\;\propensity[\ell,k],
+                 \label{eq:births-by-mother}\\[0.2em]
+  \tilde{B}_t[\ell,j] &= \sum_k B_t[\ell,k]\; M_t[\ell,k,j],
+                 \label{eq:births-by-child}
+\end{align}
+where $\bar{P}_t$ is mid-year exposure of women and $M_t$ is the transition
+matrix from mother's type to child's type. Everything the mechanism claims is in
+those two lines. Survival, ageing, the open-ended age group and migration are
+untouched, and are carried identically for every type.
+
+Selection is what happens when the rows of $M$ differ and $\propensity$ is not
+constant. Higher-propensity women appear more often in
+\Cref{eq:births-by-mother} because they have more children; those children land
+in their mother's type more often than chance through
+\Cref{eq:births-by-child}; so the composition drifts upward, so the
+population-average propensity rises, so observed fertility departs from the
+environment path without anyone imposing a floor on it. The quantity we report
+throughout is that departure,
+\begin{equation}
+  S_t[\ell] \;=\; \frac{\text{observed fertility}}{\text{environment alone}}
+            \;=\; \bar{\propensity}_t[\ell],
+  \label{eq:selection-effect}
+\end{equation}
+the propensity averaged over women of childbearing age. It equals one when
+selection is switched off, and its distance above one is the size of the
+mechanism's claim.
+
+\subsection{The response, and why it is a covariance rather than a heritability}
+\label{sec:response}
+
+The mainstream transition rule is deliberately the simplest one that can carry
+the evidence. A child takes its mother's type with probability $\rho$ and is
+otherwise drawn from the surrounding population of childbearing adults. Under
+that rule the one-generation response has a closed form. Mothers are sampled in
+proportion to their own fertility, so the birth-weighted distribution of types is
+$q_k \propto w_k \propensity_k$ where $w_k$ is the share of childbearing women of
+type $k$. The mean propensity of the newborn cohort is then
+\begin{equation}
+  \rho \sum_k q_k \propensity_k + (1-\rho) \sum_k w_k \propensity_k
+  \;=\; \bar{\propensity} + \rho\,\frac{\sigma^2}{\bar{\propensity}},
+  \label{eq:response}
+\end{equation}
+so the relative gain per generation is $\rho\,\mathrm{CV}^2$, the transmission
+coefficient times the squared coefficient of variation of family size. This is
+the secondary theorem of natural selection in its covariance form
+\citep{robertson1966,price1970}: the response equals the covariance of the trait
+with fitness divided by mean fitness, and here the trait and the fitness are the
+same quantity, so the covariance is a variance.
+
+The important consequence is epistemic rather than algebraic. The right-hand
+side of \Cref{eq:response} is exactly
+$\mathrm{Cov}(\text{parent family size},\,\text{offspring family size})$ divided
+by mean family size, expressed relatively --- and that covariance is directly
+observed. The model therefore moment-matches a measured intergenerational
+covariance. It does not require that any particular fraction of family-size
+variation be a stable inherited trait, which is the assumption that would be hard
+to defend and that \citet{hruschka2016} give good reasons to doubt.
+
+At the central calibration ($\rho = \Persistence{}$, $\mathrm{CV} =
+\FamilySizeCV{}$) the one-generation response is \GenerationResponse{}. Compounded
+over the roughly four generations between \PhaseFiveBaseYear{} and
+\ProjectionEndYear{}, that closed form implies a selection multiplier near
+$1.22$, against the $\RaceSelectionEffect{}$ the full projection produces. The
+closed form runs slightly hot because it ignores the age structure that delays
+each generation's effect and the migration that mixes compositions between
+countries; that the two agree to within a few per cent is a useful check that the
+simulation is doing what the theory says.
+
+\subsection{What children regress toward}
+\label{sec:transmission-mode}
+
+\Cref{eq:response} contains a structural choice that turns out to matter more
+than almost anything else in the model, and that is easy to make by accident.
+When a child does \emph{not} take its mother's type, which population does it
+resemble?
+
+\begin{description}[leftmargin=1.4em,style=nextline]
+  \item[The current population.] The child is drawn from the composition alive
+  around it. Selection then compounds, because the thing children regress toward
+  is itself moving. This is the standard evolutionary-demography result and it is
+  the specification used for the results below.
+  \item[The base-year population.] The child is drawn from the
+  \PhaseFiveBaseYear{} composition, which never moves. Selection then runs into
+  an equilibrium in which the pull-back cancels it, and the long-run effect is
+  several times smaller.
+\end{description}
+
+Both are coherent. The second is a real claim --- that institutions, schooling
+and media hold a society's fertility culture roughly in place regardless of who
+is in it --- and it deserves to be argued for rather than arrived at silently.
+The first implementation of this model used the anchored rule without noticing,
+and produced a selection effect about a quarter of the theoretical size.
+
+Because the two are kept as an explicit switch, the cost of the assumption is
+reportable: holding everything else fixed, anchoring transmission to the base-year
+composition lowers the selection multiplier from \RaceSelectionEffect{} to
+\AnchoredSelectionEffect{} and the \ProjectionEndYear{} world population from
+\RaceTwentyOneFifty{} to \AnchoredTwentyOneFifty{} billion. Nearly half a billion
+people at the horizon turn on a modelling decision about what a child regresses
+toward, which is a question about cultural transmission that demography could
+answer empirically and largely has not.
+
+\subsection{Named groups are transitions, not labels}
+\label{sec:named-groups}
+
+Populations with both very high fertility and strong boundaries --- Haredi Jews,
+the Amish, and others --- are the version of this mechanism that reaches public
+discussion, and they are modelled here as one additional type with two properties
+rather than one. A named group has its own fertility, and it has its own
+\emph{retention}: the share of children raised in it who remain in it as adults.
+Those who leave are not deleted into an average; they land in the mainstream,
+weighted toward its high-propensity type, on the reasoning that leaving a
+community is not the same as abandoning everything it taught you. How much they
+carry with them is a scenario knob (\Cref{sec:calibration}), set at
+\DefectorWeight{} and reported separately for that reason.
+
+Retention is as load-bearing as fertility, and the arithmetic makes this obvious:
+a group at one per cent of a population with six children per woman and ninety per
+cent retention, against a mainstream at $1.4$, reaches \ToyFinalShare{} of the
+population in \ToyGenerations{} generations, while the same group with weak
+retention goes nowhere. This is exactly the condition \citet{arenberg2022} state
+--- retention times fertility must exceed one for a group to grow --- and because
+this model carries absolute fertility levels rather than heritability alone, the
+condition is evaluated rather than assumed. The projection's answer, given in
+\Cref{sec:results}, is that at world scale it barely matters. That is a finding,
+and it points away from the version of this story that gets told.
+
+Two further limits are stated rather than fixed. No conversion \emph{into} a named
+group is modelled, which is small for these two groups but not zero. And every
+type starts with its host country's age structure, because nobody publishes one by
+type; since a population with six children per woman is far younger than its host,
+this understates group growth, and every group share reported below is a lower
+bound.

@@ -1,0 +1,74 @@
+\section{Mechanism parameters}
+\label{app:parameters}
+
+\Cref{tab:parameters} is generated directly from the machine-readable table the
+model loads, so it cannot drift from the values the results were produced with.
+Each row carries an evidence field and a provenance field in the source file; the
+loader refuses to run if a row marked \texttt{sourced} carries no evidence, or if
+a row marked \texttt{knob} claims to have been verified.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\input{generated/parameter_table}
+\caption{All \MechanismParameterCount{} mechanism parameters. Of these,
+\MechanismSourcedCount{} are estimated from published sources and checked against
+them, and \MechanismKnobCount{} are scenario knobs with no independent support.
+The range column is propagated through the parameter ensemble of
+\Cref{sec:results} and the boundary grid of \Cref{sec:boundary}; it is a stated
+plausible interval across settings, not a confidence interval from a single
+study.}
+\label{tab:parameters}
+\end{table}
+
+\subsection*{Sources for the estimated rows}
+
+\begin{description}[leftmargin=1.2em,style=nextline,itemsep=0.35em]
+\item[mainstream persistence] Parent--child correlation in completed family size.
+\citet{murphy1999} reports values mostly 0.15--0.20 in the larger recent British
+and American samples reviewed; \citet{murphy2013}, covering 46 populations in 28
+countries, reports unweighted regional means from 0.09 to 0.19. The interval
+0.05--0.30 is a deliberately conservative cross-setting range rather than one
+study's confidence interval. This is combined genetic and cultural continuity,
+not a heritability.
+
+\item[mainstream propensity cv] Computed from \CVAllCountries{} pinned country
+files of the Cohort Fertility and Education database \citep{cfe2017}; among the
+\CVCountries{} with mean completed fertility at or below 2.2 children, the
+country-median coefficient of variation is \CVMedian{} and the observed range is
+\CVMin{}--\CVMax{}. Independently cross-checked at \CVUnitedStates{} for United
+States cohorts 1947--1956 \citep{cdccohort}. See \Cref{sec:cv} for the tail
+treatment and the declared inclusion rule.
+
+\item[group retention/fertility/share, haredi] \citet{regev2020} estimate that
+13.3\% of people aged 20--64 raised Haredi had left, implying \HarediRetention{}
+retention, with documented faction rates from 5.4\% to 26.4\% --- which is what
+the wide interval reflects. Fertility \HarediFertility{} is the national
+statistical office's own estimate of 6.38 for 2020--2022, which \citet{idi2024}
+round to 6.4 and set against a fall from 7.5 in 2003--2005; the same report gives
+1.392 million Haredim in 2024, or \HarediShare{} of Israel's population.
+
+\item[group retention/fertility/share, amish] \citet{anderson2025} analyse more
+than 50{,}000 households and estimate an age-40+ retention of \AmishRetention{},
+which the authors identify as the best available approximation to lifetime
+retention, and a total fertility rate of \AmishFertility{} from a 2002--2011
+snapshot. Population share \AmishShare{} from \citet{youngcenter2024}, whose
+definition covers horse-and-buggy affiliations and excludes Beachy Amish and
+Amish Mennonites; the model inherits that boundary.
+\end{description}
+
+\subsection*{Why the knobs stay knobs}
+
+No literature check can convert a structural choice or an explicitly future path
+into an estimate. The number of mainstream types is a discretisation. The routing
+of group leavers has no direct measurement. The rate at which a group's fertility
+advantage decays as it stops being unusual has documented instances but no
+established general value. And the two environment parameters describe a future
+that has not happened.
+
+The last of these is the reason \Cref{sec:boundary} exists. Fitting the
+environmental decline to observed fertility would consume exactly the evidence
+the mechanism is meant to explain, and setting it by judgement would let it
+control a headline it cannot support --- as \Cref{fig:ladder} shows it doing,
+at \LadderPressureLoss{} billion against the mechanism's
+\LadderMainstreamGain{} billion.
