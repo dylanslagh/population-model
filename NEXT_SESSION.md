@@ -4,12 +4,11 @@ This is the current, session-specific handoff. Read it before `HANDOFF.md`.
 `HANDOFF.md` is the durable technical history; this file records the owner's
 goal, what just finished, and the next piece of work.
 
-**Phases 1 to 5 are built, and all eight sourced mechanism parameters are now
-verified.** The last gap, `mainstream_propensity_cv`, was completed on
-2026-08-13 from 43 CFE countries with an independent CDC U.S. check. The value
-changed 0.60 -> 0.57, its meaning was corrected from a supposedly latent-trait
-CV to an effective completed-family-size spread, and the model was rerun. See
-`docs/mechanism-parameter-audit.md` and "Do this next".
+**The science is ready to begin the project's three central outputs.** Phases
+1–5 are built; all eight sourced mechanism parameters are verified; and the
+paired stochastic-migration comparison and its boundary robustness receipt
+have passed. The source work is now a fixed base for authoring, not a reason to
+keep expanding the model.
 
 ## Owner's goal, and his editorial direction
 
@@ -24,11 +23,9 @@ Dylan wants three finished public outputs:
    legitimacy comes from the source rather than from us. His idea, added
    2026-08-11. `scripts/render_race.py` writes the frames.
 
-**None of the three is in progress.** They are the finished-output list, to be
-picked up when the science underneath them is worth publishing. Dylan explicitly
-said on 2026-08-14 not to begin the public-site redesign yet. Treat the
-password-gated hub page as a working document where he can review figures, not
-as the design seed for the eventual public site.
+**None of the three is in progress, but they are now ready to begin.** Treat
+the password-gated hub page as a working document where Dylan can review
+figures, not as the design seed for the eventual public site.
 
 Notes on each, so the next session does not rediscover them:
 
@@ -118,10 +115,11 @@ another 0.05 billion. The old 4% development-pressure path then lowers it to
 
 The primary mechanism result is therefore a boundary, not 7.61 billion. At the
 central measured family-size spread and parent-child persistence, an additional
-environmental decline of about **1.53% per decade** after 2050 cancels mainstream
-selection by 2150. `data/reference/selection_break_even_sensitivity.json` and
-`docs/selection-break-even.svg` are the reproducible analysis. The 4% path is
-retained only as an illustrative stress test.
+universal decline of **1.52% per decade** after 2050 cancels mainstream
+selection by 2150. The 50 paired stochastic-migration paths give a 90% range
+of 1.51%–1.53%. `data/reference/paired_selection_boundary_sensitivity.json`
+and `docs/selection-break-even-paired.svg` are the durable receipt. The 4% path
+is retained only as an illustrative stress test.
 
 **The corrected decomposition.** World 90% width at 2150, in billions:
 fertility 7.26, the mechanism 5.72, migration 0.34, our own post-2100
@@ -132,51 +130,14 @@ are not globally balanced draw by draw and were creating or deleting people.
 
 ## Do this next
 
-### Top priority: connect stochastic migration to the paired selection comparison
+### Begin the central outputs
 
-This is the next implementation task. The selection model must still fork in
-2024; the new 2100 boundary belongs to the UN reproduction/extension, not to the
-selection mechanism. Run the reference and selection cases against the same
-underlying migration trajectory (common random numbers) so their difference
-continues to isolate selection rather than migration luck. Use the observed UW
-paths through 2100 and the documented AR(1) emulator after 2100. Preserve a
-zero world migration balance every year and keep the source draw ID and seed in
-the output receipt.
-
-Before replacing any working-page result, the implementation should demonstrate:
-
-1. With selection off, the typed model still reproduces the ordinary cohort
-   engine under the new time-varying migration input.
-2. In every paired run, reference and selection cases use the same source draw
-   and continuation innovations; any population-dependent balancing adjustment
-   is reported rather than hidden.
-3. Every draw-year has zero world net migration to numerical precision, with no
-   people created by clipping impossible age-cell emigration.
-4. The deterministic Phase 5 results remain available as a regression
-   comparison, and any movement in the 1.53% break-even boundary is explained.
-5. Country trajectories are regenerated before the legacy post-2100 line and
-   pyramids on the hub working page are replaced.
-
-Do not switch selection on at 2100, add sticky migrant fertility, or redesign
-the public site as part of this task. Those would change the scientific question
-or expand the scope. The current interactive page explicitly labels its older
-frozen-count post-2100 country results as legacy; that is honest until the paired
-output is ready.
-
-### After that: tighten or challenge the selection-first boundary
-
-The sourced-parameter
-audit no longer blocks the three finished outputs. The clearest remaining model
-weakness is structural: the fertility environment multiplies every propensity
-type equally, so selection and environment are exactly separable. Researching
-whether high- and low-fertility people respond differently to economic and
-institutional pressure would be more valuable than inventing an interaction.
-The 1.53% boundary should move when that assumption is relaxed; the direction
-and size of the movement are now the useful scientific question.
-
-The five scenario knobs stay `verified=FALSE` by definition.
-`development_decline_per_decade` is still the single most important number in
-the model and cannot be looked up as a future path.
+Start with the genuinely public webpage, designed from scratch rather than as
+a cleaned-up hub. Then rewrite the paper scaffold into a field-quality paper;
+the 1950–2100 UN bar-chart race remains a separate, source-led video output.
+Keep the economic-pressure parameter universal: it is a deliberately clean
+sensitivity axis for the boundary figure, not a forecast or a type-specific
+mechanism to elaborate.
 
 ### Later research: broader cohort fertility evidence
 
@@ -201,8 +162,9 @@ above rather than a separate track. Concrete pieces already scoped:
 
 ### Eventual Phase 6 scoring
 
-Formats are ready and two vintages are stored. Nothing
-resolves before about 2038; WPP 2027 is the next data event.
+Formats are ready and two vintages are stored. This remains important future
+work, not a current blocker: WPP 2027 is the next data event, while the first
+meaningful completed-cohort-fertility grade arrives around 2038.
 
 ## Known limitations to state, not fix quietly
 
@@ -211,15 +173,16 @@ resolves before about 2038; WPP 2027 is the next data event.
   most of the answer for the Gulf. The separate post-2100 extension includes it.
 - **Selection and environment are separable** in the Phase 5 model: the
   environment multiplies every type equally, so it cancels out of the relative
-  birth weights, and the two full-selection curves coincide exactly. Probably
-  wrong — a harsher environment plausibly costs high-propensity people more.
+  birth weights, and the two full-selection curves coincide exactly. This is a
+  deliberate simplification for the universal-pressure boundary figure, not a
+  claim that real economic pressure is literally uniform.
 - **Cross-country pairing is inferred.** Trajectory k in every country is treated
   as one posterior sample. That is how bayesTFR generates and bayesPop
   aggregates, but it is not read off UW documentation.
 - **After 2100 fertility and mortality rates are held constant**, which is ours,
-  not the source's. Migration is now stochastic in the project extension, but
-  the older deterministic and selection runs still freeze its final count until
-  the shared-path integration above is done.
+  not the source's. Selection comparisons now use paired stochastic migration;
+  the hub's older country display remains explicitly labelled legacy until its
+  pyramid/export layer is regenerated.
 - **Named groups start with the host country's age structure**, which understates
   their growth. Group shares from Phase 5 are lower bounds.
 - **Holy See** is excluded rather than invented — about 500 people.
@@ -249,6 +212,7 @@ Nothing blocks the work above. Before a genuinely public release: the public
 hostname and the licensing decision. Before the paper: title, author line,
 acknowledgements and release status.
 
-*Updated 2026-08-14 after commit `299fc2f`: stochastic migration extension,
-global-balance correction, selection regression, hub publication, and an
-explicit acceptance checklist for the paired migration/selection integration.*
+*Updated 2026-08-15 after commits `9243d01` and `133ccc9`: paired stochastic
+migration passed, its selection-boundary robustness receipt was recorded, and
+the project moved into its output-creation stage. Phase 6 remains a future
+scoring programme.*

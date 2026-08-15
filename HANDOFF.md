@@ -575,42 +575,27 @@ committed. The central CV changed 0.60 -> 0.57 and the race result 7.75 -> 7.61
 billion. All eight sourced mechanism rows are now verified. Do not reopen this
 by fitting a latent-trait variance to the projection it is meant to explain.
 
-**Top priority: connect the stochastic migration paths to the paired selection
-comparison.** Keep the selection fork at 2024 and give each reference/selection
-pair the same source draw and post-2100 innovations, so the difference isolates
-selection. Preserve exact annual world balance, record the draw and seed, prove
-that selection-off still matches the ordinary engine, and do not replace the
-hub's explicitly labelled legacy country paths until the paired output passes.
-`NEXT_SESSION.md` has the acceptance checklist and scope boundaries.
+**The paired stochastic-migration comparison is complete.** Reference and
+selection cases share each UW source draw and post-2100 innovations, balance
+the world annually, and record the required receipts. The central universal
+pressure boundary is 1.52% per decade (90% migration-path range 1.51%–1.53%).
+The reproducible receipt is `data/reference/paired_selection_boundary_sensitivity.json`.
 
-After that, discuss the next scientific target with Dylan before starting a
-finished output. The strongest remaining structural assumption is that the
-fertility environment multiplies every propensity type equally, making
-selection and environment exactly separable. Testing or relaxing it needs
-outside evidence, not a convenient interaction term. Broader cohort-fertility
-work from HFD is also valuable per spec section 4.3, but HFD bulk access now
-requires an account; the public CFE archive can support some of that work
-without a login.
+The science is now ready for the three finished outputs: a public webpage, a
+rewritten field-quality paper, and the source-led 1950–2100 video. Keep the
+economic-pressure parameter universal as the transparent boundary sensitivity
+axis Dylan chose; do not add a type-specific interaction as a new project track.
 
-**Do not redesign the public site yet.** Dylan is using the authenticated hub
-page as a working document for reviewing figures. The eventual public website
-will be redesigned from the ground up and is deliberately out of scope for the
-next task.
+The public website should be redesigned from the ground up rather than derived
+from the authenticated hub working page.
 
 `NEXT_SESSION.md` carries the rest, including Dylan's editorial direction for
 the page and the scoped pieces of it that are not built.
 
 ---
 
-*Status confirmed 2026-08-14 on `main` at `299fc2f`; the authenticated hub was
-republished after that commit. Last scientific-source audit 2026-08-13: all eight sourced mechanism
-parameters verified; `mainstream_propensity_cv` is reproduced from CFE and CDC
-cohort data. The Phase 5 grid and map QA were rerun after the corrections, and
-all 168 tests pass. Engine validation, Phase 5, and map QA were rerun 2026-08-14;
-the full schedule-converter checkpoint was last completed 2026-08-11. The band checks
-and headless hover-rendering check all pass. Phases 1 to 5 are complete. The live
-page carries the uncertainty band, the hover readout with touch support, the
-corrected uncertainty decomposition, the explicit UN boundary, the stochastic
-migration-extension figure and the two mechanisms. Phase 4's ensemble is stored
-as vintage `2026-08-10-phase4-uw-baseline` with every quantity marked as not a
-project claim.*
+*Status updated 2026-08-15 on `main` after `133ccc9`: all eight sourced mechanism
+parameters verified; paired stochastic migration and the selection-boundary
+robustness receipt passed; 170 tests pass; the project is ready to begin its
+central outputs. Phase 6 scoring remains planned for WPP 2027 and later
+completed-cohort-fertility data around 2038. The hub remains a working page.*
