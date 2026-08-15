@@ -1,71 +1,65 @@
 # Publishing the race video
 
-Copy-ready title, description, thumbnail and music notes for
-`out/race-1950-2100.mp4`. Rendered by `scripts/render_race.py`; thumbnails by
-`scripts/render_thumbnail.py`.
+Copy-ready title, description, thumbnail and music notes.
 
-The video is **1:46** (106 s), 1920x1080, 30 fps, no audio track.
+| | |
+|---|---|
+| Silent master | `out/race-1950-2100.mp4` — `scripts/render_race.py` |
+| **Upload this one** | `out/race-1950-2100-music.mp4` — `scripts/add_music.py` |
+| Thumbnails | `out/thumbnails/thumbnail-*.png` — `scripts/render_thumbnail.py` |
+
+1:46 (105.5 s), 1920x1080, 30 fps, AAC stereo at 48 kHz.
 
 ## Title
 
-Recommended, 58 characters, keywords first:
+Dylan's, chosen 2026-08-15:
 
-> The 12 Biggest Countries, 1950–2100 — With the Uncertainty
+> Biggest Countries by Population - Timelapse (2024 UN Estimates - With Uncertainty)
 
-Alternatives:
-
-> Every Population Race Video Hides This (1950–2100)
-> 150 Years of World Population: 1950 to 2100, UN Data
-> What the UN Actually Knows About 2100
-
-The first is the honest one and still has a hook. The second is the highest
-click-rate phrasing and is defensible — it is true that the genre draws single
-confident lines — but it picks a fight, and this project's whole posture is that
-it would rather show its own ignorance than somebody else's error.
+82 characters, inside YouTube's 100. Mobile search truncates around 60, and
+this one survives it: "Biggest Countries by Population - Timelapse" is the
+first 43 characters and still says what the video is.
 
 ## Description
 
-Everything above the fold is the first three lines. The source attribution is
-not optional: the video's legitimacy rests on it.
+Written as prose rather than the bulleted version that was here first. The
+source attribution is the one part that is not stylistic — the video's
+legitimacy rests on being exact about whose numbers are whose.
 
 ```
-The twelve most populous countries from 1950 to 2100, using the UN's own
-figures — and, from 2024, showing how much the projection actually disagrees
-with itself.
+Twelve countries, 1950 to 2100, ranked by population every year.
 
-Watch 0:51. That is where the UN's estimates of the past stop and the
-projection begins, and a whisker appears on every bar. It keeps widening for
-the rest of the video. That range is the part every other population race
-video leaves out.
+Through 2023 these are the UN's own figures for what already happened. At 0:51
+the video crosses into 2024, and a whisker appears on every bar. That is the
+range the projection actually covers, and it keeps widening for the rest of
+the video. Most population timelapses draw a single confident line all the way
+to 2100 and never show it.
 
-WHERE THE NUMBERS COME FROM
-• The bars are the UN World Population Prospects 2024. Through 2023 they are
-  the UN's reconstruction of what already happened; from 2024 they are its
-  medium projection.
-• The whiskers are the 5th to 95th percentile of 1,000 draws from the
-  University of Washington's Bayesian population posterior — a separate
-  publication from the UN's medium variant, though the UN's own probabilistic
-  work uses that group's method.
-• It stops at 2100 because that is where the UN's published assumptions stop.
-  Anything past 2100 would be my own extrapolation, and it does not belong in
-  a video whose credibility comes from the source.
+The bars are the UN's World Population Prospects, 2024 revision. The whiskers
+are the 5th to 95th percentile of 1,000 draws from the University of
+Washington's Bayesian posterior — a separate publication, though the UN's own
+probabilistic work uses that group's method.
 
-Sources:
-UN World Population Prospects 2024 — https://population.un.org/wpp/
-University of Washington / bayesPop posterior — https://bayespop.csss.washington.edu/
+It stops at 2100 because that is where the UN's published assumptions stop.
+Anything past that would be my own extrapolation, and it does not belong in a
+video that borrows its credibility from the source.
 
-Made with a cohort-component projection engine I wrote, which reproduces the
-UN's own zero-migration variant at 2100 to within 0.001% at the world level.
+UN World Population Prospects 2024: https://population.un.org/wpp/
+University of Washington, bayesPop: https://bayespop.csss.washington.edu/
 
-Music: [TRACK] by [ARTIST] — [LICENCE / LINK]
+Music: Cocktail Lounge by Dyalla
 ```
 
-Replace the music line with whatever the library gives you, or delete it if you
-use a track that needs no attribution.
+**On "sounding like AI".** YouTube does not run AI-text detection on
+descriptions, and there is no ranking penalty for how a description is phrased.
+The disclosure rule that does exist covers realistic synthetic media — a
+person or event that could be mistaken for real footage — and a bar chart is
+not that. So nothing here is a policy risk. The reason to prefer the prose
+version is only that the bulleted one *read* like a template to a human, and
+this is a channel where the writing is part of the credibility.
 
-**Timestamps**, if you want chapters. YouTube needs at least three, the first
-at 0:00, each at least ten seconds. Derived from the render settings
-(1.5 s opening hold, then 1.5 years per second), so they move if those change.
+**Timestamps**, if you want chapters. Derived from the render settings (1.5 s
+opening hold, then 1.5 years per second) and checked against the encoded file.
 
 ```
 0:00 1950
@@ -77,57 +71,76 @@ at 0:00, each at least ten seconds. Derived from the render settings
 
 ## Tags
 
-population, demographics, world population, bar chart race, data
-visualization, united nations, population projection, 2100, uncertainty,
-data science, forecasting
-
-## Thumbnail
-
-`python scripts/render_thumbnail.py` writes three to `out/thumbnails/`. All are
-1280x720 and well under YouTube's 2 MB limit. They are the video's own first
-frame with the chart squeezed left, so the thumbnail cannot drift away from the
-video it advertises.
-
-| Variant | Headline | When to use it |
-|---|---|---|
-| `takeover` | 1950 → 2100 | Safest. Says exactly what the video is. |
-| `uncertainty` | NOBODY KNOWS 2100 | Strongest hook, and honest to the content. |
-| `plain` | 150 YEARS OF WORLD POPULATION | Most sober; weakest at small size. |
-
-The headline font size is fitted to the column width rather than hard-coded,
-and the script refuses to write a file whose headline runs past the canvas
-edge — a cropped word is invisible in a log and obvious to a viewer.
+population, demographics, world population, bar chart race, timelapse, data
+visualization, united nations, population projection, 2100, uncertainty
 
 ## Music
 
-The video has no audio. It wants roughly 1:50 of something at 70–85 BPM,
-instrumental, with no build or drop — the chart is doing the moving, and music
-with structure will fight it.
+`Cocktail Lounge` by Dyalla, chosen 2026-08-15. `scripts/add_music.py` lays it
+under the silent master and writes a new file, so swapping the track never
+means re-rendering three thousand frames. The video stream is copied rather
+than re-encoded.
 
-**Where to get it, safest first.**
+- Fades in over 1 s, fades out over the last 4 s, so it settles as 2100 lands.
+- Normalised to -14 LUFS, which is where YouTube normalises to; the finished
+  file measures -13.2, close enough that YouTube will not move it audibly.
+- The script refuses to run if the track is shorter than the video, because
+  `-shortest` would otherwise truncate the *video* and that looks like a bug
+  rather than a choice.
 
-1. **YouTube Audio Library**, inside YouTube Studio. Cleared specifically for
-   YouTube monetisation, so it cannot generate a Content ID claim against your
-   own video. Most tracks need no attribution; the subset marked `CC BY` gives
-   you the exact credit line to paste. This is the one to use unless you have a
-   reason not to.
-2. **Pixabay Music.** Free for commercial use, no attribution required.
-3. **Uppbeat.** Good lofi catalogue; the free tier requires a credit line and a
-   per-track code in the description.
-4. **Bensound**, **Free Music Archive**, **Chosic.** Real music under Creative
-   Commons, but read each track's licence — CC BY-NC would forbid a monetised
-   upload, and CC BY still requires the credit.
+**One thing to check before publishing.** Dyalla's catalogue is distributed in
+two ways: free tracks that ask for credit, and tracks licensed through Epidemic
+Sound, which are only cleared while you hold a subscription. The downloaded
+file carries no licence metadata — its only tag is `encoder=Google`, which is
+consistent with the YouTube Audio Library. Use the credit line from wherever
+you actually downloaded it. Leaving `Music: Cocktail Lounge by Dyalla` in the
+description costs nothing and covers the attribution case either way.
 
-**Search terms that land on the right sound:** `lofi`, `lo-fi hip hop`,
-`chillhop`, `study beats`, `mellow`, `downtempo`. In the YouTube Audio Library
-the genre filter is *Hip Hop & Rap* with mood *Calm*, which is where the
-study-beats material actually sits.
+If a track ever needs replacing, the safe libraries are the YouTube Audio
+Library (cleared for YouTube monetisation, so it cannot claim your own video),
+Pixabay Music (no attribution), and Uppbeat (free tier wants a credit code).
+Avoid channels calling themselves "no copyright music" — they frequently
+re-upload material they do not own, and the claim lands on you.
 
-**The one trap.** Do not take music from a YouTube channel called "no copyright
-music" or similar. Those channels frequently re-upload material they do not own,
-and the claim lands on your video, not theirs. Use a library that licenses to
-you directly.
+## Thumbnail
 
-I have not verified any individual track — libraries rotate their catalogues,
-and a track name I gave you from memory could easily be gone or relicensed. The
-libraries above are stable; pick from inside them.
+Three 1280x720 variants, all far under YouTube's 2 MB limit, built from the
+video's own first frame so they cannot drift from what they advertise.
+
+| Variant | Headline | Notes |
+|---|---|---|
+| `takeover` | 1950 → 2100 | Safest. Says exactly what the video is. |
+| `uncertainty` | NOBODY KNOWS 2100 | Strongest hook, honest to the content. |
+| `plain` | 150 YEARS OF WORLD POPULATION | Soberest, weakest at small size. |
+
+### A/B testing them
+
+**Test & Compare requires YouTube Partner Program membership** — 1,000
+subscribers and 4,000 watch hours (or 10 million Shorts views), with advanced
+features enabled. It runs in YouTube Studio on desktop only, takes up to two
+weeks, and picks the winner on watch time rather than click-through. Three
+variants is exactly the maximum, so the set above fits if the channel is
+eligible.
+
+If it is not eligible yet, the fallback is manual and still informative:
+publish with one thumbnail, leave it a week, swap to another, and compare
+impressions click-through rate in Analytics for comparable periods. It is
+noisier than a real A/B test because the audience and the video's age are not
+held constant, so treat a small difference as nothing.
+
+Worth knowing before spending two weeks on it: all three variants share the
+same chart and differ only in the headline. That isolates the text cleanly,
+which is a good experiment, but it caps how much the result can move — a test
+between genuinely different images usually separates faster.
+
+## Before you can publish
+
+- **Custom thumbnails need verified advanced features.** That is the same
+  verification currently in review. Until it clears, YouTube will not accept an
+  uploaded thumbnail and will only offer the three auto-generated frames.
+- Upload it as **private or unlisted** now if you want it staged, then set the
+  thumbnail and flip it to public once verification comes back. Nothing about
+  the file changes.
+- The two source URLs are plain links in the description. They are the video's
+  attribution, so they should not be dropped if links are restricted — a
+  non-clickable URL still says where the numbers came from.
