@@ -101,7 +101,7 @@ def step(
     propensity: np.ndarray,
     transition: np.ndarray,
     environment: np.ndarray,
-    migration: np.ndarray | None = None,
+    migration: np.ndarray | object | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Advance one year, carrying composition.
 
@@ -113,7 +113,9 @@ def step(
         propensity: (L, K) fertility multiplier for each type.
         transition: (L, K, K) parent type to child type.
         environment: (L,) multiplier on the base fertility, this year.
-        migration: (L, 2, 101) net migrants, split across types by composition.
+        migration: either (L, 2, 101) net migrants, or a state-aware policy
+            whose ``movement(start_population, available_population)`` method
+            supplies a feasible, balanced age/sex flow for this year.
 
     Returns:
         (population next 1 January, births by child type).
@@ -127,13 +129,33 @@ def step(
     ) * sx[:, None, :, cohort.MAX_AGE]
 
     if migration is not None:
+        if hasattr(migration, "movement"):
+            movement = migration.movement(
+                pop.sum(axis=(1, 2, 3)), aged.sum(axis=1)
+            )
+        else:
+            movement = migration
         # Split by the receiving population's composition at each age and sex,
         # rather than by its overall composition: a country whose high-fertility
         # type is concentrated among the young should not receive migrants as
-        # though it were evenly mixed.
+        # though it were evenly mixed.  An empty cell (notably age zero before
+        # births are added) has no such composition, so immigration there uses
+        # the country's surviving type mix.  Leaving its share at zero would
+        # make those migrants disappear when this typed state is summed.
         total = aged.sum(axis=1, keepdims=True)
-        share = np.divide(aged, total, out=np.zeros_like(aged), where=total > 0)
-        aged = aged + share * migration[:, None, :, :]
+        country_type = aged.sum(axis=(2, 3))
+        country_total = country_type.sum(axis=1, keepdims=True)
+        fallback = np.divide(
+            country_type, country_total, out=np.zeros_like(country_type),
+            where=country_total > 0,
+        )[:, :, None, None]
+        share = np.divide(
+            aged, total, out=np.broadcast_to(fallback, aged.shape).copy(),
+            where=total > 0,
+        )
+        aged = aged + share * movement[:, None, :, :]
+        if np.any(aged < -1e-7):
+            raise ValueError("migration removed more people than a typed age/sex cell contained")
 
     exposure = 0.5 * (pop[:, :, cohort.FEMALE, :] + aged[:, :, cohort.FEMALE, :])
     rate = asfr[:, None, :] * environment[:, None, None] * propensity[:, :, None]
@@ -164,7 +186,7 @@ def project(
     environment: np.ndarray,
     labels: tuple[str, ...],
     locations: tuple[str, ...],
-    migration: np.ndarray | None = None,
+    migration: np.ndarray | object | None = None,
     n_years: int | None = None,
 ) -> MechResult:
     """Run the mechanistic projection forward.
@@ -214,7 +236,12 @@ def project(
         srb_t = year_of(srb, t, True)
         env_t = year_of(environment, t, True)
         prop_t = year_of(propensity, t, propensity_by_year)
-        mig_t = year_of(migration, t, True) if migration is not None else None
+        if migration is None:
+            mig_t = None
+        elif hasattr(migration, "movement"):
+            mig_t = migration
+        else:
+            mig_t = year_of(migration, t, True)
 
         base_tfr = asfr_t.sum(axis=1)
         environment_tfr[t] = base_tfr * env_t

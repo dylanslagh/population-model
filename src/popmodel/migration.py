@@ -75,6 +75,159 @@ class SimulatedMigrationRates:
 
 
 @dataclass(frozen=True)
+class RawMigrationPath:
+    """One UW trajectory, observed through 2100 and emulated afterwards.
+
+    These are deliberately *raw* rates.  They are shared by the reference and
+    selection runs.  Each run balances them against its own evolving
+    population, because applying a count balanced for one population to the
+    other would quietly create or remove people.
+    """
+
+    years: np.ndarray  # rate years, inclusive
+    loc_id: np.ndarray
+    trajectory_id: int
+    rates: np.ndarray  # (T, L), in source-location order
+    continuation_seed: int
+
+
+def trajectory_path(
+    draws: MigrationRateDraws,
+    continuation: SimulatedMigrationRates,
+    *,
+    trajectory_id: int,
+    start_rate_year: int,
+    end_rate_year: int,
+) -> RawMigrationPath:
+    """Join one source path to its matching post-2100 continuation.
+
+    The trajectory identity is shared across countries because it is the only
+    cross-country dependence exposed by the UW archive.  The continuation was
+    simulated for every source trajectory with one pinned seed, so selecting
+    this row also selects its exact future innovations.
+    """
+    if not np.array_equal(draws.loc_id, continuation.loc_id):
+        raise ValueError("source and continuation locations do not match")
+    if not np.array_equal(draws.trajectory_ids, continuation.trajectory_ids):
+        raise ValueError("source and continuation trajectory IDs do not match")
+    if start_rate_year < int(draws.years[0]) or end_rate_year < start_rate_year:
+        raise ValueError("requested migration years are outside the source range")
+    source_row = np.flatnonzero(draws.trajectory_ids == int(trajectory_id))
+    if len(source_row) != 1:
+        raise ValueError(f"unknown migration trajectory ID {trajectory_id}")
+    row = int(source_row[0])
+    years = np.arange(start_rate_year, end_rate_year + 1, dtype=np.int64)
+    rates = np.empty((len(years), len(draws.loc_id)), dtype=np.float64)
+    observed = years <= int(draws.years[-1])
+    if np.any(observed):
+        indices = years[observed] - int(draws.years[0])
+        rates[observed] = draws.rates[row, indices, :]
+    if np.any(~observed):
+        indices = years[~observed] - int(continuation.years[0])
+        if np.any(indices < 0) or np.any(indices >= len(continuation.years)):
+            raise ValueError("continuation does not cover every requested migration year")
+        rates[~observed] = continuation.rates[row, indices, :]
+    return RawMigrationPath(
+        years=years,
+        loc_id=np.asarray(draws.loc_id, dtype=np.int64),
+        trajectory_id=int(trajectory_id),
+        rates=rates,
+        continuation_seed=int(continuation.seed),
+    )
+
+
+@dataclass
+class BalancedMigrationPath:
+    """Apply one raw path without letting balancing depend on hidden counts.
+
+    ``movement`` is called once per rate year by the cohort engine.  It records
+    the adjustment imposed by world balancing, which makes the necessary
+    population-dependence of a paired comparison inspectable rather than an
+    unreported source of differences.
+    """
+
+    raw: RawMigrationPath
+    rates: np.ndarray  # (T, L), aligned to the engine locations
+    composition: np.ndarray  # (L, 2, 101)
+    active_locations: np.ndarray
+    locations: tuple[str, ...]
+    _step: int = 0
+    _maximum_world_imbalance_people: float = 0.0
+    _maximum_rate_adjustment: float = 0.0
+    _total_absolute_adjustment_people: float = 0.0
+    _redistributed_outflow_cells: int = 0
+
+    def __post_init__(self) -> None:
+        self.rates = np.asarray(self.rates, dtype=np.float64)
+        self.composition = np.asarray(self.composition, dtype=np.float64)
+        self.active_locations = np.asarray(self.active_locations, dtype=bool)
+        n_locations = len(self.locations)
+        if self.rates.shape != (len(self.raw.years), n_locations):
+            raise ValueError("aligned migration rates do not match years or locations")
+        if self.composition.shape != (n_locations, cohort.N_SEXES, cohort.N_AGES):
+            raise ValueError("migration composition does not match locations")
+        if self.active_locations.shape != (n_locations,):
+            raise ValueError("active migration locations do not match locations")
+        if np.any(self.composition < 0) or not np.allclose(
+            self.composition.sum(axis=(1, 2)), 1.0, atol=1e-10
+        ):
+            raise ValueError("migration composition must be non-negative and sum to one")
+
+    def movement(
+        self,
+        start_population: np.ndarray,
+        available_population: np.ndarray,
+    ) -> np.ndarray:
+        """Return this year's feasible age/sex migration, recording its receipt."""
+        if self._step >= len(self.raw.years):
+            raise ValueError("migration path was asked for more years than it contains")
+        start = np.asarray(start_population, dtype=np.float64)
+        available = np.asarray(available_population, dtype=np.float64)
+        if start.shape != (len(self.locations),):
+            raise ValueError("start population does not match migration locations")
+        if available.shape != (len(self.locations), cohort.N_SEXES, cohort.N_AGES):
+            raise ValueError("available population does not match migration locations")
+        requested = self.rates[self._step]
+        requested_counts = requested * start
+        adjusted, net_counts = balance_rates(
+            requested, start, active=self.active_locations,
+            lower=-RATE_LIMIT, upper=RATE_LIMIT,
+        )
+        self._maximum_world_imbalance_people = max(
+            self._maximum_world_imbalance_people,
+            float(abs(net_counts.sum())),
+        )
+        self._maximum_rate_adjustment = max(
+            self._maximum_rate_adjustment,
+            float(np.max(np.abs(adjusted - requested))),
+        )
+        self._total_absolute_adjustment_people += float(
+            np.abs(net_counts - requested_counts).sum()
+        )
+        movement, redistributed = allocate_age_sex_migration(
+            net_counts[None, :], available[None, :, :, :], self.composition
+        )
+        self._redistributed_outflow_cells += int(redistributed)
+        self._step += 1
+        return movement[0]
+
+    def receipt(self) -> dict:
+        """The run-specific accounting record for a shared raw path."""
+        if self._step != len(self.raw.years):
+            raise ValueError("cannot receipt a migration path before every year is used")
+        return {
+            "source_trajectory_id": self.raw.trajectory_id,
+            "continuation_seed": self.raw.continuation_seed,
+            "rate_years": [int(self.raw.years[0]), int(self.raw.years[-1])],
+            "maximum_world_imbalance_people": self._maximum_world_imbalance_people,
+            "maximum_rate_adjustment": self._maximum_rate_adjustment,
+            "total_absolute_adjustment_people": self._total_absolute_adjustment_people,
+            "redistributed_outflow_cells": self._redistributed_outflow_cells,
+            "world_balance": "zero net migrants every year after population-weighted adjustment",
+        }
+
+
+@dataclass(frozen=True)
 class MigrationExtensionResult:
     """Country totals from migration-only uncertainty after the UN boundary."""
 
