@@ -14,18 +14,22 @@ It stops at 2100, which is where the UN's own assumptions stop. Everything this
 project does beyond that is its own extrapolation and does not belong in a video
 whose legitimacy comes from the source.
 
-Writes numbered PNGs. There is no encoder on this machine, so turning them into
-a video is a separate step: any editor will import an image sequence, or
-ffmpeg will do it in one line (printed at the end).
+Writes numbered 1920x1080 PNGs and, with --encode, an H.264 MP4. ffmpeg is a
+portable build kept outside the repository beside R and Tectonic; its path is in
+LOCAL_TOOLS.md and is passed with --ffmpeg or the FFMPEG environment variable,
+so nothing here depends on ffmpeg being installed anywhere in particular.
 
     python scripts/render_race.py --still 2065      # one frame, to look at
-    python scripts/render_race.py                   # the whole sequence
+    python scripts/render_race.py --encode          # the sequence, then the MP4
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -42,7 +46,13 @@ from popmodel import export, paths  # noqa: E402
 START, END = 1950, 2100
 BARS = 12
 FPS = 30
-YEARS_PER_SECOND = 4.0
+YEARS_PER_SECOND = 1.5  # 1950-2100 in about 100 seconds
+DPI = 150  # 12.8x7.2 inches -> 1920x1080, which is what YouTube wants
+
+# Without these the last year is on screen for one frame and nobody can read the
+# ending. Held in the encoder rather than by writing duplicate PNGs, so the frame
+# folder stays a plain one-frame-per-instant sequence for any other editor.
+HOLD_START, HOLD_END = 1.5, 4.0
 
 # Region colours, assigned by hand for the ~30 countries that ever reach the top
 # twelve. This is presentation, not data: no number here comes from it.
@@ -159,11 +169,18 @@ def frame(year: float, totals, names, first, band, ax):
         ax.spines[side].set_visible(False)
     ax.spines["bottom"].set_color("#ccc")
 
-    ax.text(0.985, 0.10, f"{int(year)}", transform=ax.transAxes, ha="right",
+    ax.text(0.985, 0.135, f"{int(year)}", transform=ax.transAxes, ha="right",
             fontsize=54, fontweight="700", color="#d8d8d8", zorder=0)
-    kind = "UN estimates" if year < 2024 else "UN projection, with 90% of 1,000 draws"
-    ax.text(0.985, 0.045, kind, transform=ax.transAxes, ha="right",
-            fontsize=11, color="#9a9a9a", zorder=0)
+    # The bar and the whisker do not come from the same place, and saying they
+    # do would be the one dishonesty this video cannot afford. The bar is the
+    # UN's own figures; the whisker is the University of Washington's Bayesian
+    # posterior, which is a separate publication even though the UN's own
+    # probabilistic work uses that group's method.
+    kind = ("UN estimates" if year < 2024 else
+            "UN medium projection; whiskers are 90% of 1,000 draws\n"
+            "from the University of Washington's Bayesian posterior")
+    ax.text(0.985, 0.038, kind, transform=ax.transAxes, ha="right", va="bottom",
+            fontsize=10, color="#9a9a9a", linespacing=1.45, zorder=0)
 
 
 def main() -> int:
@@ -171,13 +188,24 @@ def main() -> int:
     parser.add_argument("--still", type=int, action="append",
                         help="render one year and stop; repeatable")
     parser.add_argument("--out", type=Path)
+    parser.add_argument("--encode", action="store_true",
+                        help="run ffmpeg on the frames when they are done")
+    parser.add_argument("--encode-only", action="store_true",
+                        help="skip rendering and encode the frames already there")
+    parser.add_argument("--ffmpeg", type=Path,
+                        help="path to ffmpeg.exe; defaults to $FFMPEG then PATH")
     args = parser.parse_args()
 
-    totals, names, first, band = load_series()
     out = args.out or (paths.OUT / "race")
     out.mkdir(parents=True, exist_ok=True)
+    mp4 = out.parent / "race-1950-2100.mp4"
 
-    fig, ax = plt.subplots(figsize=(12.8, 7.2), dpi=100)
+    if args.encode_only:
+        return encode(out, mp4, args.ffmpeg)
+
+    totals, names, first, band = load_series()
+
+    fig, ax = plt.subplots(figsize=(12.8, 7.2), dpi=DPI)
     fig.subplots_adjust(left=0.135, right=0.965, top=0.92, bottom=0.11)
     fig.suptitle("The twelve most populous countries, 1950 to 2100",
                  fontsize=17, fontweight="600", x=0.02, ha="left")
@@ -190,8 +218,13 @@ def main() -> int:
             print(f"wrote {path}")
         return 0
 
-    step = YEARS_PER_SECOND / FPS
-    years = np.arange(START, END + step / 2, step)
+    # linspace, not arange. Stepping by YEARS_PER_SECOND/FPS accumulates float
+    # error until the last value is 2099.9999999998, which int() floors to 2099:
+    # a video titled "1950 to 2100" that never shows 2100, and every year label
+    # arriving one frame late. linspace pins both ends exactly.
+    steps = round((END - START) * FPS / YEARS_PER_SECOND)
+    years = np.linspace(START, END, steps + 1)
+    assert years[0] == START and years[-1] == END
     print(f"rendering {len(years)} frames at {FPS} fps "
           f"({len(years)/FPS:.0f} seconds of video)")
     for n, year in enumerate(years):
@@ -201,10 +234,45 @@ def main() -> int:
             print(f"  {n}/{len(years)}")
     plt.close(fig)
     print(f"\nwrote {len(years)} frames to {out}")
-    print("There is no encoder on this machine. To make an MP4:")
-    print(f'  ffmpeg -framerate {FPS} -i "{out}/frame-%05d.png" '
-          f'-c:v libx264 -pix_fmt yuv420p -crf 18 race.mp4')
+
+    if args.encode:
+        return encode(out, mp4, args.ffmpeg)
+    print("To make an MP4:")
+    print(f"  python scripts/render_race.py --encode --out {out}")
     print("or import the folder as an image sequence in any video editor.")
+    return 0
+
+
+def encode(frames: Path, mp4: Path, ffmpeg: Path | None) -> int:
+    """Frames to H.264. Fails loudly rather than writing a truncated file."""
+    exe = str(ffmpeg or os.environ.get("FFMPEG") or shutil.which("ffmpeg") or "")
+    if not exe or not (Path(exe).exists() or shutil.which(exe)):
+        raise SystemExit(
+            "no ffmpeg. Pass --ffmpeg, set $FFMPEG, or put it on PATH. "
+            "LOCAL_TOOLS.md records where the portable build lives."
+        )
+    count = len(sorted(frames.glob("frame-*.png")))
+    if count == 0:
+        raise SystemExit(f"no frames in {frames}; render them first")
+    pad = (f"tpad=start_mode=clone:start_duration={HOLD_START}"
+           f":stop_mode=clone:stop_duration={HOLD_END}")
+    cmd = [
+        exe, "-y", "-framerate", str(FPS),
+        "-i", str(frames / "frame-%05d.png"),
+        "-vf", pad,
+        "-c:v", "libx264", "-preset", "slow", "-crf", "18",
+        # YouTube re-encodes whatever it is given, so the job here is to hand it
+        # something lossless-looking. yuv420p is the only chroma format every
+        # player accepts, and faststart moves the index to the front so the file
+        # can be scrubbed before it has finished downloading.
+        "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+        str(mp4),
+    ]
+    print(f"encoding {count} frames -> {mp4}")
+    subprocess.run(cmd, check=True)
+    size = mp4.stat().st_size / 1e6
+    seconds = count / FPS + HOLD_START + HOLD_END
+    print(f"wrote {mp4} ({size:.1f} MB, {seconds:.0f} seconds)")
     return 0
 
 

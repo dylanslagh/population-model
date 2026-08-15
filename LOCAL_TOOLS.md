@@ -23,8 +23,22 @@ menu or on the normal command path. Every script that needs R takes its path as
 | R 4.4.2 | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\R-4.4.2\bin\Rscript.exe` |
 | Rtools44 root | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\rtools44` |
 | Tectonic 0.17.0 | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tectonic-0.17.0\tectonic.exe` |
+| ffmpeg 9.0.1 | `C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tools\ffmpeg-9.0.1-essentials_build\bin\ffmpeg.exe` |
 | Pinned R packages | `r\uw-extract\library\R-4.4.2` (inside the repository) |
 | R package sources | `r\uw-extract\sources` (inside the repository) |
+
+ffmpeg was added on 2026-08-15 for the video output. It is the `essentials`
+build from gyan.dev, downloaded from the publisher's own GitHub releases and
+checked against the SHA-256 he publishes beside it:
+
+| | |
+|---|---|
+| Source | `https://github.com/GyanD/codexffmpeg/releases/download/9.0.1/ffmpeg-9.0.1-essentials_build.zip` |
+| SHA-256 | `fec81ae03971d9dd4be3ebe02e263bd2ec1d789483f931bdba5f5715e65da2e9` |
+| Publisher's hash | `https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip.sha256` |
+
+`render_race.py` takes `--ffmpeg`, or reads `$env:FFMPEG`, or falls back to
+`PATH`, so nothing depends on it being installed in a particular place.
 
 ## UW data
 

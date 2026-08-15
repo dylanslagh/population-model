@@ -34,21 +34,28 @@ Notes on each, so the next session does not rediscover them:
   listed under "Do this next".
 - **Paper.** `paper/` is a scaffold from before there were results. Rewrite,
   do not polish.
-- **Video.** `scripts/render_race.py` renders frames and is finished enough to
-  use; nothing else about the video exists. It stops at 2100 on purpose, because
-  that is where the UN's assumptions stop and everything past it is this
-  project's own extrapolation, which does not belong in something whose
-  credibility rests on the source. Through 2023 the bars are the UN's
-  reconstruction; from 2024 a whisker appears on each bar and widens, which is
-  the one thing every other population race video lacks. There is no encoder on
-  this machine, so the frames are the deliverable and the MP4 is a separate step
-  — an editor's image-sequence import, or a portable ffmpeg the way the project
-  already keeps portable R and Tectonic.
+- **Video.** `scripts/render_race.py` now renders the frames *and* encodes the
+  MP4. It stops at 2100 on purpose, because that is where the UN's assumptions
+  stop and everything past it is this project's own extrapolation, which does
+  not belong in something whose credibility rests on the source. Through 2023
+  the bars are the UN's reconstruction; from 2024 a whisker appears on each bar
+  and widens, which is the one thing every other population race video lacks.
 
-  Open question Dylan has not answered, raised 2026-08-11: whether a second act
-  on **annual births** belongs in the same video. Population falls slowly while
-  the birth flow collapses fast (spec section 7.5), which is arguably the more
-  startling chart. Ask before rendering eleven hundred frames of anything.
+  Settled on 2026-08-15: **1.5 years per second**, about 100 seconds at 30 fps
+  and 1920x1080; and **no second act on annual births** in this video — Dylan
+  chose population only, so births is a separate video if it ever happens.
+
+  A caption bug was fixed at the same time, and it is the kind that matters
+  here. The frame said "UN projection, with 90% of 1,000 draws", which credits
+  the UN with the whisker. The bar is the UN's own medium projection; the
+  whisker is the University of Washington's Bayesian posterior, which is a
+  separate publication. Every other surface in the repo already attributed it
+  correctly. Do not let that shorthand creep back in — the video's whole claim
+  to legitimacy is that it says exactly whose numbers these are.
+
+  ffmpeg is now a portable build kept beside R and Tectonic, path and checksum
+  in [`LOCAL_TOOLS.md`](LOCAL_TOOLS.md). Nothing depends on it being installed:
+  `--ffmpeg`, then `$env:FFMPEG`, then `PATH`.
 
 **His view on what earns a reader's trust, which overrode mine and is the better
 call.** Not the backtest. Grading old UN forecasts is evidence about somebody

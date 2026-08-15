@@ -299,9 +299,9 @@ else's forecasts. See `NEXT_SESSION.md`.
 - **The three finished outputs**, none of them started beyond scaffolding, and
   all of them waiting on the science being worth publishing:
   a genuinely public webpage (the live page is still the authenticated hub);
-  the paper (`paper/` is an early scaffold, not an approved draft); and a
-  YouTube bar-chart race (`scripts/render_race.py` renders frames, and that is
-  all that exists). `NEXT_SESSION.md` carries the notes on each.
+  and the paper (`paper/` is an early scaffold, not an approved draft).
+  The third, the YouTube bar-chart race, is now rendered and encoded — see
+  §13. `NEXT_SESSION.md` carries the notes on each.
 
 ## 5. Rules that must not break
 
@@ -471,6 +471,14 @@ impossible because migration cancels globally. The reader now checks that the
 median of the reshaped draws reproduces the median grid built independently by a
 groupby, which catches it in one line.
 
+**A float step accumulates until the last frame is the wrong year.** The race
+video stepped `np.arange(1950, 2100+step/2, 1.5/30)`, whose final value is
+2099.9999999998. `int()` floors that to 2099, so a video titled "1950 to 2100"
+never showed 2100, and every year label on screen changed one frame later than
+it should have. Only the endpoint was visible, and only because the last frame
+is held. Use `np.linspace` and assert both ends whenever a frame index has to
+land on an exact value.
+
 **A regular expression that loses its backreference deletes what it matched.**
 The figure inliner's substitution ate the opening svg tag and produced a page
 with no figure and no error. Anything that strips attributes from markup now
@@ -591,6 +599,38 @@ from the authenticated hub working page.
 
 `NEXT_SESSION.md` carries the rest, including Dylan's editorial direction for
 the page and the scoped pieces of it that are not built.
+
+## 13. The video
+
+The first of the three outputs to be finished. `scripts/render_race.py` renders
+1920x1080 frames and, with `--encode`, writes `out/race-1950-2100.mp4`.
+
+- **1950 to 2100, twelve bars, 1.5 years per second**, about 100 seconds at
+  30 fps. It stops at 2100 because that is where the UN's assumptions stop.
+- **Population only.** Dylan decided on 2026-08-15 that the annual-births second
+  act does not belong in this video. It is a separate video if it happens at
+  all, and nothing for it is built.
+- **ffmpeg** is a portable gyan.dev build kept outside the repo beside R and
+  Tectonic, checksum-verified against the publisher's own hash. Path in
+  `LOCAL_TOOLS.md`. The script takes `--ffmpeg`, then `$FFMPEG`, then `PATH`,
+  so nothing depends on where it is installed.
+- **The opening and closing holds are applied by the encoder** (`tpad`), not by
+  writing duplicate PNGs, so the frame folder stays one frame per instant and
+  imports cleanly into any editor. Without the closing hold the final year is on
+  screen for a thirtieth of a second.
+- `--encode-only` re-encodes the frames already on disk, which is 20 seconds
+  against 10 minutes for a full re-render.
+
+**The caption trap, which is worth its place in §8.** The frame used to read
+"UN projection, with 90% of 1,000 draws". The solid bar is the UN's own medium
+projection, but the whisker is the University of Washington's Bayesian
+posterior run through this project's engine — a separate publication, even
+though the UN's own probabilistic work uses that group's method. Every other
+surface in the repo attributes it correctly; only the video did not. Nothing
+errored and no number was wrong. For an output whose entire claim is that the
+legitimacy comes from the source, misattributing the band is the most damaging
+error available, and it is invisible unless somebody reads the caption against
+`build_map.py`.
 
 ---
 
