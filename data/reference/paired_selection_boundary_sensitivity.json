@@ -1,0 +1,391 @@
+{
+  "generated": "2026-08-15T08:12:50",
+  "purpose": "Universal additional pressure after 2050 that cancels mainstream selection; not an economic forecast.",
+  "migration": {
+    "paths": 50,
+    "selection": "equally spaced source trajectory IDs",
+    "trajectory_ids": [
+      1,
+      21,
+      42,
+      62,
+      83,
+      103,
+      123,
+      144,
+      164,
+      184,
+      205,
+      225,
+      246,
+      266,
+      286,
+      307,
+      327,
+      348,
+      368,
+      388,
+      409,
+      429,
+      450,
+      470,
+      490,
+      511,
+      531,
+      551,
+      572,
+      592,
+      613,
+      633,
+      653,
+      674,
+      694,
+      715,
+      735,
+      755,
+      776,
+      796,
+      817,
+      837,
+      857,
+      878,
+      898,
+      918,
+      939,
+      959,
+      980,
+      1000
+    ],
+    "continuation_seed": 20260814,
+    "pairing": "reference and selection share each raw path and continuation innovations; balancing remains population-specific and is asserted"
+  },
+  "parameter_grid": {
+    "cv_values": [
+      0.44,
+      0.57,
+      0.8
+    ],
+    "persistence_values": [
+      0.05,
+      0.07500000000000001,
+      0.1,
+      0.125,
+      0.15000000000000002,
+      0.175,
+      0.2,
+      0.22500000000000003,
+      0.25,
+      0.275,
+      0.3
+    ]
+  },
+  "rows": [
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.05,
+      "break_even_decline_per_decade": {
+        "p05": 0.003261602477582898,
+        "p50": 0.0032845437394589116,
+        "p95": 0.0033003835897026435
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.07500000000000001,
+      "break_even_decline_per_decade": {
+        "p05": 0.004849597413128776,
+        "p50": 0.004883155514340709,
+        "p95": 0.004906676842711693
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.1,
+      "break_even_decline_per_decade": {
+        "p05": 0.006405703358986392,
+        "p50": 0.006447540630665549,
+        "p95": 0.006479711759873186
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.125,
+      "break_even_decline_per_decade": {
+        "p05": 0.0079184303184889,
+        "p50": 0.00797915434031271,
+        "p95": 0.008017723484618133
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.15000000000000002,
+      "break_even_decline_per_decade": {
+        "p05": 0.009401746951757429,
+        "p50": 0.009473629607270218,
+        "p95": 0.00952150480504162
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.175,
+      "break_even_decline_per_decade": {
+        "p05": 0.010863096595956589,
+        "p50": 0.010934163402659625,
+        "p95": 0.010987631902032724
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.2,
+      "break_even_decline_per_decade": {
+        "p05": 0.012285820665295622,
+        "p50": 0.012357425392058141,
+        "p95": 0.012419528377047462
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.22500000000000003,
+      "break_even_decline_per_decade": {
+        "p05": 0.013658187225077029,
+        "p50": 0.013744256914698827,
+        "p95": 0.013811663083614483
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.25,
+      "break_even_decline_per_decade": {
+        "p05": 0.015003524602334544,
+        "p50": 0.01509085951076744,
+        "p95": 0.015164556514293543
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.275,
+      "break_even_decline_per_decade": {
+        "p05": 0.01630716027855584,
+        "p50": 0.016399755704953667,
+        "p95": 0.01647985641817753
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.44,
+      "mainstream_persistence": 0.3,
+      "break_even_decline_per_decade": {
+        "p05": 0.017574552097625724,
+        "p50": 0.017670822874519043,
+        "p95": 0.017756283588364657
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.05,
+      "break_even_decline_per_decade": {
+        "p05": 0.005391204976047254,
+        "p50": 0.005435073354012554,
+        "p95": 0.005462913027490279
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.07500000000000001,
+      "break_even_decline_per_decade": {
+        "p05": 0.007956777200368392,
+        "p50": 0.008020276313625174,
+        "p95": 0.008060360677332668
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.1,
+      "break_even_decline_per_decade": {
+        "p05": 0.010445096015270572,
+        "p50": 0.010513851585873257,
+        "p95": 0.010565847448491433
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.125,
+      "break_even_decline_per_decade": {
+        "p05": 0.012830093384038743,
+        "p50": 0.012916179534384564,
+        "p95": 0.012978673152557902
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.15000000000000002,
+      "break_even_decline_per_decade": {
+        "p05": 0.015132137730820217,
+        "p50": 0.015226737671560131,
+        "p95": 0.015299896976835852
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.175,
+      "break_even_decline_per_decade": {
+        "p05": 0.01734673541389765,
+        "p50": 0.017445591269798222,
+        "p95": 0.0175278220921121
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.2,
+      "break_even_decline_per_decade": {
+        "p05": 0.019464626085921432,
+        "p50": 0.019574335983639612,
+        "p95": 0.019664551539748183
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.22500000000000003,
+      "break_even_decline_per_decade": {
+        "p05": 0.021498987101417972,
+        "p50": 0.021611162373041726,
+        "p95": 0.0217099201245682
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.25,
+      "break_even_decline_per_decade": {
+        "p05": 0.02343452181653085,
+        "p50": 0.023560168437666063,
+        "p95": 0.023666111614130004
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.275,
+      "break_even_decline_per_decade": {
+        "p05": 0.025294619370435346,
+        "p50": 0.025423677305055126,
+        "p95": 0.02553672973278403
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.57,
+      "mainstream_persistence": 0.3,
+      "break_even_decline_per_decade": {
+        "p05": 0.027078214625663094,
+        "p50": 0.027199875755295366,
+        "p95": 0.027319469009339792
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.05,
+      "break_even_decline_per_decade": {
+        "p05": 0.010276957403997172,
+        "p50": 0.010343498629488468,
+        "p95": 0.010391426538404048
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.07500000000000001,
+      "break_even_decline_per_decade": {
+        "p05": 0.014915488825104855,
+        "p50": 0.015010424858191873,
+        "p95": 0.015084745170248848
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.1,
+      "break_even_decline_per_decade": {
+        "p05": 0.01925435881969072,
+        "p50": 0.019365660087434955,
+        "p95": 0.019454346104818405
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.125,
+      "break_even_decline_per_decade": {
+        "p05": 0.023290555844681187,
+        "p50": 0.02342330819143884,
+        "p95": 0.023528605228072753
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.15000000000000002,
+      "break_even_decline_per_decade": {
+        "p05": 0.027059763962155557,
+        "p50": 0.02720102134585045,
+        "p95": 0.02732103823967146
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.175,
+      "break_even_decline_per_decade": {
+        "p05": 0.030556662056149653,
+        "p50": 0.030714303943416288,
+        "p95": 0.0308436149316267
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.2,
+      "break_even_decline_per_decade": {
+        "p05": 0.033818925670602684,
+        "p50": 0.033983408902834966,
+        "p95": 0.034121166929284415
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.22500000000000003,
+      "break_even_decline_per_decade": {
+        "p05": 0.036848968657234964,
+        "p50": 0.037017851439001936,
+        "p95": 0.03715947913567518
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.25,
+      "break_even_decline_per_decade": {
+        "p05": 0.03967060275534885,
+        "p50": 0.039835280346649904,
+        "p95": 0.03998396202896812
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.275,
+      "break_even_decline_per_decade": {
+        "p05": 0.0422798502180135,
+        "p50": 0.04244902991291932,
+        "p95": 0.042602333882302376
+      }
+    },
+    {
+      "mainstream_propensity_cv": 0.8,
+      "mainstream_persistence": 0.3,
+      "break_even_decline_per_decade": {
+        "p05": 0.0447033041183224,
+        "p50": 0.04487714557317768,
+        "p95": 0.0450296624773578
+      }
+    }
+  ],
+  "central_result": {
+    "mainstream_propensity_cv": 0.57,
+    "mainstream_persistence": 0.15000000000000002,
+    "break_even_decline_per_decade": {
+      "p05": 0.015132137730820217,
+      "p50": 0.015226737671560131,
+      "p95": 0.015299896976835852
+    }
+  },
+  "parameter_caveat": "5 of 13 mechanism parameters are scenario knobs with no independent support; 5 remain unverified (including those knobs); sourced rows marked verified were checked against the literature recorded in docs/mechanism-parameter-audit.md"
+}
