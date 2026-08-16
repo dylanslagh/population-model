@@ -3,36 +3,34 @@
 
 Of the mechanism's \MechanismParameterCount{} parameters,
 \MechanismSourcedCount{} are estimated from published evidence and
-\MechanismKnobCount{} are not. The
-distinction is enforced in code rather than described in prose: the parameter
-loader refuses a row with no provenance, refuses a row marked as sourced that
-carries no evidence, and refuses a scenario knob that claims to be verified. The
-full table with sources is \Cref{app:parameters}.
+\MechanismKnobCount{} are not. The distinction is enforced in code rather than
+described in prose: the loader refuses a row with no provenance, a row marked as
+sourced that carries no evidence, and a scenario knob that claims to have been
+verified. The full table and its sources are in the supplement.
 
-One rule governs the whole exercise, and it is the reason the numbers in
-\Cref{sec:results} mean anything:
+One rule governs the exercise:
 
 \caveatbox{The standing rule on parameters}{No mechanism parameter may be fitted
-to the series it is meant to explain. If a quantity cannot be sourced
-independently of the fertility path the model produces, it is labelled a scenario
-knob and is never allowed to carry a headline result. This is a restriction on
-what the model may learn, adopted because a mechanism tuned to reproduce
-observed fertility explains nothing about it.}
+to the series it is meant to explain. A quantity that cannot be sourced
+independently of the fertility path the model produces is labelled a scenario
+knob, and the paper does not build a result on one. This restricts what the model
+is allowed to learn, and it is adopted because a mechanism tuned until it
+reproduces observed fertility has explained nothing about it.}
 
 \subsection{The dispersion of completed family size}
 \label{sec:cv}
 
 The first mainstream parameter is the coefficient of variation of completed
-family size. It comes from the Cohort Fertility and Education database
-\citep{cfe2017}, which reports parity distributions by birth cohort. We pin
-\CVAllCountries{} country files, and apply one declared rule everywhere: women
-rather than couples or mothers only; children ever born, including childless
-women; whole birth-cohort bins whose members were all aged 50--59 at observation;
-and one estimate per country, with education categories summed.
+family size, from the Cohort Fertility and Education database \citep{cfe2017},
+which reports parity distributions by birth cohort. We pin \CVAllCountries{}
+country files and apply one declared rule everywhere: women rather than couples
+or mothers only; children ever born, including childless women; whole
+birth-cohort bins whose members were all aged 50--59 at observation; and one
+estimate per country, with education categories summed.
 
 The open highest-parity category has to be handled, and it does not have to be
 guessed at, because the database supplies exact total children and therefore
-identifies the category's mean. The primary estimate distributes it
+identifies that category's mean. The primary estimate distributes it
 geometrically, the maximum-entropy integer distribution with that mean.
 Substituting the minimum-variance integer tail instead moves the coefficient of
 variation by $0.005$ at the median across all \CVAllCountries{} countries and by
@@ -42,37 +40,35 @@ Across the \CVCountries{} countries with mean completed fertility at or below 2.
 children (\CVWomenMillions{} million women), the country-median coefficient of
 variation is \CVMedian{}, with an observed range of \CVMin{} to \CVMax{}. We take
 the unweighted country median rather than the women-weighted one because these
-sources are a set of plausible settings rather than a harmonised global sample,
-and weighting would let the single largest national extract dominate. The
-adopted value is \FamilySizeCV{} with a propagated range of \FamilySizeCVLow{} to
+are a set of plausible settings rather than a harmonised global sample, and
+weighting would let the single largest national extract dominate. The adopted
+value is \FamilySizeCV{} with a propagated range of \FamilySizeCVLow{} to
 \FamilySizeCVHigh{}.
 
-As an independent check on a source with a different construction, paired
-cohort fertility tables from the United States National Center for Health
-Statistics \citep{cdccohort} give mean completed fertility
-\CVUnitedStatesMean{} and a coefficient of variation of \CVUnitedStates{} for
-cohorts born 1947--1956 at exact age 50. That is inside the declared range and
-above the cross-country median.
+As a check against a source of different construction, paired cohort fertility
+tables from the United States National Center for Health Statistics
+\citep{cdccohort} give mean completed fertility \CVUnitedStatesMean{} and a
+coefficient of variation of \CVUnitedStates{} for cohorts born 1947--1956 at
+exact age 50 --- inside the declared range and above the cross-country median.
 
 \subsection{What that dispersion is, and is not}
 
 \citet{hruschka2016} show, using two hundred surveys, that a large share of
-completed-fertility variance can be produced by a counting process alone,
-without any stable differences between women. Their objection is correct and it
-applies here. The parity marginals used above do not identify a latent trait with
-coefficient of variation \FamilySizeCV{}: realised family size also contains
-timing, infertility, partnership history and measurement error.
+completed-fertility variance can be produced by a counting process alone, with no
+stable differences between women. The objection is correct and it applies here.
+These parity marginals do not identify a latent trait with coefficient of
+variation \FamilySizeCV{}; realised family size also contains timing,
+infertility, partnership history and measurement error.
 
-Two things follow. First, the parameter is used as an \emph{effective phenotypic
+Two things follow. The parameter is used as an \emph{effective phenotypic
 spread}, paired with the observed intergenerational correlation, and the pair
-reproduces a measured covariance --- \Cref{sec:response} --- rather than
-asserting a variance decomposition. Second, the correction that would seem
-natural is unavailable: most of these low-fertility distributions are
-\emph{under}-dispersed relative to Poisson, consistent with targeted family
-sizes, so subtracting a Poisson variance to manufacture a latent-trait
-coefficient of variation would be invalid. That is why the empirical range
-\FamilySizeCVLow{}--\FamilySizeCVHigh{} is carried through every result rather
-than collapsed to a point.
+reproduces a covariance (\Cref{sec:response}) rather than asserting a variance
+decomposition. And the correction that would look natural is unavailable: most of
+these low-fertility distributions are \emph{under}-dispersed relative to Poisson,
+consistent with targeted family sizes, so subtracting a Poisson variance to
+manufacture a latent-trait coefficient would be invalid. That is why the
+empirical range \FamilySizeCVLow{}--\FamilySizeCVHigh{} is carried through every
+result rather than collapsed to a point.
 
 \subsection{Parent--child transmission}
 
@@ -85,52 +81,76 @@ in Northern Europe, 0.15 in Western Europe, 0.17 in Southern Europe and 0.19 in
 Eastern Europe. We adopt \Persistence{}, with a deliberately conservative
 cross-setting interval of \PersistenceLow{} to \PersistenceHigh{}.
 
-This is the whole of the transmission assumption, and it is worth being explicit
-about what it excludes. Twin studies report substantial genetic variance
-components for fertility behaviour \citep{kohler1999}, and there is direct
-molecular evidence of contemporary selection on fertility-associated variants
-\citep{beauchamp2016,kong2017}. None of that is used. A heritability is a
-variance decomposition and is not numerically interchangeable with a parent--child
+That is the whole of the transmission assumption, and it is worth saying what it
+excludes. Twin studies report substantial genetic variance components for
+fertility behaviour \citep{kohler1999}, and there is molecular evidence of
+contemporary selection on fertility-associated variants
+\citep{beauchamp2016,kong2017}. None of it is used. A heritability is a variance
+decomposition and is not numerically interchangeable with a parent--child
 correlation; substituting one for the other would inflate the mechanism by a
-factor of two or more with no warrant. The parameter used here is the observed
+factor of two or more with no warrant. The parameter here is the observed
 continuity, whatever produces it.
+
+\subsection{How far the evidence is being stretched}
+\label{sec:extrapolation}
+
+Both parameters are then applied to all 237 countries, and this is a larger step
+than the preceding two subsections make it sound.
+
+The dispersion comes from \CVCountries{} low-fertility countries, almost all
+European, and the transmission literature is concentrated in Europe and North
+America. Neither source covers sub-Saharan Africa, where most of the century's
+births will happen, or South and East Asia, where most of the departure from
+replacement now is. Applying a European parent--child correlation to Nigeria is
+not a small extrapolation dressed up as a global constant; it is a global
+constant with European evidence behind it and nothing behind it elsewhere.
+
+We use one value because the alternative --- inventing regional values --- would
+break the rule above in the least visible way possible. What can be done instead
+is to carry the range honestly, which is why \FamilySizeCVLow{} to
+\FamilySizeCVHigh{} and \PersistenceLow{} to \PersistenceHigh{} propagate through
+every result and why \Cref{sec:boundary} reports a threshold across that whole
+grid rather than at the central pair. A reader who thinks transmission is weaker
+outside the sampled countries can read the answer off \Cref{fig:boundary}
+directly.
 
 \subsection{The named groups}
 
 Two populations have enough published demography to pin fertility, retention and
-population share separately, which is the threshold for modelling a group by
-name rather than inventing one.
+population share separately, which is the threshold for modelling a group by name
+rather than inventing one.
 
 Haredi Jews in Israel: fertility \HarediFertility{} children per woman,
-population share \HarediShare{}, and retention \HarediRetention{} implied by an
+population share \HarediShare{}, and retention \HarediRetention{}, implied by an
 estimated 13.3\% of adults raised Haredi having left \citep{regev2020,idi2024}.
-The retention interval is wide (\;0.735--0.950\;) because the same study documents
-leaving rates from 5.4\% to 26.4\% across factions, and that heterogeneity is
-real rather than sampling noise.
+The retention interval is wide because the same study documents leaving rates
+from 5.4\% to 26.4\% across factions, and that heterogeneity is real rather than
+sampling noise.
 
 The Amish in the United States: fertility \AmishFertility{} children per woman and
 retention \AmishRetention{} at ages 40 and over, from a population-wide analysis
 of more than 50{,}000 households \citep{anderson2025}, with a population share of
 \AmishShare{} from a specialist census of settlements \citep{youngcenter2024}.
 
-Both fertility figures are period rates used only to initialise a relative
-propensity at the model's base year. They are not used as scoring targets, since
-the model's claim concerns cohort fertility and period rates are contaminated by
-timing \citep{bongaarts1998}.
+Both fertility figures are period rates, used only to initialise a relative
+propensity at the base year. They are not scoring targets, since the model's
+claim concerns cohort fertility and period rates are contaminated by timing
+\citep{bongaarts1998}.
 
 \subsection{The parameters that are not measured}
 
 \MechanismKnobCount{} parameters cannot be sourced independently and are labelled
 scenario knobs. The number of mainstream types (\MainstreamTypes{}) is a
-discretisation choice. The share of group leavers who land in the mainstream's
+discretisation choice. The share of group leavers landing in the mainstream's
 high-propensity type (\DefectorWeight{}) has no direct measurement. The rate at
 which a named group's fertility advantage decays as the group stops being unusual
-has no established general value. And two describe the fertility environment: the
-additional proportional decline per decade, and the floor beneath it.
+has documented instances but no established general value. And two describe the
+fertility environment: the additional proportional decline per decade, and the
+floor beneath it.
 
-The last of these is the important one, and it is the quantity this project
-exists to be uncertain about. It cannot be looked up, and it must not be fitted,
-because fitting it to observed fertility would use up exactly the evidence the
-mechanism is supposed to explain. \Cref{sec:boundary} is the response to that
-problem: rather than choosing a value and reporting the population it implies, we
-report the value at which the model's answer changes sign.
+The last is the important one, and it is the quantity this project exists to be
+uncertain about. It cannot be looked up, and it must not be fitted, because
+fitting it to observed fertility would consume exactly the evidence the mechanism
+is supposed to explain. \Cref{sec:boundary} is the response: rather than choosing
+a value and reporting the population it implies, we report the value at which the
+model's answer changes sign.

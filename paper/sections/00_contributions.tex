@@ -1,0 +1,39 @@
+\section*{How this paper was made}
+\label{sec:contributions}
+\addcontentsline{toc}{section}{How this paper was made}
+
+Two of the three authors are language models. We list them because they did the
+work that authorship normally denotes, and because a paper arguing that a
+projection should be auditable would be in a poor position to obscure how it was
+itself produced.
+
+\textbf{Dylan Slagh} conceived the project, set its scope and its constraints,
+made every decision about what the model would and would not attempt, chose the
+questions the paper answers and the order it answers them in, and reviewed all
+of it. The standing rules the work is held to --- in particular that no
+mechanism parameter may be fitted to the series it explains, and that a stored
+prediction may never be overwritten --- are enforced throughout at his
+insistence.
+
+\textbf{Claude Opus 5} built the mechanism layer, the migration and rate
+continuations, the uncertainty analyses and the reproducibility machinery, and
+wrote this manuscript.
+
+\textbf{ChatGPT 5.6 Sol} did earlier model and specification work, and wrote an
+adversarial review of the first complete draft. Several of its objections
+changed the paper's claims rather than its wording: the distinction between
+cancelling a terminal fertility rate and cancelling an accumulated population
+(\Cref{sec:boundary}), the correction that a constructed covariance is not an
+observed one (\Cref{sec:response}), and the removal of an unsupported
+explanation for cross-country variation in the mechanism's strength.
+
+The complete conversation record that produced this work will be released as
+supplementary material. It is not a tidy document, and that is the point of
+releasing it: the errors it contains were caught by the checks described in
+\Cref{sec:engine} and in the supplement, and a reader who wants to know how much
+to trust this paper is entitled to see how many times it was wrong first.
+
+Current journal authorship policies generally do not admit non-human authors.
+This author line therefore describes the division of labour rather than making a
+claim on credit as those policies define it; the human author takes
+responsibility for the whole of it.

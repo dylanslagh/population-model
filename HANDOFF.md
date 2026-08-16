@@ -640,6 +640,46 @@ error available, and it is invisible unless somebody reads the caption against
 
 ## 14. The paper
 
+**Version 1.1.0, 2026-08-16.** Authored by Dylan Slagh, Claude Opus 5 and
+ChatGPT 5.6 Sol, with an opening note explaining who did what and why the model
+authors are listed. Dylan intends to release the full conversation record as
+supplementary material; `conversations/` at the repo root is where it goes. Two
+documents now build: the paper and a supplement carrying the engine validation,
+the parameter table, the backtest and the reproduction path.
+
+### What changed in 1.1.0, and why
+
+Dylan's review and an adversarial review by ChatGPT 5.6 Sol
+(`docs/paper-review-notes.md`) between them changed several claims rather than
+just their wording. The ones that matter:
+
+* **Fertility and mortality are no longer frozen after 2100.** This was the
+  biggest gap and it had never been closed, only labelled. `src/popmodel/rates.py`
+  continues both from the source's own 2070-2100 behaviour; see
+  `docs/migration-extension.md`. Because both versions now exist, the cost of the
+  frozen-rate assumption is measured directly instead of by the old
+  truncate-the-data-early proxy.
+* **There are two break-even thresholds, not one.** Cancelling the terminal
+  fertility rate takes 1.52% per decade; cancelling the 2150 *population* takes
+  2.45%, because the extra people selection already produced are still alive.
+  Reporting only the first understated what it takes to undo the mechanism.
+* **The named-group conclusion was narrowed.** It supports a claim about the two
+  modelled groups, not about high-fertility minorities in general.
+* **The covariance is constructed, not observed.** The dispersion and the
+  correlation come from different samples; the paper now says so and names it as
+  the weakest link in the calibration.
+* **The parameter ensemble is a sensitivity envelope, not a posterior.** Uniform
+  draws from judgemental ranges do not make a 90% credible interval.
+* Removed: an unsupported claim that low-fertility countries pass through more
+  generations (generation length is mean age at childbearing, not level), and
+  "selection overtakes in 100% of draws", whose criterion was only that the
+  multiplier exceeds 1.01.
+* The transmission-mode section was cut. Anchoring transmission to a fixed 2024
+  baseline is not defensible over 126 years, so it is reported once in the
+  limitations as a lower bound rather than presented as a rival specification.
+
+### The original 1.0.0 notes
+
 The second of the three outputs to be finished, written 2026-08-15. It is a
 complete rewrite: the earlier `paper/` scaffold was written before there were
 results, and none of its prose survives.

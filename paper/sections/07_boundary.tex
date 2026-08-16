@@ -5,9 +5,9 @@
 measured parameters, moves the \ProjectionEndYear{} world result by
 \LadderMainstreamGain{} billion. A single unmeasured scenario knob --- how fast
 the fertility environment keeps falling --- moves it by \LadderPressureLoss{}
-billion in the other direction. If that knob were reported as a preferred value,
-it would be doing most of the work while carrying none of the evidence, and the
-paper would amount to an assertion dressed as a projection.
+billion the other way. Reported as a preferred value, that knob would be doing
+most of the work while carrying none of the evidence, and the paper would amount
+to an assertion dressed as a projection.
 
 There is a better use for it, available because of a structural property of the
 model.
@@ -16,119 +16,124 @@ model.
 \label{sec:separability}
 
 The environment multiplier $\envmult_t[\ell]$ in \Cref{eq:births-by-mother}
-multiplies every type equally. It therefore cancels out of the relative weights
+multiplies every type equally. It therefore cancels from the relative weights
 with which types contribute to the next generation: whether conditions are
 generous or harsh, the ratio of a high-propensity woman's births to a
 low-propensity woman's births is unchanged, so the composition follows almost the
 same path either way.
 
 The cancellation is exact in the birth weights and very nearly exact in the
-outcome. Running the same full selection setting under two environments that end
+outcome. Running the same selection setting under two environments that end
 \SeparabilityPopulationGap{} billion people apart gives selection multipliers of
 \SeparabilityCalmEffect{} and \SeparabilityStressedEffect{}, a difference of
-\SeparabilityGap{}. The residue is not a rounding error but a real and small
-second-order effect: a harsher environment produces a different age structure,
-so the childbearing-age women over whom the propensity is averaged are drawn
+\SeparabilityGap{}. The residue is a real second-order effect rather than
+rounding: a harsher environment produces a different age structure, so the
+childbearing-age women over whom the propensity is averaged are drawn
 differently, and a fixed number of migrants mixes into a smaller population with
-proportionally more force. Both effects are worth naming because a model in which
-they were exactly zero would be one that had lost track of the population's age
-structure.
+proportionally more force.
 
-That near-separability is a modelling assumption, and \Cref{sec:limitations}
-takes it seriously as one. But it is also what makes the two forces directly
-comparable. Selection multiplies fertility by $S$; a uniform environmental
-decline of rate $r$ per decade over $d$ decades multiplies it by $(1-r)^d$. The
-two cancel when
+That near-separability is a modelling assumption --- \Cref{sec:limitations} takes
+it seriously as one --- but it is what makes the two forces directly comparable.
+Selection multiplies fertility by $S$; a uniform environmental decline of rate
+$r$ per decade over $d$ decades multiplies it by $(1-r)^d$. The two cancel when
 \begin{equation}
   S \cdot (1-r)^{d} = 1
   \qquad\Longleftrightarrow\qquad
   r^{\star} = 1 - S^{-1/d}.
   \label{eq:break-even}
 \end{equation}
-So instead of asking what the population will be, we can ask a question whose
-answer is determined by measured quantities: \emph{how much additional
-environmental decline would exactly cancel measured selection?}
 
-\subsection{The break-even decline}
+\subsection{Two thresholds, because there are two questions}
 
-At the central calibration, measured mainstream selection reaches
+\Cref{eq:break-even} cancels the fertility \emph{rate} in the final year. At the
+central calibration, measured mainstream selection reaches
 $S = \MainstreamSelectionMultiplier{}$ in the final fertility-rate year
-(\FinalRateYear{}), giving a break-even rate of \BoundaryDeterministic{} per
-decade of additional decline beginning in \PressureFromYear{}. Country selection
-effects are aggregated using births from the no-selection counterfactual, so a
-scenario cannot choose the weights by which it is judged.
+(\FinalRateYear{}), giving \BoundaryDeterministic{} per decade of additional
+decline beginning in \PressureFromYear{}. Country selection effects are
+aggregated using births from the no-selection counterfactual, so a scenario
+cannot choose the weights by which it is judged.
+
+That is not the same as cancelling selection's effect on the population, and the
+difference is not small. Bringing the rate back to parity in \FinalRateYear{}
+leaves every extra birth selection produced in the preceding century, and those
+people and their descendants are alive in \ProjectionEndYear{}. Solving directly
+for the decline that returns the \ProjectionEndYear{} world population to the
+no-selection benchmark of \LadderBenchmark{} billion gives
+\BoundaryPopulation{} per decade --- sixty per cent larger. Both are reported
+because both get asked, and quoting only the first would understate what it takes
+to undo the mechanism.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.86\textwidth]{fig3-boundary.pdf}
 \caption{The additional uniform decline in the fertility environment, per decade
-after \PressureFromYear{}, that exactly cancels mainstream selection by
-\ProjectionEndYear{}. Above a curve, the environment wins and fertility ends
-below the benchmark; below it, selection wins. The two axes are the measured
-parameters: the dispersion of completed family size (three curves, spanning the
-observed low-fertility country range) and the parent--child correlation in it.
-Shaded bands are the 5th to 95th percentile across \PairedMigrationPaths{}
-paired stochastic migration paths and are narrow enough to be nearly invisible,
-which is itself the result reported in \Cref{sec:migration-robustness}. The
-dashed line marks the illustrative \PressureStressTest{} stress test used in
-\Cref{fig:ladder}.}
+after \PressureFromYear{}, that cancels mainstream selection's effect on the
+fertility rate by \ProjectionEndYear{}. Above a curve the environment wins;
+below it selection does. The two axes are the measured parameters: the dispersion
+of completed family size (three curves, spanning the observed low-fertility
+country range) and the parent--child correlation in it. Shaded bands are the 5th
+to 95th percentile across \PairedMigrationPaths{} paired stochastic migration
+paths, and are narrow enough to be nearly invisible, which is itself the result
+reported in \Cref{sec:migration-robustness}. The dashed line marks the
+illustrative \PressureStressTest{} stress test of \Cref{fig:ladder}. Cancelling
+the effect on the 2150 \emph{population} rather than on the rate requires
+\BoundaryPopulation{} at the central setting, above the top of this figure's
+central curve.}
 \label{fig:boundary}
 \end{figure}
 
-\Cref{fig:boundary} shows how that threshold moves across the empirical range of
-both measured parameters, over a \BoundaryGridCells{}-cell grid. It runs from
+\Cref{fig:boundary} shows how the rate threshold moves across the empirical range
+of both measured parameters, over a \BoundaryGridCells{}-cell grid. It runs from
 \BoundaryFloor{} per decade at the low corner --- weak dispersion and weak
 transmission --- to \BoundaryCeiling{} per decade at the high corner. The
 threshold is close to linear in the transmission coefficient and roughly
-quadratic in the dispersion, as \Cref{eq:response} implies it should be.
+quadratic in the dispersion, as \Cref{eq:response} implies.
 
-Read as a statement about the world, \Cref{fig:boundary} says something specific
-and, we think, more useful than a projected total. If the conditions that
-determine how many children a given person has continue to deteriorate at less
-than roughly one and a half per cent per decade after \PressureFromYear{}, the
-compositional force wins and world fertility ends the century-and-a-half above
-where the demographic transition left it. If they deteriorate faster than that,
-the environment wins. Nobody can currently say which, and this paper does not
-try to. What it does is put a number on the question, so that a claim about the
-future of fertility can be stated as a rate that could in principle be observed
-rather than as a mood about modernity.
+Read as a statement about the world, this says something more useful than a
+projected total. If the conditions that determine how many children a given
+person has continue to deteriorate at less than roughly one and a half per cent
+per decade after \PressureFromYear{}, the compositional force wins on the
+fertility rate; below about two and a half per cent it still wins on the
+population at the horizon. Above those, the environment wins. Nobody can
+currently say which, and this paper does not try to. What it does is put a number
+on the question, so that a claim about the future of fertility can be stated as a
+rate that could in principle be observed.
 
 For scale: \PressureStressTest{} per decade, the illustrative stress test, is
-about two and a half times the break-even rate and is far from a neutral choice.
-Sustained for a century, it removes a third of the fertility environment before
-its floor binds. We report it because it was the project's original central
-scenario and because a stress test should be visible, not because we think it
-likely.
+well above both thresholds and is far from a neutral choice. Sustained for a
+century it removes a third of the fertility environment before its floor binds.
+It is reported because it was the project's original central scenario and a
+stress test should be visible, not because we think it likely.
 
 \subsection{The boundary survives stochastic migration}
 \label{sec:migration-robustness}
 
-A boundary computed on one migration path would be worth little if migration
+A threshold computed on one migration path would be worth little if migration
 could move it. It is checked against \PairedMigrationPaths{} stochastic paths
 drawn from the published Bayesian migration trajectories \citep{azose2015}, with
-one important design choice: the selection run and its no-selection counterfactual
-share each source path and each post-2100 innovation, so the comparison is paired
-and the migration draw cannot masquerade as a selection effect. Every draw-year
-is balanced to exactly zero world net migration.
+one design choice that matters: the selection run and its no-selection
+counterfactual share each source path and each post-2100 innovation, so the
+comparison is paired and a migration draw cannot masquerade as a selection
+effect. Every draw-year is balanced to exactly zero world net migration.
 
-The central boundary is \BoundaryPaired{} per decade with a 90\% range of
-\BoundaryPairedLow{} to \BoundaryPairedHigh{}. Migration moves the threshold by
-about one part in seventy-five, against a factor of thirteen between the corners
-of the measured-parameter grid. This is what one should expect --- migration sums
-to zero globally by construction and can only affect a world fertility aggregate
-by relocating people between countries with different schedules --- but expecting
-it is not the same as having checked it.
+The central rate threshold is \BoundaryPaired{} per decade with a 90\% range of
+\BoundaryPairedLow{} to \BoundaryPairedHigh{}. Migration moves it by about one
+part in seventy-five, against a factor of thirteen between the corners of the
+measured-parameter grid. That is what one should expect --- migration sums to
+zero globally by construction and can affect a world fertility aggregate only by
+relocating people between countries with different schedules --- but expecting it
+is not the same as having checked it.
 
 \subsection{What the boundary is not}
 
 \caveatbox{Reading \Cref{fig:boundary} correctly}{The vertical axis is
-\emph{additional} decline, on top of the fertility fall already present in the
-observed data and already carried by the benchmark path. It is not a forecast of
-economic conditions, and this paper makes no claim about what causes the
-fertility environment to move or how fast it will. The threshold is also a
-statement about the terminal year: because both forces compound, a decline that
-begins later or ends earlier trades against the same total. And the uniformity is
-deliberate --- a decline that fell unequally on different dispositions would
-interact with selection rather than merely oppose it, which is a richer model
-than the evidence currently supports and would destroy the clean threshold that
-makes this figure readable.}
+\emph{additional} decline, on top of the fertility fall already in the observed
+data and already carried by the benchmark path. It is not a forecast of economic
+conditions, and this paper makes no claim about what moves the fertility
+environment or how fast. The threshold is also specific to the terminal year:
+because both forces compound, a decline beginning later or ending earlier trades
+against the same total. And the uniformity is deliberate --- a decline falling
+unequally across dispositions would interact with selection rather than merely
+oppose it, which is a richer model than the evidence supports and which would
+destroy the single threshold that makes this figure readable. \Cref{sec:limitations}
+treats that as the most valuable available extension.}

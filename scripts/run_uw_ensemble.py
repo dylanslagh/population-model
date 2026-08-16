@@ -61,6 +61,7 @@ from popmodel.bayes import (  # noqa: E402
 )
 from popmodel.bayes import schedules as sched  # noqa: E402
 from popmodel.ingest import uw_bundle, uw_mig, wpp  # noqa: E402
+from popmodel import rates  # noqa: E402
 
 END_YEAR = 2150
 
@@ -75,10 +76,17 @@ QUANTILE_LEVELS = (0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95)
 WORLD_2100_FLOOR = 3.0e9
 WORLD_2100_CEILING = 30.0e9
 
-POST_2100 = (
+POST_2100_HOLD = (
     "UW's trajectories end in 2100 and this projection runs to 2150; the final "
     "year's fertility, mortality and sex ratio are held constant thereafter. "
     "This is an assumption of this project, not of the source."
+)
+POST_2100_CONTINUE = (
+    "UW's trajectories end in 2100 and this projection runs to 2150; fertility "
+    "and life expectancy are continued by an emulator of the archive's own "
+    "2070-2100 behaviour (see popmodel/rates.py), so the source covers every "
+    "projected year and no rate is held constant. The continuation is this "
+    "project's, not the source's."
 )
 ZERO_MIGRATION = (
     "zero net migration for every country and year; UW's fertility and "
@@ -129,9 +137,29 @@ def main() -> int:
         "--migration", choices=("uw", "zero"), default="uw",
         help="UW's bayesMig median path, or an explicit zero-migration run",
     )
+    parser.add_argument(
+        "--post-2100", choices=("continue", "hold"), default="continue",
+        help=(
+            "continue the source's own late-horizon fertility and longevity "
+            "behaviour past 2100 (default), or hold the final rates constant"
+        ),
+    )
+    parser.add_argument(
+        "--rate-seed", type=int, default=rates.DEFAULT_SEED,
+        help="seed for the post-2100 rate continuation",
+    )
     args = parser.parse_args()
 
     bundle = uw_bundle.load()
+    continuation = None
+    if args.post_2100 == "continue":
+        # Extend the trajectories themselves rather than the age schedules, so
+        # every downstream step -- converter, propagator, vintage writer --
+        # sees a source that covers the whole horizon and the extension policy
+        # never has to invent anything.
+        bundle, continuation = rates.extend_bundle(
+            bundle, end_year=args.end_year - 1, seed=args.rate_seed
+        )
     base, excluded, excluded_people = build_base(bundle)
     print(f"source:    {bundle.provenance['source_label']}")
     print(
@@ -147,8 +175,20 @@ def main() -> int:
             f"({excluded_people:,.0f} people)"
         )
 
+    post_2100 = POST_2100_CONTINUE if continuation else POST_2100_HOLD
     converter = sched.WppRelationalConverter(
-        extension=RateExtensionPolicy.hold_all(POST_2100)
+        extension=(
+            RateExtensionPolicy.strict() if continuation
+            else RateExtensionPolicy.hold_all(POST_2100_HOLD)
+        ),
+        # The drawn levels now run to the horizon, but the age patterns they are
+        # scaled onto still stop in 2100. Reusing the final pattern holds the
+        # shape of fertility across ages and the mortality standard, which is a
+        # far weaker claim than holding the level and is stated as its own
+        # assumption rather than folded into the continuation.
+        reference=sched.ReferenceSchedules.from_bundle(
+            hold_final_pattern=bool(continuation)
+        ),
     )
     if args.migration == "zero":
         migration = MigrationAssumption.zero(
@@ -192,7 +232,16 @@ def main() -> int:
     print(f"migration: {migration.source}")
     if migration.scenario_knob:
         print(f"           scenario knob - {migration.scenario_knob}")
-    print(f"post-2100: rates held constant to {args.end_year}")
+    if continuation:
+        print(
+            f"post-2100: fertility and longevity continued to {args.end_year} "
+            f"by an emulator of the archive's {continuation['fit_years'][0]}-"
+            f"{continuation['fit_years'][1]} behaviour"
+        )
+        clipped = continuation["clipped_share"]
+        print(f"           {clipped:.2e} of continued values hit an absurdity rail")
+    else:
+        print(f"post-2100: rates held constant to {args.end_year}")
     print()
 
     draws = iter(bundle)
@@ -262,7 +311,8 @@ def main() -> int:
             "UN-equivalent: UW's posterior is mean-reverting, so this band "
             "expresses the conventional long-run assumption, not this project's"
         ),
-        "post_2100_assumption": POST_2100,
+        "post_2100_assumption": post_2100,
+        "post_2100_continuation": continuation,
         "migration": {
             "source": migration.source,
             "independently_sourced": migration.independently_sourced,

@@ -25,8 +25,8 @@ sys.path.insert(0, str(REPO / "src"))
 OUT = REPO / "paper" / "generated" / "results_macros.tex"
 TABLE = REPO / "paper" / "generated" / "parameter_table.tex"
 
-PAPER_VERSION = "1.0.0"
-PAPER_DATE = "15 August 2026"
+PAPER_VERSION = "1.1.0"
+PAPER_DATE = "16 August 2026"
 
 
 class ResultError(RuntimeError):
@@ -238,6 +238,16 @@ def add_ladder_and_boundary(m: Macros) -> None:
         m.percent(name, float(rows[(cv, round(persistence, 3))]
                               ["break_even_decline_per_decade"]), 2)
 
+    # Cancelling the terminal rate and cancelling the accumulated population are
+    # different questions with different answers, and reporting only the first
+    # overstates what the boundary shows.
+    population = dig(sens, "population_break_even", source="ladder")
+    m.percent("BoundaryPopulation",
+              sanity("population boundary",
+                     float(population["break_even_decline_per_decade"]), 0.005, 0.08), 2)
+    m.number("BoundaryPopulationWorld",
+             float(population["world_2150_billions_at_break_even"]), 2)
+
     paired = read_json("data/reference/paired_selection_boundary_sensitivity.json")
     band = dig(paired, "central_result", "break_even_decline_per_decade",
                source="paired boundary")
@@ -389,6 +399,44 @@ def add_comparator(m: Macros) -> None:
     m.number("ComparatorTwentyOneFiftyHigh", float(final["p95"]), 2)
 
 
+def add_continuation(m: Macros) -> None:
+    """The post-2100 rate continuation, and what the old frozen rule was worth.
+
+    Both runs propagate the same posterior through the same engine and differ
+    only after 2100, so the difference between them is exactly the cost of the
+    assumption -- which is better than the proxy it replaces, where the source
+    data was truncated ten years early to estimate the same thing.
+    """
+    continued = read_json("out/uw_ensemble_continued.json")
+    held = read_json("out/uw_ensemble.json")
+    fit = dig(continued, "post_2100_continuation", source="continued ensemble")
+
+    m.number("ContinuationTfrPhi", float(fit["tfr_phi_median"]), 2)
+    m.number("ContinuationTfrSigma", float(fit["tfr_sigma_median"]), 3)
+    m.number("ContinuationEZeroDrift",
+             float(fit["e0_drift_years_per_year_median"]), 3)
+    low, high = fit["e0_drift_years_per_year_range"]
+    m.number("ContinuationEZeroDriftLow", float(low), 3)
+    m.number("ContinuationEZeroDriftHigh", float(high), 3)
+    share = float(fit["clipped_share"])
+    m.add("ContinuationClippedShare", f"{share:.1e}".replace("e-0", "e$-$"))
+    m.add("ContinuationFitStart", str(fit["fit_years"][0]))
+
+    def band(payload: dict) -> tuple[float, float, float]:
+        world = dig(payload, "world_billions", source="ensemble")
+        final = world[str(max(int(y) for y in world))]
+        return float(final["p05"]), float(final["p50"]), float(final["p95"])
+
+    c_low, c_mid, c_high = band(continued)
+    h_low, h_mid, h_high = band(held)
+    m.number("ContinuedTwentyOneFifty",
+             sanity("continued 2150 median", c_mid, 7.0, 13.0), 2)
+    m.number("ContinuedLow", c_low, 2)
+    m.number("ContinuedHigh", c_high, 2)
+    m.number("HoldVsContinueMedian", c_mid - h_mid, 2)
+    m.number("HoldVsContinueWidth", (c_high - c_low) - (h_high - h_low), 2)
+
+
 def add_validation(m: Macros) -> None:
     """The engine test that makes any later difference attributable."""
     report = read_json("out/validation_wpp2024.json")
@@ -510,6 +558,7 @@ def main() -> int:
     add_extension(m)
     add_decomposition(m)
     add_comparator(m)
+    add_continuation(m)
     add_validation(m)
     add_backtest(m)
 

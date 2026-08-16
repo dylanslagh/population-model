@@ -1,0 +1,41 @@
+\section{The historical backtest}
+\label{app:backtest}
+
+This is evidence about somebody else's model, not about ours, which is why it
+sits here rather than in the main paper. It is worth recording because it bears
+on how wide a published long-run interval ought to be.
+
+The same archive machinery that supplies the model's inputs grades
+\BacktestVintages{} archived United Nations revisions from
+\BacktestFirstVintage{} to \BacktestLastVintage{} against the current estimates.
+World population was under-projected by \BacktestWorldBias{} on average, and in
+the same direction in every revision since 1996. African fertility was projected
+\BacktestAfricaFertility{} too low and East Asian fertility
+\BacktestEastAsiaFertility{} too high; life expectancy was
+\BacktestLifeExpectancy{} years too low.
+
+Two honesty constraints are enforced in the code rather than mentioned in prose.
+The comparison is against WPP 2024's \emph{estimates}, which are themselves a
+model output and not ground truth. And the low and high variants being compared
+against are fertility scenarios with no probability attached to them.
+
+That second constraint limits what the coverage number can mean. Only
+\BacktestInsideRange{} of \BacktestRangeTotal{} world-level projections
+(\BacktestRangeShare{}) fell inside the low-to-high band printed in the revision
+that made them. Because those bands never claimed a coverage rate, this is not a
+calibration failure in the technical sense, and it would be wrong to call it one.
+What it shows is narrower and still useful: the scenario envelopes demography has
+historically published around long-run population frequently failed to bracket
+what was later estimated, which is a reason to expect that intervals of that kind
+understate how much is unknown.
+
+Grading is done at world and continental-region level rather than by country. The
+United Nations' region codes mean the same thing in 1992 and now, whereas the
+USSR, Yugoslavia, Czechoslovakia, Sudan and Ethiopia all changed shape inside the
+window.
+
+A correction worth recording: the archived revisions are ordinary Excel
+workbooks, downloadable under the ``Archive'' file type and using the same
+country codes still in use. An earlier stage of this project recorded the
+opposite --- that they were scanned volumes and effectively unusable --- and
+skipped the backtest entirely on that basis.

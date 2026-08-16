@@ -309,9 +309,17 @@ class ReferenceSchedules:
     asfr: np.ndarray  # (T, L, 101)
     sx: np.ndarray  # (T, L, 2, 101)
     srb: np.ndarray  # (T, L)
+    #: Whether a year after the reference ends may reuse the final age pattern.
+    #: This is a much weaker assumption than holding a *level* constant: what is
+    #: held is the shape of fertility across ages and the mortality standard the
+    #: Brass logit is applied to, not how many children or how many years of
+    #: life those shapes are scaled to produce. Off by default, because a
+    #: silently repeated schedule is exactly the kind of extrapolation this
+    #: class exists to refuse.
+    hold_final_pattern: bool = False
 
     @classmethod
-    def from_bundle(cls, bundle=None) -> "ReferenceSchedules":
+    def from_bundle(cls, bundle=None, *, hold_final_pattern: bool = False) -> "ReferenceSchedules":
         bundle = bundle if bundle is not None else wpp.load_bundle()
         return cls(
             revision=str(bundle.provenance["revision_label"]),
@@ -320,6 +328,7 @@ class ReferenceSchedules:
             asfr=np.asarray(bundle.asfr, dtype=np.float64),
             sx=np.asarray(bundle.sx, dtype=np.float64),
             srb=np.asarray(bundle.srb, dtype=np.float64),
+            hold_final_pattern=bool(hold_final_pattern),
         )
 
     def select(
@@ -342,11 +351,18 @@ class ReferenceSchedules:
 
         first = int(self.years[0])
         rows = np.asarray(years, dtype=np.int64) - first
-        if np.any(rows < 0) or np.any(rows >= len(self.years)):
+        if np.any(rows < 0):
             raise ScheduleConversionError(
-                f"draw years {int(years[0])}-{int(years[-1])} fall outside the "
+                f"draw years {int(years[0])}-{int(years[-1])} start before the "
                 f"WPP reference range {first}-{int(self.years[-1])}"
             )
+        if np.any(rows >= len(self.years)):
+            if not self.hold_final_pattern:
+                raise ScheduleConversionError(
+                    f"draw years {int(years[0])}-{int(years[-1])} fall outside the "
+                    f"WPP reference range {first}-{int(self.years[-1])}"
+                )
+            rows = np.minimum(rows, len(self.years) - 1)
 
         return (
             self.asfr[np.ix_(rows, columns)],

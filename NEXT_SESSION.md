@@ -240,10 +240,12 @@ hostname and the licensing decision. For the paper, which is now written:
 whether the title wording is right, the author line and affiliation,
 acknowledgements, the licence, and whether and where it is released.
 
-*Updated 2026-08-15: the paper was written and published, leaving the public
-webpage as the only unstarted central output. Two bugs surfaced while getting
-the paper's numbers to regenerate and were fixed — a strict migration
-feasibility check that had broken `run_phase5.py` on `main` for every
-plain-array migration input, and a field named `median_peak` in the comparator
-receipt that held a mean. 173 tests pass. Phase 6 remains a future scoring
-programme.*
+*Updated 2026-08-16: the paper was revised to version 1.1.0 after Dylan's review
+and an adversarial review by ChatGPT 5.6 Sol. The substantive change is that
+fertility and mortality are no longer frozen after 2100 --- `src/popmodel/rates.py`
+continues them from the source's own late-horizon behaviour, so the cost of the
+old assumption is measured (a 0.58bn median shift, 0.23bn of extra width) rather
+than estimated by proxy. There are now two break-even thresholds, 1.52% per
+decade for the terminal fertility rate and 2.45% for the 2150 population. The
+paper carries three authors, a supplement, and an opening note on how it was
+made. 183 tests pass. The public webpage remains the only unstarted output.*

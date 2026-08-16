@@ -1,42 +1,45 @@
 \begin{abstract}
 \noindent
-Long-run population projections model the national fertility rate as a time
-series that reverts toward a long-run level. That representation has no
-composition in it. But completed family size varies widely within every
-population, and it is transmitted imperfectly from parents to children, so the
-next generation is drawn disproportionately from the larger families. This is
-selection; its direction on fertility is upward; and it is absent from the
-standard projection machinery by construction.
+How many people will be alive in 150 years depends almost entirely on one thing:
+what fertility does after the demographic transition. Standard projections answer
+that with a national average that drifts back toward some long-run level. An
+average has no memory of who the parents were.
 
-We add a composition axis to a single-year, two-sex cohort-component projection
-covering 237 countries and validated against the United Nations' own
-zero-migration variant to \ValidationWorld{} of world population at 2100. With
-every fertility propensity set to one, the extended engine reproduces the
-ordinary one to machine precision, so any difference in what follows is the
-mechanism rather than a second implementation of the arithmetic. The mechanism's
-two mainstream parameters are taken from evidence that is not the series they
-are meant to explain: the dispersion of completed family size across
-\CVCountries{} low-fertility countries (median coefficient of variation
-\CVMedian{}) and the parent--child correlation in completed family size reported
-in the literature (\Persistence{}). Their product with the squared dispersion is
-the model's one-generation response, and it equals an observed covariance rather
-than an assumed heritability.
+It should. Women differ enormously in how many children they have --- across
+low-fertility countries with completed cohort data, the spread of family size is
+more than half its mean --- and larger families tend to produce children who
+themselves have larger families, with a parent--child correlation of about
+\Persistence{}. Those two facts together mean the next generation is not a random
+sample of this one. It is drawn disproportionately from the bigger families, so
+whatever inclines a woman toward four children rather than one becomes more
+common. This is selection, it pushes fertility up, and a model of the national
+average cannot represent it.
 
-Selection is real but modest at the century scale. It raises world population in
-\ProjectionEndYear{} from \LadderBenchmark{} to \LadderMainstream{} billion and
-lifts observed fertility \RaceSelectionEffectPercent{} above the environment path
-that produced it. Named high-fertility groups, which dominate popular discussion
-of this mechanism, add a further \LadderNamedGroupsGain{} billion: the unlabelled
-variation inside ordinary populations does almost all of the work.
+We add that mechanism to a cohort-component projection covering 237 countries,
+built on the United Nations' own age-specific inputs and reproducing its
+published projection to \ValidationWorld{} of world population at 2100. Switching
+the mechanism off returns the original engine to machine precision, so whatever
+the mechanism changes is the mechanism and not different arithmetic. Its two
+parameters come from sources that have nothing to do with the projection they are
+used to alter.
 
-Because selection and the fertility environment both act multiplicatively, they
-are directly commensurable, and our primary result is a boundary rather than a
-preferred number. An additional uniform decline in the fertility environment of
-\BoundaryPaired{} per decade after \PressureFromYear{} exactly cancels measured
-mainstream selection by \ProjectionEndYear{} (90\% range \BoundaryPairedLow{} to
-\BoundaryPairedHigh{} across \PairedMigrationPaths{} paired stochastic migration
-paths); across the empirical range of the two measured parameters the threshold
-runs from \BoundaryFloor{} to \BoundaryCeiling{} per decade. The unmeasurable
-quantity in this problem is thereby converted from a free parameter that sets the
-headline into a threshold that can be argued about.
+Selection turns out to be real, measurable, and smaller than its advocates
+suggest. It raises world population in \ProjectionEndYear{} from
+\LadderBenchmark{} to \LadderMainstream{} billion --- a shift of about
+\LadderMainstreamGainPercent{} --- but it changes where the curve settles rather
+than restoring growth. The high-fertility religious groups that dominate public
+discussion of this idea contribute \NamedGroupShareOfMechanism{} as much as the
+ordinary, unlabelled variation inside the general population.
+
+Against that measured force sits an unmeasurable one: whether the conditions
+that make children costly keep worsening. Because both act as multipliers on
+fertility, we can report the threshold instead of guessing the value. A further
+uniform decline of \BoundaryPaired{} per decade after \PressureFromYear{} cancels
+selection's effect on the fertility rate; cancelling its effect on the 2150
+\emph{population} takes \BoundaryPopulation{}, because the extra people selection
+has already produced are still alive. Across the measured uncertainty in the two
+parameters the first threshold ranges from \BoundaryFloor{} to
+\BoundaryCeiling{}. We do not know which side of it the world is on, and the
+point of reporting it this way is that the disagreement becomes a disagreement
+about a rate rather than about a mood.
 \end{abstract}

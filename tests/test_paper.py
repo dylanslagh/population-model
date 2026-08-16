@@ -34,9 +34,9 @@ STANDARD_COMMANDS = frozenset({"LaTeX", "TeX", "LaTeXe"})
 
 
 def prose_files() -> list[Path]:
-    """Section and appendix sources, which is where prose numbers would hide."""
+    """Every hand-written source, which is where a typed number would hide."""
     return sorted((PAPER / "sections").glob("*.tex")) + sorted(
-        (PAPER / "appendices").glob("*.tex")
+        (PAPER / "supplement").glob("*.tex")
     )
 
 
@@ -50,14 +50,18 @@ def defined_macros() -> dict[str, str]:
     }
 
 
-def test_main_manuscript_includes_every_declared_section():
+def test_both_documents_include_every_declared_source():
+    """A section file no document inputs is invisible rather than absent."""
     main = (PAPER / "main.tex").read_text(encoding="utf-8")
+    supplement = (PAPER / "supplement.tex").read_text(encoding="utf-8")
     section_files = sorted((PAPER / "sections").glob("*.tex"))
-    appendix_files = sorted((PAPER / "appendices").glob("*.tex"))
-    assert len(section_files) >= 9
-    for path in section_files + appendix_files:
+    supplement_files = sorted((PAPER / "supplement").glob("*.tex"))
+    assert len(section_files) >= 9 and len(supplement_files) >= 3
+    pairs = [(p, main) for p in section_files]
+    pairs += [(p, supplement) for p in supplement_files]
+    for path, document in pairs:
         relative = path.relative_to(PAPER).with_suffix("").as_posix()
-        assert f"\\input{{{relative}}}" in main
+        assert f"\\input{{{relative}}}" in document, f"{relative} is never input"
 
 
 def test_every_result_macro_used_in_the_prose_is_defined():

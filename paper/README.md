@@ -1,12 +1,17 @@
 # Research paper
 
 **Selection on Fertility, and the Environmental Decline That Would Cancel It.**
-A compositional mechanism inside a validated 237-country projection to 2150.
+A compositional mechanism in a 237-country cohort-component projection to 2150.
 
-Version 1.0.0, written 2026-08-15. This replaced the earlier scaffold that was
-written before there were results worth writing up; nothing of its prose
-survives, and the framing it used ("research design and preliminary backtest")
-is superseded.
+Version 1.1.0. Authored by Dylan Slagh, Claude Opus 5 and ChatGPT 5.6 Sol; the
+main paper opens with a note on who did what and why the model authors are
+listed. The complete conversation record is intended for release as
+supplementary material and belongs in `conversations/` at the repository root.
+
+Two documents are built: the paper (`population-model.pdf`) and its supplement
+(`population-model-supplement.pdf`), which carries the engine validation, the
+parameter table with sources, the historical backtest and the reproduction
+path.
 
 ## What the paper argues
 
@@ -15,10 +20,11 @@ mean-reverting time series, which has no composition in it. Family size is
 dispersed and imperfectly transmitted, so the parents of each generation are
 sampled in proportion to how many children they have, and the composition drifts
 upward. The paper measures that force, shows it is worth 1.82 billion people at
-2150, shows that named high-fertility groups contribute only 2.5% of it, and
-then reports a **break-even boundary** rather than a preferred total: the
-additional environmental decline (1.52% per decade after 2050) that would
-exactly cancel measured selection.
+2150, shows that the two best-documented high-fertility religious groups contribute
+only 2.5% of it, and then reports a **break-even threshold** rather than a
+preferred total: the additional environmental decline that would cancel measured
+selection, 1.52% per decade for the fertility rate and 2.45% for the 2150
+population.
 
 ## Build
 
@@ -31,8 +37,10 @@ $env:TECTONIC = 'C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tectonic-0.17.
 ```
 
 `build_paper.py` never reruns the model. If a result file is stale, regenerate it
-with the script named in `appendices/b_reproducibility.tex` and rerun
-`build_paper_results.py`.
+with the script named in `supplement/s4_reproducibility.tex` and rerun
+`build_paper_results.py`. Both documents are built every time, because a
+supplement that silently stops compiling is a way to ship a paper whose
+references point at nothing.
 
 **Look at the pages before publishing.** `--publish` is not a substitute for
 review. The pattern used here is to rasterise every page and open it:
@@ -69,18 +77,18 @@ PDF into `out/paper-figures/` for exactly this reason.
 |---|---|
 | `main.tex` | Document, section order, bibliography style |
 | `metadata.tex`, `preamble.tex` | Title block and packages |
-| `sections/` | Ten section files, numbered in reading order |
-| `appendices/a_parameters.tex` | Parameter table plus its sources |
-| `appendices/b_reproducibility.tex` | What produced each number, and the conventions |
+| `sections/` | The main paper, numbered in reading order |
+| `supplement.tex`, `supplement/` | Engine validation, parameters, backtest, reproduction |
 | `generated/` | Machine-written macros and the parameter table |
 | `figures/` | Vector PDFs used by the manuscript |
 | `bibliography/references.bib` | Checked entries only |
 | `index.html` | The landing page, kept in step with the paper |
-| `population-model.pdf` | The reviewed, published PDF |
+| `population-model.pdf` | The reviewed, published paper |
+| `population-model-supplement.pdf` | The reviewed, published supplement |
 
 ## Decisions still owned by Dylan
 
-Title wording, the author line and affiliation, acknowledgements, the licence,
-and whether and where this is released. The paper currently carries an
-independent-researcher author line with no affiliation and no acknowledgements
-section.
+Title wording, acknowledgements, the licence, and whether and where this is
+released. Note that most journals' authorship policies do not admit non-human
+authors; the paper's opening note addresses that directly rather than working
+around it, but it is a decision to revisit before submitting anywhere.

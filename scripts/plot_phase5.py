@@ -90,12 +90,15 @@ def main() -> int:
     ax.set_xlabel("year")
     ax.set_ylabel("observed fertility / environment alone")
     ax.set_title("Does selection overtake the environment?", fontsize=10.5)
-    # The two full-selection curves sit exactly on top of each other, and that
-    # is a property of the model rather than a plotting mistake: the
+    # The two full-selection curves sit almost exactly on top of each other, and
+    # that is a property of the model rather than a plotting mistake: the
     # environment multiplies every type equally, so it cancels out of the
-    # relative birth weights that drive composition. Selection's proportional
-    # effect is therefore the same under either environment. Saying so on the
-    # figure is better than letting a reader think one line is missing.
+    # relative birth weights that drive composition. The cancellation is exact
+    # in those weights and near-exact in the outcome -- the world multipliers
+    # differ by about 0.2%, because a harsher environment changes the age
+    # structure the propensity is averaged over and changes how forcefully a
+    # fixed migrant count mixes in. Saying so on the figure is better than
+    # letting a reader think one line is missing.
     ax.legend(fontsize=7.5, frameon=False, loc="upper left")
     ax.spines[["top", "right"]].set_visible(False)
 
@@ -105,11 +108,11 @@ def main() -> int:
     fig.text(
         0.5, 0.058,
         chr(10).join([
-            "The two full-selection curves coincide on the right. That is the "
-            "model, not the plot: the environment multiplies every type equally,",
-            "so it cancels out of who has children relative to whom. Selection "
-            "and environment are separable here, which is itself an assumption "
-            "worth doubting.",
+            "The two full-selection curves almost coincide on the right. That is "
+            "the model, not the plot: the environment multiplies every type",
+            "equally, so it nearly cancels out of who has children relative to "
+            "whom. They differ by about 0.2%, through age structure and migration "
+            "mixing.",
         ]),
         ha="center", fontsize=7.4, color="0.4", linespacing=1.7,
     )

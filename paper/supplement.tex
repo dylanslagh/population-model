@@ -1,0 +1,35 @@
+\documentclass[11pt]{article}
+
+\input{preamble}
+\input{generated/results_macros}
+
+\title{\textbf{Supplementary material}\\[0.35em]
+\large Selection on Fertility, and the Environmental Decline That Would Cancel It}
+\author{Dylan Slagh \and Claude Opus 5 \and ChatGPT 5.6 Sol}
+\date{Version \PaperVersion{} \quad\textbullet\quad \PaperDate{}}
+
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\begin{document}
+\maketitle
+
+This document holds the material a reader needs to check the main paper but does
+not need to read it: the engine's validation in full, the conventions that
+produce plausible wrong answers if guessed, the mechanism parameter table with
+its sources, the historical backtest, and the reproduction path from a model run
+to a number on the page. Section references of the form \S2 refer to the main
+paper.
+
+\tableofcontents
+
+\input{supplement/s1_engine}
+\input{supplement/s2_parameters}
+\input{supplement/s3_backtest}
+\input{supplement/s4_reproducibility}
+
+\bibliographystyle{plainnat}
+\bibliography{bibliography/references}
+
+\end{document}

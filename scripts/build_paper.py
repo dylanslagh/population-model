@@ -21,7 +21,9 @@ REPO = Path(__file__).resolve().parents[1]
 PAPER = REPO / "paper"
 BUILD = PAPER / "build"
 MAIN = PAPER / "main.tex"
+SUPPLEMENT = PAPER / "supplement.tex"
 STABLE = PAPER / "population-model.pdf"
+STABLE_SUPPLEMENT = PAPER / "population-model-supplement.pdf"
 
 
 def executable(name: str) -> str:
@@ -38,19 +40,19 @@ def run(command: list[str]) -> None:
     subprocess.run(command, cwd=PAPER, check=True)
 
 
-def build_with_tectonic(tectonic: str) -> Path:
+def build_with_tectonic(tectonic: str, source: Path) -> Path:
     run([
         tectonic,
         "--keep-logs",
         "--keep-intermediates",
         "--outdir",
         str(BUILD),
-        str(MAIN),
+        str(source),
     ])
-    return BUILD / "main.pdf"
+    return BUILD / f"{source.stem}.pdf"
 
 
-def build_with_pdftex() -> Path:
+def build_with_pdftex(source: Path) -> Path:
     pdflatex = executable("pdflatex")
     bibtex = executable("bibtex")
     latex = [
@@ -59,33 +61,50 @@ def build_with_pdftex() -> Path:
         "-halt-on-error",
         "-file-line-error",
         f"-output-directory={BUILD}",
-        str(MAIN),
+        str(source),
     ]
     run(latex)
-    run([bibtex, str(BUILD / "main")])
+    run([bibtex, str(BUILD / source.stem)])
     run(latex)
     run(latex)
-    return BUILD / "main.pdf"
+    return BUILD / f"{source.stem}.pdf"
 
 
-def build() -> Path:
+def build_one(source: Path) -> Path:
+    tectonic = os.environ.get("TECTONIC") or shutil.which("tectonic")
+    candidate = (
+        build_with_tectonic(tectonic, source) if tectonic
+        else build_with_pdftex(source)
+    )
+    stem = source.stem
+    if not candidate.exists() or candidate.stat().st_size == 0:
+        raise SystemExit(f"LaTeX completed without producing paper/build/{stem}.pdf")
+    log = (BUILD / f"{stem}.log").read_text(encoding="utf-8", errors="replace")
+    blg_path = BUILD / f"{stem}.blg"
+    blg = blg_path.read_text(encoding="utf-8", errors="replace") if blg_path.exists() else ""
+    bbl_path = BUILD / f"{stem}.bbl"
+    bbl = bbl_path.read_text(encoding="utf-8", errors="replace") if bbl_path.exists() else ""
+    if "There were undefined citations" in log or "undefined references" in log:
+        raise SystemExit(f"unresolved citations or references; see paper/build/{stem}.log")
+    if "error message" in blg.lower() or "\\bibitem" not in bbl:
+        raise SystemExit(f"BibTeX produced no complete bibliography; see paper/build/{stem}.blg")
+    return candidate
+
+
+def build() -> list[tuple[Path, Path]]:
+    """Build the paper and its supplement, in that order.
+
+    Both are built every time. A supplement that silently stops compiling while
+    the paper still does is a way to publish a paper whose appendix references
+    point at nothing.
+    """
     if BUILD.exists():
         shutil.rmtree(BUILD)
     BUILD.mkdir(parents=True)
-    tectonic = os.environ.get("TECTONIC") or shutil.which("tectonic")
-    candidate = build_with_tectonic(tectonic) if tectonic else build_with_pdftex()
-    if not candidate.exists() or candidate.stat().st_size == 0:
-        raise SystemExit("LaTeX completed without producing paper/build/main.pdf")
-    log = (BUILD / "main.log").read_text(encoding="utf-8", errors="replace")
-    blg_path = BUILD / "main.blg"
-    blg = blg_path.read_text(encoding="utf-8", errors="replace") if blg_path.exists() else ""
-    bbl_path = BUILD / "main.bbl"
-    bbl = bbl_path.read_text(encoding="utf-8", errors="replace") if bbl_path.exists() else ""
-    if "There were undefined citations" in log or "undefined references" in log:
-        raise SystemExit("LaTeX left unresolved citations or references; see paper/build/main.log")
-    if "error message" in blg.lower() or "\\bibitem" not in bbl:
-        raise SystemExit("BibTeX did not produce a complete bibliography; see paper/build/main.blg")
-    return candidate
+    return [
+        (build_one(MAIN), STABLE),
+        (build_one(SUPPLEMENT), STABLE_SUPPLEMENT),
+    ]
 
 
 def main() -> int:
@@ -93,15 +112,15 @@ def main() -> int:
     parser.add_argument(
         "--publish",
         action="store_true",
-        help="copy the candidate to paper/population-model.pdf after review",
+        help="copy the candidates to their stable paths after review",
     )
     args = parser.parse_args()
-    candidate = build()
-    print(f"Built {candidate.relative_to(REPO)}")
-    if args.publish:
-        shutil.copy2(candidate, STABLE)
-        print(f"Published {STABLE.relative_to(REPO)}")
-    else:
+    for candidate, stable in build():
+        print(f"Built {candidate.relative_to(REPO)}")
+        if args.publish:
+            shutil.copy2(candidate, stable)
+            print(f"Published {stable.relative_to(REPO)}")
+    if not args.publish:
         print("Render and inspect every page before using --publish.")
     return 0
 

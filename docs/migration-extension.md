@@ -1,4 +1,13 @@
-# Stochastic migration after the UN boundary
+# After the UN boundary
+
+> **Fertility and mortality are no longer frozen after 2100.** They are continued
+> by the same kind of emulator this document describes for migration; see
+> [Fertility and longevity after 2100](#fertility-and-longevity-after-2100) at
+> the end. The `--post-2100 hold` flag on `run_uw_ensemble.py` reproduces the old
+> frozen-rate behaviour, which is kept so the cost of that assumption can be
+> measured rather than argued about.
+
+## Stochastic migration
 
 ## The project boundary
 
@@ -117,3 +126,74 @@ times for Canada, and about one-sixteenth as large for Nigeria.
 The durable numerical receipt is
 `data/reference/un_project_extension_summary.json`; the review figure is
 `docs/un-project-extension.svg`.
+
+## Fertility and longevity after 2100
+
+Added 2026-08-16. `src/popmodel/rates.py` continues the published fertility and
+life-expectancy trajectories in the same spirit, and for the same reason: the
+alternative was holding them constant, which is a strong claim about half the
+distance to 2150 dressed up as housekeeping.
+
+The two components need different treatments, and getting that wrong is the
+whole risk:
+
+* **Fertility is stationary inside a trajectory.** Fitted over 2070-2100, each
+  path fluctuates around its own level with an autocorrelation near 0.89 and a
+  stationary spread near 0.12 children, while the spread *between* trajectories
+  at 2100 is about 0.40. Each path is therefore continued as an AR(1) around
+  **its own 2100 value**. Fitting the AR(1) across trajectories instead would
+  estimate one level per country, return an autocorrelation near one, and drag
+  every draw toward that level — deleting the posterior spread while producing
+  entirely plausible-looking output. `tests/test_rates.py::test_between_draw_spread_survives`
+  exists to catch exactly that.
+* **Longevity is still trending.** The annual gain in female life expectancy
+  averages 0.114 years over 2070-2100 and is uniform across countries
+  (0.100-0.154). Each path continues as a random walk with its country's fitted
+  drift plus AR(1) noise on the gain. The male series is derived from the female
+  series and a separately continued sex gap, so the two cannot cross.
+
+Two biases are stated rather than buried, and both point the same way. Centring
+each fertility path on its 2100 value drops the small residual downward drift
+still present at the boundary, which would otherwise subtract about 0.15 children
+by 2150. And the continuation does not reproduce bayesLife's deceleration, in
+which gains slow as life expectancy rises. Both make the result slightly higher
+than a more faithful continuation would.
+
+The age **patterns** are still held at their final published shape — the shape of
+fertility across ages, and the mortality standard the Brass logit is applied to.
+That is a much weaker assumption than holding a level, and it is carried by
+`ReferenceSchedules.hold_final_pattern`, which is off by default so that a
+silently repeated schedule cannot happen by accident.
+
+### The rails, and why they are derived rather than written down
+
+Continued values are clipped only if they leave the range the source archive
+itself occupied, padded by a quarter of its width, by four innovation standard
+deviations, and — for a trending series — by as far as its own fitted trend can
+carry it. All three corrections came from a check that fired when it should not
+have:
+
+* A first version bounded the female-male life-expectancy gap at 0 and 15 years
+  and clipped a tenth of all values, because the source's own gap runs from
+  -6.6 to +20.2.
+* A width-proportional pad on fertility put the floor at -1.45, because
+  fertility spans 0.33 to 7.27 across the archive, so the rail permitted a
+  negative birth rate.
+* A rail from the observed range binds immediately on a trending series, because
+  leaving that range is what a trend does.
+
+On the real archive the rails now clip about three values in every million.
+A rail that fires on ordinary source behaviour is not a safety check; it is a
+silent model.
+
+### Reproduction
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_uw_ensemble.py --output out\uw_ensemble_continued.json
+.\.venv\Scripts\python.exe scripts\run_uw_ensemble.py --post-2100 hold --output out\uw_ensemble.json
+```
+
+Both propagate the same posterior through the same engine and differ only after
+2100, so the difference between them is exactly the cost of the frozen-rate
+assumption. That replaces the older proxy, which truncated the source data ten
+years early to estimate the same thing.

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="A compositional fertility mechanism inside a validated 237-country cohort-component projection to 2150, and the environmental decline that would exactly cancel it.">
+  <meta name="description" content="A compositional fertility mechanism in a 237-country cohort-component projection to 2150, and the environmental decline that would cancel it.">
   <title>Selection on fertility, and the environmental decline that would cancel it</title>
   <style>
     :root {
@@ -66,12 +66,13 @@
     </nav>
 
     <header>
-      <span class="status">Working paper &middot; version 1.0.0</span>
+      <span class="status">Working paper &middot; version 1.1.0</span>
       <h1>Selection on fertility, and the environmental decline that would cancel it</h1>
-      <p class="subtitle">A compositional mechanism inside a validated 237-country cohort-component projection to 2150.</p>
-      <p class="meta">Dylan Slagh &middot; 15 August 2026</p>
+      <p class="subtitle">A compositional mechanism in a 237-country cohort-component projection to 2150.</p>
+      <p class="meta">Dylan Slagh, Claude Opus 5 and ChatGPT 5.6 Sol &middot; 16 August 2026</p>
       <div class="actions">
         <a class="button primary" href="population-model.pdf">Read the paper (PDF)</a>
+        <a class="button" href="population-model-supplement.pdf">Supplement (PDF)</a>
         <a class="button" href="#findings">The findings</a>
       </div>
     </header>
@@ -81,6 +82,7 @@
         <h2 id="abstract">The argument in short</h2>
         <p>Long-run population projections model the national fertility rate as a time series that reverts toward a long-run level. That representation has no composition in it. But completed family size varies widely within every population, and it is transmitted imperfectly from parents to children, so the next generation is drawn disproportionately from the larger families. That is selection, its direction on fertility is upward, and it is absent from the standard projection machinery by construction.</p>
         <p>This paper adds a composition axis to a cohort-component engine that reproduces the United Nations' own published projection to 0.001% of world population at 2100. With every fertility propensity set to one, the extended engine reproduces the ordinary one to machine precision &mdash; so any difference in the results is the mechanism, not a second implementation of the arithmetic.</p>
+        <p>Two of the three authors are language models. The paper opens with a note on who did what, and the full conversation record is intended for release alongside it.</p>
       </section>
 
       <section id="findings" aria-labelledby="findings-heading">
@@ -89,10 +91,10 @@
           <p><strong>Selection is real but modest.</strong> It raises world population in 2150 from 8.54 to 10.36 billion, and lifts observed fertility 17.4% above the environment path that produced it. It shifts the level of the long-run curve; it does not restore growth.</p>
         </div>
         <div class="headline">
-          <p><strong>Named high-fertility groups are a small part of it.</strong> The Haredi and Amish populations, which dominate popular discussion of this mechanism, contribute 2.5% of what unlabelled variation inside ordinary populations contributes &mdash; even though the model is generous to them at every choice point.</p>
+          <p><strong>The best-documented high-fertility groups are a small part of it.</strong> The Haredi and Amish populations, which dominate popular discussion of this mechanism, contribute 2.5% of what unlabelled variation inside ordinary populations contributes &mdash; even though the model is generous to them at every choice point.</p>
         </div>
         <div class="headline">
-          <p><strong>The headline result is a boundary, not a number.</strong> An additional uniform decline in the fertility environment of 1.52% per decade after 2050 exactly cancels measured selection by 2150 (90% range 1.51%&ndash;1.53% across 50 paired stochastic migration paths). Across the empirical range of the two measured parameters the threshold runs from 0.33% to 4.49% per decade.</p>
+          <p><strong>The headline result is a threshold, not a number.</strong> An additional uniform decline in the fertility environment of 1.52% per decade after 2050 cancels selection's effect on the fertility rate by 2150; cancelling its effect on the 2150 <em>population</em> takes 2.45%, because the extra people already produced are still alive. Across the empirical range of the two measured parameters the first threshold runs from 0.33% to 4.49% per decade.</p>
         </div>
         <p>That last result is the point of the exercise. The decisive quantity in a 150-year projection &mdash; how the conditions of parenthood keep changing &mdash; cannot be measured in advance, and a projection that sets it by judgement is reporting its author's intuition with extra steps. Reporting the threshold instead converts a free parameter into a rate that could in principle be observed.</p>
       </section>
@@ -124,7 +126,7 @@
 
       <section aria-labelledby="citation">
         <h2 id="citation">Citation</h2>
-        <div class="citation">Slagh, Dylan. 2026. &ldquo;Selection on Fertility, and the Environmental Decline That Would Cancel It: A Compositional Mechanism Inside a Validated 237-Country Projection to 2150.&rdquo; Working paper, version 1.0.0, 15 August 2026.</div>
+        <div class="citation">Slagh, Dylan, Claude Opus 5 and ChatGPT 5.6 Sol. 2026. &ldquo;Selection on Fertility, and the Environmental Decline That Would Cancel It: A Compositional Mechanism in a 237-Country Cohort-Component Projection to 2150.&rdquo; Working paper, version 1.1.0, 16 August 2026.</div>
       </section>
     </main>
 

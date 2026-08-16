@@ -47,6 +47,62 @@ def with_values(base: mech_parameters.ParameterSet, **values: float):
     return mech_parameters.ParameterSet(changed, base.source_path)
 
 
+def population_break_even(
+    *, baseline_world, bundle, migration, reference_tfr, base,
+    low=0.0, high=0.08, tolerance=1e-5,
+):
+    """The decline rate that returns the 2150 *population* to the benchmark.
+
+    The fertility boundary and this one answer different questions, and
+    conflating them overstates what the fertility boundary shows. Setting the
+    terminal fertility multiplier back to one still leaves every extra birth
+    selection produced along the way, and those people and their descendants are
+    still alive in 2150. Cancelling the population therefore takes a larger
+    decline than cancelling the rate, and the gap between the two numbers is the
+    accumulated stock.
+    """
+    scenario = runs.MechScenario(
+        "population-break-even", "continued-pressure", "mainstream"
+    )
+
+    def world_at(rate: float) -> float:
+        parameters = with_values(base, development_decline_per_decade=rate)
+        result = run_scenario(
+            scenario, bundle=bundle, migration=migration,
+            reference_tfr=reference_tfr, parameters=parameters,
+        )
+        return float(result.world[-1])
+
+    at_low, at_high = world_at(low), world_at(high)
+    if not (at_high <= baseline_world <= at_low):
+        raise RuntimeError(
+            f"the benchmark {baseline_world / 1e9:.3f}bn is not bracketed by "
+            f"{at_high / 1e9:.3f}-{at_low / 1e9:.3f}bn over decline rates "
+            f"{low:.3f}-{high:.3f}; widen the search rather than reporting an edge"
+        )
+    iterations = 0
+    while high - low > tolerance:
+        mid = 0.5 * (low + high)
+        if world_at(mid) > baseline_world:
+            low = mid
+        else:
+            high = mid
+        iterations += 1
+    rate = 0.5 * (low + high)
+    return {
+        "break_even_decline_per_decade": rate,
+        "world_2150_billions_at_break_even": world_at(rate) / 1e9,
+        "benchmark_world_2150_billions": baseline_world / 1e9,
+        "bisection_iterations": iterations,
+        "meaning": (
+            "the uniform additional decline after 2050 at which the selection "
+            "run's 2150 world population equals the no-selection benchmark; "
+            "larger than the fertility boundary because cancelling the terminal "
+            "rate leaves the extra people selection has already produced"
+        ),
+    }
+
+
 def run_scenario(scenario, *, bundle, migration, reference_tfr, parameters):
     return runs.run(
         scenario,
@@ -158,8 +214,15 @@ def main() -> int:
             row["world_2150_billions"] - ladder[index - 1]["world_2150_billions"]
         )
 
+    print("  bisecting for the population break-even...")
+    population_boundary = population_break_even(
+        baseline_world=float(baseline.world[-1]), bundle=bundle,
+        migration=migration, reference_tfr=reference_tfr, base=base,
+    )
+
     payload = {
         "generated": ANALYSIS_DATE,
+        "population_break_even": population_boundary,
         "benchmark": (
             "stable-low fertility environment with no additional post-2050 "
             "decline; selection is then added"
@@ -195,7 +258,10 @@ def main() -> int:
     print(
         f"central mainstream selection effect {central['selection_effect_final']:.3f}; "
         f"break-even additional decline "
-        f"{100 * central['break_even_decline_per_decade']:.2f}% per decade"
+        f"{100 * central['break_even_decline_per_decade']:.2f}% per decade "
+        f"to cancel the terminal fertility rate, "
+        f"{100 * population_boundary['break_even_decline_per_decade']:.2f}% "
+        f"to cancel the 2150 population"
     )
     for row in ladder:
         delta = row["change_from_previous_billions"]

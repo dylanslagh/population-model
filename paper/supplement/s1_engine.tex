@@ -1,0 +1,132 @@
+\section{The engine, in full}
+\label{app:engine}
+
+\subsection{Validation against published outputs}
+
+The engine is a standard cohort-component projection: single year of age 0--100
+with an open-ended final group, two sexes, 237 countries and territories, annual
+steps, populations dated 1 January, rates in force during the calendar year. It
+takes fertility, survival and net migration as given and does the bookkeeping,
+with no theory about the future inside it.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrr}
+\toprule
+Check at 2100, WPP 2024 zero-migration variant & Result & Tolerance \\
+\midrule
+World population                                  & \ValidationWorld{}   & 0.05\% \\
+Worst country above 10{,}000 people (\ValidationWorstCountry{}) & \ValidationCountry{} & 0.5\% \\
+Worst five-year age group below 100               & \ValidationAge{}     & 0.05\% \\
+Open-ended 100+ group                             & \ValidationOpenAge{} & 2\% \\
+Constant fertility vs the UN's own variant        & \ValidationConstantFertility{} & 0.5\% \\
+\bottomrule
+\end{tabular}
+\caption{The zero-migration variant is the real test, because every input to it
+is published and nothing in it is estimated by us, so any discrepancy is our
+arithmetic being wrong. The medium variant agrees to
+\ValidationMediumDiagnostic{} but is a diagnostic rather than a test: the United
+Nations does not publish net migrants by single year of age, so ours are backed
+out of its own medium path as a residual and absorb every procedural difference
+between us.}
+\label{tab:validation}
+\end{table}
+
+The typed engine of \S2 is the same code with a composition axis. With every
+propensity set to one it reproduces the ordinary engine to a relative difference
+of $3\times10^{-16}$, and one generation of it matches the analytic
+parent--offspring covariance response to nine decimal places.
+
+\subsection{An absurdity check that was itself wrong}
+
+An earlier specification of this project required that constant fertility reach
+roughly 244 billion people by \ProjectionEndYear{}, on pain of the engine being
+declared buggy. That figure came from a United Nations long-range report built on
+the 2002 revision. Fertility rates have fallen substantially since 2002, and
+constant fertility freezes the base year's rates, so reaching 244 billion from a
+\PhaseFiveBaseYear{} base would have meant the engine was wrong rather than
+right. The check was replaced by a comparison against the UN's own WPP 2024
+constant-fertility variant, which the engine matches to
+\ValidationConstantFertility{} at 2100.
+
+The episode is recorded because the failure mode is general: a number mentioned
+in passing became a stated requirement, and stayed one for longer than it should
+have because it was written down.
+
+\subsection{Conventions that produce plausible wrong answers if guessed}
+\label{app:conventions}
+
+Each of these was found by a wrong number rather than by an error message.
+
+\begin{itemize}[leftmargin=1.2em]
+\item Ages run 0--100 where 100 is an open-ended group; sex 0 is female.
+\item Survival $s[a]$ is survival \emph{into} age $a$, following the source's own
+convention, so no translation step stands between the published table and the
+engine. $s[0]$ is birth survival, and $s[100]$ applies to the sum of the
+99-year-olds and the existing 100+ group.
+\item Populations are people. The source publishes thousands; the multiplication
+happens exactly once, at ingest.
+\item Fertility is births per woman per year. The source publishes per thousand.
+\item Childbearing ages are 10--54. The single-age source file stops at 49 and
+the five-year file does not; the missing mothers are about 0.3\% of world births,
+which left the projection running 0.3\% low at 2100 with the error still growing.
+\item Age-specific fertility uses mid-year women, so the denominator is the mean
+of the 1 January figure and the following one. Getting this wrong biases births
+by roughly half a year of cohort change --- negligible in one year, not
+negligible after 126.
+\item The United Nations' constant-fertility variant freezes 2023, not 2024:
+about 0.6\% higher than the 2024 medium rates, compounding to 2.7\% by 2100. The
+comparison reads the UN's own frozen rates rather than assuming ours.
+\item World quantiles are computed from each draw's own world total, never by
+summing country quantiles. Adding every country's 5th percentile assumes all 236
+land in their own bad tail in the same draw; at \ProjectionEndYear{} that
+shortcut gives 3.13 billion where the correct world 5th percentile is
+\ComparatorTwentyOneFiftyLow{} billion.
+\item Archived WPP revisions ship counterfactual scenarios beside the real
+projection --- ``no AIDS'', ``instant replacement'', ``zero migration''. They are
+excluded by name. Grading a counterfactual as a forecast would be a serious
+error, not a rounding problem.
+\end{itemize}
+
+\subsection{Migration after 2100}
+
+The published Bayesian migration trajectories \citep{azose2015} run to 2100 and
+the public archive does not include the fitted posterior state, so the
+continuation refits the same autoregressive form to the
+\ExtensionFitStart{}--\ExtensionFitEnd{} portion of those trajectories and
+continues each path from its own \OfficialBoundaryYear{} rate. This is an
+emulator of a model's output, not an official continuation.
+
+Every draw-year is balanced so that world net migration is exactly zero, by
+shifting active-country rates by a common amount, which redistributes the
+discrepancy in proportion to current populations. The United Nations uses a more
+detailed staged procedure; this implements the essential accounting constraint
+and is labelled an approximation. Where a schedule would remove more people from
+a narrow age and sex cell than exist, the unmet removal is redistributed across
+populated cells rather than clipped, because clipping silently creates people.
+
+The resulting extension gives \ExtensionTwentyOneHundred{} billion in
+\OfficialBoundaryYear{}, \ExtensionTwentyOneTwentyFive{} billion in 2125, and
+\ExtensionTwentyOneFifty{} billion in \ProjectionEndYear{}, with a
+migration-only 90\% range of \ExtensionTwentyOneFiftyLow{} to
+\ExtensionTwentyOneFiftyHigh{} billion.
+
+\subsection{Fertility and longevity after 2100}
+\label{app:rates}
+
+Fitted parameters for the continuation described in \S7.2, over
+\ExtensionFitStart{}--\ExtensionFitEnd{}: the within-trajectory fertility
+autocorrelation has a median of \ContinuationTfrPhi{} with a median innovation
+spread of \ContinuationTfrSigma{} children, and the mean annual gain in female
+life expectancy is \ContinuationEZeroDrift{} years, ranging from
+\ContinuationEZeroDriftLow{} to \ContinuationEZeroDriftHigh{} across countries.
+
+Continued values are clipped only if they leave the range the source archive
+itself ever occupied, padded by a quarter of its width. Clipping affects
+\ContinuationClippedShare{} of generated values, which is what a rail should do.
+An earlier version of this check bounded the female--male life-expectancy gap at
+zero and fifteen years and clipped a tenth of all values, because the source's
+own gap runs from $-6.6$ to $+20.2$ years. A rail firing on ordinary source
+behaviour is not a safety check; it is a silent model. The rails are therefore
+derived from the archive rather than written down.

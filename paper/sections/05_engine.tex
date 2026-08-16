@@ -1,73 +1,50 @@
-\section{The projection engine, and why it is worth validating first}
+\section{What is validated, and what is not}
 \label{sec:engine}
 
-A mechanism is only worth reporting if a reader can tell the difference between
-its effect and an arithmetic error. That requirement drove the order of the work:
-the accounting layer was built and validated against published outputs before any
-mechanism was added to it, and the mechanism was then implemented as an extra
-axis on the same code rather than as a new model.
+A mechanism is only worth reporting if a reader can distinguish its effect from
+an arithmetic error. That requirement set the order of the work: the accounting
+layer was built and checked against published outputs before any mechanism went
+near it, and the mechanism was then added as an extra axis on the same code
+rather than as a new model.
 
-\subsection{The accounting layer}
+It also sets a distinction the rest of the paper depends on. Three different
+things are involved here and only one of them is validated:
 
-The engine is a standard cohort-component projection with no theory in it. It is
+\begin{description}[leftmargin=1.4em,style=nextline]
+  \item[The accounting is validated.] The engine reproduces the United Nations'
+  published projection from the United Nations' published inputs, to
+  \ValidationWorld{} of world population at 2100.
+  \item[The post-2100 continuation is ours.] The source stops at 2100. What
+  happens after it is this project's emulator of the source's own late-horizon
+  behaviour, and \Cref{sec:horizon} measures what that choice is worth rather
+  than asserting it is small.
+  \item[The mechanism is not validated at all.] It is calibrated, from evidence
+  independent of the projection, and its first-generation response is checked
+  against theory. Nothing here tests it against an outcome, because the outcome
+  it predicts has not happened yet. \Cref{sec:falsification} says when it could.
+\end{description}
+
+\subsection{The accounting layer and its test}
+
+The engine is a standard cohort-component projection with no theory in it:
 single year of age from 0 to 100 with an open-ended final group, two sexes, 237
-countries and territories, annual steps, populations dated 1 January and rates in
-force during the calendar year. It takes fertility, survival and net migration as
-given and does the bookkeeping. Its inputs come from World Population Prospects
-2024 \citep{un2024methodology}: age-specific fertility, survival ratios into each
-age, and sex ratio at birth.
-
-Two conventions are worth stating because getting them wrong produces plausible
-rather than obviously broken output. Survival $s[a]$ is survival \emph{into} age
-$a$, which is the UN's own convention, so that the numbers in the engine are the
-numbers in the source file with no translation step. And childbearing ages run
-from 10 to 54 rather than 15 to 49: the UN's single-age fertility file stops at
-49, its five-year file does not, and the missing mothers are about 0.3\% of world
-births --- small in one year, and a visible bias by 2100.
-
-\subsection{The validation}
+countries and territories, annual steps, populations dated 1 January, and rates
+in force during the calendar year. It takes fertility, survival and net migration
+as given and does the bookkeeping. Its inputs are World Population Prospects 2024
+\citep{un2024methodology}.
 
 The test that matters is the zero-migration variant, because every input to it is
 published and nothing in it is tuned, so any discrepancy is our arithmetic being
 wrong. Running from 1 January \PhaseFiveBaseYear{} to 1 January 2100 on the UN's
-own inputs (\Cref{tab:validation}), world population lands within
-\ValidationWorld{} of the UN's published figure, the worst of
-\ValidationGatedCountries{} countries above ten thousand people is within
-\ValidationCountry{}, and the worst five-year age group below 100 is within
-\ValidationAge{}.
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{lrr}
-\toprule
-Check at 2100, WPP 2024 zero-migration variant & Result & Tolerance \\
-\midrule
-World population                                  & \ValidationWorld{}   & 0.05\% \\
-Worst country above 10{,}000 people (\ValidationWorstCountry{}) & \ValidationCountry{} & 0.5\% \\
-Worst five-year age group below 100               & \ValidationAge{}     & 0.05\% \\
-Open-ended 100+ group                             & \ValidationOpenAge{} & 2\% \\
-Constant fertility vs the UN's own variant        & \ValidationConstantFertility{} & 0.5\% \\
-\bottomrule
-\end{tabular}
-\caption{The engine reproduces the United Nations' published projection from the
-United Nations' published inputs. The zero-migration variant is the real test
-because nothing in it is estimated by us. The medium variant agrees to
-\ValidationMediumDiagnostic{} but is reported as a diagnostic rather than a test,
-because the UN does not publish net migrants by single year of age and ours are
-backed out of its own medium path as a residual.}
-\label{tab:validation}
-\end{table}
-
-The constant-fertility comparison is the absurdity check at the other end of the
-range: freezing the base year's rates gives about
+own inputs, world population lands within \ValidationWorld{}, the worst of
+\ValidationGatedCountries{} countries above ten thousand people within
+\ValidationCountry{}, and the worst five-year age group below 100 within
+\ValidationAge{}. Freezing the base year's rates instead gives about
 \ConstantFertilityTwentyOneFifty{} billion people by \ProjectionEndYear{}, within
 \ValidationConstantFertility{} of the UN's own constant-fertility variant at
-2100. Worth recording is that an earlier specification of this project expected
-roughly 244 billion, a figure taken from a UN long-range report built on the 2002
-revision. Rates have fallen a great deal since 2002, so reaching 244 billion from
-a 2024 base would have meant the engine was wrong. A remembered number was
-treated as a requirement for longer than it should have been.
+2100, which is the absurdity check at the other end of the range. The full table,
+and the conventions that produce plausible wrong answers if guessed, are in the
+supplement.
 
 \subsection{Why the mechanism's effect is attributable}
 
@@ -75,32 +52,29 @@ The typed engine of \Cref{sec:mechanism} is the same code with a composition
 axis. Setting every propensity to one leaves the composition free to move but
 unable to change fertility, and in that configuration the typed engine reproduces
 the ordinary engine to a relative difference of $3\times10^{-16}$ --- machine
-precision. It also lands on the same \ProjectionEndYear{} world total as the
-older single-axis long-run diagnostic.
+precision.
 
 This is not a formality. It means the difference between a run with selection and
 a run without it cannot be a second implementation of the arithmetic, a different
 handling of the open age group, or a changed exposure convention. It is the
-mechanism. Separately, one generation of the typed engine matches the analytic
-parent--offspring covariance response of \Cref{eq:response} to nine decimal
-places, which is the implementation agreeing with its own calibration.
+mechanism.
 
 \subsection{Migration, and what it is allowed to support}
 
-The UN does not publish net migrants by single year of age. For the runs in
-\Cref{sec:results} the migration input is backed out of the UN's own medium path
-as a residual, which makes it a usable forward-model input and no evidence at
-all: it absorbs every difference between the UN's procedure and ours. Runs using
-it are labelled diagnostics.
+The United Nations does not publish net migrants by single year of age. For the
+scenario comparisons in \Cref{sec:results} the migration input is backed out of
+the UN's own medium path as a residual, which makes it a usable forward-model
+input and no evidence at all: it absorbs every difference between the UN's
+procedure and ours. Runs using it are labelled diagnostics.
 
-Where migration uncertainty is the object of study --- \Cref{sec:horizon} and the
-robustness check in \Cref{sec:boundary} --- a different and stronger construction
-is used: the published Bayesian migration trajectories of \citet{azose2015}, with
-rates applied to each path's own evolving population and every draw-year balanced
-so that world net migration is exactly zero. That constraint matters more than it
+Where migration uncertainty is the object of study --- \Cref{sec:horizon}, and
+the robustness check in \Cref{sec:boundary} --- a stronger construction is used:
+the published Bayesian migration trajectories of \citet{azose2015}, with rates
+applied to each path's own evolving population and every draw-year balanced so
+that world net migration is exactly zero. That constraint matters more than it
 sounds. The public trajectory archive is balanced in expectation but not draw by
-draw, and using it unbalanced allows individual paths to create or delete millions
-of people globally. An earlier version of the uncertainty decomposition reported
-below did exactly that and attributed 1.75 billion of world spread to migration; a
+draw, and using it unbalanced lets individual paths create or delete millions of
+people globally. An earlier version of the analysis in \Cref{sec:horizon} did
+exactly that and attributed 1.75 billion of world spread to migration; a
 component that cancels globally by construction cannot do that, and the corrected
 figure is \WidthMigration{} billion.

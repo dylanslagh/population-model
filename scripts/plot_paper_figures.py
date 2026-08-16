@@ -348,6 +348,90 @@ def figure_decomposition(decomposition: dict) -> None:
     save(fig, "fig5-decomposition")
 
 
+# --------------------------------------------------------------------------
+# Figure 6: uncertainty accumulating
+# --------------------------------------------------------------------------
+
+def figure_fan(phase5: dict, decomposition: dict) -> None:
+    """The thing a single band at one date cannot show: the spread growing.
+
+    Panel (a) is the whole fan year by year rather than three quantiles at 2150,
+    because the shape of the widening is the argument -- it is slow while the
+    2024 cohorts are still alive and then accelerates as the population becomes
+    entirely the model's own births.
+    """
+    fig, axes = plt.subplots(1, 3, figsize=(6.9, 2.6), layout="constrained",
+                             gridspec_kw={"width_ratios": [1.15, 1.0, 0.95]})
+
+    def series(stem: str):
+        """Quantiles from the raw draws, not from the three the receipt stores.
+
+        The summary JSON keeps only the 5th, 50th and 95th percentiles; the
+        stored array keeps every path, so the inner band below is computed
+        rather than interpolated.
+        """
+        totals = np.load(REPO / "out" / f"{stem}_country_totals.npz",
+                         allow_pickle=True)
+        world = totals["world"] / 1e9
+        years = totals["years"]
+        levels = {f"p{int(100 * q):02d}": np.quantile(world, q, axis=0)
+                  for q in (0.05, 0.25, 0.50, 0.75, 0.95)}
+        return years, levels
+
+    years, band = series("uw_ensemble_continued")
+    ax = axes[0]
+    ax.fill_between(years, band["p05"], band["p95"], color=ENVIRONMENT,
+                    alpha=0.18, lw=0, label="90% of draws")
+    ax.fill_between(years, band["p25"], band["p75"], color=ENVIRONMENT,
+                    alpha=0.30, lw=0, label="50% of draws")
+    ax.plot(years, band["p50"], color=ENVIRONMENT, lw=1.8, label="median")
+    ax.axvline(2100, color="#333333", lw=0.8, ls=(0, (1, 2)))
+    ax.set(xlabel="year", ylabel="world population (billions)",
+           xlim=(years[0], years[-1]))
+    ax.legend(frameon=False, loc="upper left", handlelength=1.4, fontsize=7.4)
+    panel_letter(ax, "a")
+
+    # (b) the medians only. The frozen run's own band is left out: overlaying
+    # two fans of nearly the same width makes both unreadable and the size of
+    # the difference is a number in the text, not something a reader should be
+    # asked to measure off a chart.
+    ax = axes[1]
+    held_years, held_band = series("uw_ensemble")
+    ax.fill_between(years, band["p05"], band["p95"], color=ENVIRONMENT,
+                    alpha=0.14, lw=0)
+    ax.plot(years, band["p50"], color=ENVIRONMENT, lw=1.8,
+            label="rates continued")
+    ax.plot(held_years, held_band["p50"], color=ENVIRONMENT, lw=1.5,
+            ls=(0, (4, 2)), label="rates frozen at 2100")
+    scenarios = phase5["scenarios"]
+    mech_years = np.array(scenarios["stable-low"]["years"])
+    ax.plot(mech_years, scenarios["stable-low"]["world_path_billions"],
+            color=SELECTION, lw=1.6, label="selection benchmark")
+    ax.plot(mech_years, scenarios["race"]["world_path_billions"],
+            color=PRESSURE, lw=1.6, label="selection, 4% stress")
+    ax.axvline(2100, color="#333333", lw=0.8, ls=(0, (1, 2)))
+    ax.set(xlabel="year", ylabel="world population (billions)",
+           xlim=(years[0], years[-1]), ylim=(6.8, 12.4))
+    ax.legend(frameon=False, loc="lower left", handlelength=1.7, fontsize=7.0)
+    panel_letter(ax, "b")
+
+    # (c) the width itself, year by year. Panel (a) shows the fan; this says how
+    # fast it opens, and whether the post-2100 treatment changes that or only
+    # shifts the centre.
+    ax = axes[2]
+    ax.plot(years, band["p95"] - band["p05"], color=ENVIRONMENT, lw=1.8,
+            label="rates continued")
+    ax.plot(held_years, held_band["p95"] - held_band["p05"], color=ENVIRONMENT,
+            lw=1.5, ls=(0, (4, 2)), label="rates frozen")
+    ax.axvline(2100, color="#333333", lw=0.8, ls=(0, (1, 2)))
+    ax.set(xlabel="year", ylabel="90% width (billions)",
+           xlim=(years[0], years[-1]), ylim=(0, None))
+    ax.legend(frameon=False, loc="upper left", handlelength=1.7, fontsize=7.4)
+    panel_letter(ax, "c")
+
+    save(fig, "fig6-fan")
+
+
 def main() -> int:
     phase5 = load("out/phase5.json")
     if "ensemble" not in phase5:
@@ -364,7 +448,9 @@ def main() -> int:
     figure_ladder(load("data/reference/selection_break_even_sensitivity.json"))
     figure_boundary(load("data/reference/paired_selection_boundary_sensitivity.json"))
     figure_boundary_2100(phase5)
-    figure_decomposition(load("out/uncertainty_decomposition.json"))
+    decomposition = load("out/uncertainty_decomposition.json")
+    figure_decomposition(decomposition)
+    figure_fan(phase5, decomposition)
     print("open every PNG in out/paper-figures/ before trusting the PDFs")
     return 0
 
