@@ -24,8 +24,8 @@ MAIN = PAPER / "main.tex"
 SUPPLEMENT = PAPER / "supplement.tex"
 STABLE = PAPER / "population-model.pdf"
 STABLE_SUPPLEMENT = PAPER / "population-model-supplement.pdf"
-VERSIONED = PAPER / "population-model-1_2_0.pdf"
-VERSIONED_SUPPLEMENT = PAPER / "population-model-supplement-1_2_0.pdf"
+VERSIONED = PAPER / "population-model-1_2_1.pdf"
+VERSIONED_SUPPLEMENT = PAPER / "population-model-supplement-1_2_1.pdf"
 
 
 def executable(name: str) -> str:

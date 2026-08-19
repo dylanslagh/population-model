@@ -14,7 +14,10 @@ continuous line the reader cannot see where the source ended.
   value after that year is labelled a UN projection.
   \item[The project extension.] Begins from the published population on 1
   January \OfficialBoundaryYear{} and runs to \ProjectionEndYear{} with
-  stochastic migration.
+  stochastic continuations of the published WPP 2024 fertility and mortality
+  trajectories, together with stochastic migration. Because the public archives
+  do not include the fitted posterior state, these are emulators of the source
+  trajectories rather than an official United Nations projection.
   \item[The selection model.] A separate object forking in
   \PhaseFiveBaseYear{}, so that selection acts over the whole projection rather
   than switching on after the UN's assumptions have already fixed the
@@ -26,12 +29,13 @@ continuous line the reader cannot see where the source ended.
 \includegraphics[width=\textwidth]{fig4-boundary-2100.pdf}
 \caption{Three objects, drawn so it is visible which is whose. The solid grey
 line is the reproduced UN medium path and stops where the UN's assumptions stop.
-The dashed line and shaded fan are this project's own continuation, with
-migration varying across \ExtensionPaths{} paths; the fan is narrow because
-migration cancels globally by construction. Fertility and mortality are held
-fixed in this object deliberately, in order to isolate migration --- it is not
-the frozen-rate assumption discussed in \Cref{sec:post-2100}, which concerns the
-comparator ensemble of \Cref{fig:fan}. The two coloured lines are the selection model, which forks in
+The dashed line and shaded fan isolate the migration component of this project's
+extension, with migration varying across \ExtensionPaths{} paths; the fan is
+narrow because migration cancels globally by construction. Fertility and
+mortality are held fixed in this figure so that migration can be read on its own.
+The full project extension continues all three demographic components, as
+described in \Cref{sec:post-2100} and shown for the comparator ensemble in
+\Cref{fig:fan}. The two coloured lines are the selection model, which forks in
 \PhaseFiveBaseYear{} and is not a UN projection at any point.}
 \label{fig:horizon}
 \end{figure}

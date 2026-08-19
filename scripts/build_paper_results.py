@@ -25,7 +25,7 @@ sys.path.insert(0, str(REPO / "src"))
 OUT = REPO / "paper" / "generated" / "results_macros.tex"
 TABLE = REPO / "paper" / "generated" / "parameter_table.tex"
 
-PAPER_VERSION = "1.2.0"
+PAPER_VERSION = "1.2.1"
 PAPER_DATE = "19 August 2026"
 
 

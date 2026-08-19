@@ -10,9 +10,9 @@ the authority on why the project exists; this file is about what has actually
 been built. [HANDOFF.md](HANDOFF.md) contains the longer technical history.
 
 The public outputs are the interactive webpage and a field-quality research
-paper in LaTeX and PDF. The current paper is version 1.2.0:
-[`paper/population-model-1_2_0.pdf`](paper/population-model-1_2_0.pdf), with
-[`paper/population-model-supplement-1_2_0.pdf`](paper/population-model-supplement-1_2_0.pdf)
+paper in LaTeX and PDF. The current paper is version 1.2.1:
+[`paper/population-model-1_2_1.pdf`](paper/population-model-1_2_1.pdf), with
+[`paper/population-model-supplement-1_2_1.pdf`](paper/population-model-supplement-1_2_1.pdf)
 providing validation, parameter sources, the historical backtest and the full
 reproducibility path.
 

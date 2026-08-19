@@ -3,16 +3,16 @@
 **Selection on Fertility, and the Environmental Decline That Would Cancel It.**
 A compositional mechanism in a 237-country cohort-component projection to 2150.
 
-Version 1.2.0. Authored by Dylan Slagh, Claude Opus 5 and ChatGPT 5.6 Sol; the
-main paper includes a standard contribution and responsibility statement. The
+Version 1.2.1. Authored by Dylan Slagh, Claude Opus 5 and ChatGPT 5.6 Sol; the
+main paper includes a detailed contribution and responsibility statement. The
 public conversation record in `conversations/` provides optional process
 documentation but is not required to interpret the paper.
 
 Two documents are built: the paper and its supplement, which carries the engine
 validation, parameter table with sources, historical backtest and reproduction
 path. Publishing writes both stable filenames and immutable versioned copies:
-`population-model-1_2_0.pdf` and
-`population-model-supplement-1_2_0.pdf`. Earlier numbered releases remain in
+`population-model-1_2_1.pdf` and
+`population-model-supplement-1_2_1.pdf`. Earlier numbered releases remain in
 this directory.
 
 ## What the paper argues
