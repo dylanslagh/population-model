@@ -54,6 +54,19 @@ single year of age, so `derive_migration` backs them out of the UN's own medium
 path as a residual. That is a usable forward-model input and it is **not**
 evidence of anything: any run using it is labelled a diagnostic, not a test.
 
+## The public site
+
+`index.html` at the repository root is the public front page for
+population.dylanslagh.com, built by `scripts/build_site.py` from `site/`. The
+interactive country map moved to `map/index.html`; the paper landing page stays
+at `paper/index.html`. Read `site/README.md` before editing any of it.
+
+Two rules carry over into the page itself. Every number it prints is tagged with
+the result path it came from and the build **fails** if the two disagree, so
+never fix a mismatch by editing the page to match a memory --- find out which
+one moved. And the globe stops at 2100, because that is where the UN's published
+assumptions stop; nothing on it may be this project extrapolating.
+
 The scientific outputs now have a hard boundary. The **UN reproduction** stops
 at 2100. The **UN project extension** starts from that 2100 state, holds final
 fertility and mortality schedules, and uses the stochastic migration emulator
@@ -64,6 +77,9 @@ three labels back into one "UN model to 2150".
 ## Running things
 
 ```bash
+python scripts/build_site_assets.py   # site data; stdlib only, no WPP needed
+python scripts/build_site.py          # index.html; fails if a number went stale
+python scripts/build_public.py        # stage dist/, check every local link
 python scripts/fetch_wpp.py          # ~1.1 GB, once; checksums get committed
 python scripts/build_bundle.py       # CSV -> arrays, about 90 seconds
 python scripts/validate_engine.py    # the engine test; must pass before anything else

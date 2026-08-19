@@ -9,7 +9,9 @@ for R, Python, Tectonic, and the downloaded UW data are in
 the authority on why the project exists; this file is about what has actually
 been built. [HANDOFF.md](HANDOFF.md) contains the longer technical history.
 
-The public outputs are the interactive webpage and a field-quality research
+The public outputs are the public site --- a scrolling account of the argument
+over a rotating Earth lit by the model's own population, at `index.html`, with
+the interactive country map at `map/index.html` --- and a field-quality research
 paper in LaTeX and PDF. The current paper is version 1.2.1:
 [`paper/population-model-1_2_1.pdf`](paper/population-model-1_2_1.pdf), with
 [`paper/population-model-supplement-1_2_1.pdf`](paper/population-model-supplement-1_2_1.pdf)
@@ -264,12 +266,14 @@ $rscript = 'C:\path\to\R-4.4.2\bin\Rscript.exe'
 python scripts\export_uw_fixture.py --rscript $rscript
 ```
 
-The paper and exact public-site payload are built separately from the scientific
-data pipeline:
+The paper and the public site are built separately from the scientific data
+pipeline:
 
 ```bash
 python scripts/build_paper.py
-python scripts/build_public.py
+python scripts/build_site_assets.py   # globe + story data, standard library only
+python scripts/build_site.py          # assemble index.html; fails on a stale number
+python scripts/build_public.py        # stage dist/ and check every local link
 ```
 
 For the backtest, which needs the archived revisions and two extra libraries
@@ -285,6 +289,9 @@ python scripts/plot_backtest.py      # regenerate the figures above
 
 ```
 spec/            the design brief, version 0.3
+site/            sources for the public front page: template, body, app.js, data
+index.html       the built public site. generated; do not edit by hand
+map/index.html   the interactive country map, also generated
 paper/           LaTeX manuscript, public landing page, and reviewed PDF
 r/uw-extract/    pinned official-accessor reader for UW's native R objects
 src/popmodel/

@@ -16,19 +16,49 @@ build_public = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(build_public)
 
 
-def make_repo(tmp_path: Path, html: str | None = "<!doctype html><title>Map</title>") -> Path:
+def make_repo(tmp_path: Path, html: str | None = "<!doctype html><title>Story</title>") -> Path:
+    """A fixture repo holding exactly the always-required public artifacts."""
+
     repo = tmp_path / "repo"
     repo.mkdir()
     if html is not None:
         (repo / "index.html").write_text(html, encoding="utf-8")
+    (repo / "map").mkdir()
+    (repo / "map" / "index.html").write_text("<!doctype html><title>Map</title>", encoding="utf-8")
+    (repo / "site").mkdir()
+    (repo / "site" / "social-card.jpg").write_bytes(b"\xff\xd8\xff fixture")
     return repo
 
 
-def add_paper(repo: Path, landing: str = "<!doctype html><h1 id='abstract'>Paper</h1>") -> None:
+BASE_FILES = {"index.html", "map/index.html", "social-card.jpg"}
+
+
+def add_paper(
+    repo: Path,
+    landing: str = "<!doctype html><h1 id='abstract'>Paper</h1>",
+    version: str | None = None,
+) -> set[str]:
+    """Stage a publishable paper; with `version`, also its versioned PDFs."""
+
     paper = repo / "paper"
     paper.mkdir(exist_ok=True)
     (paper / "index.html").write_text(landing, encoding="utf-8")
     (paper / "population-model.pdf").write_bytes(b"%PDF-1.7\nreviewed fixture\n")
+    staged = {"paper/index.html", "paper/population-model.pdf"}
+    if version is None:
+        return staged
+    generated = paper / "generated"
+    generated.mkdir(exist_ok=True)
+    (generated / "results_macros.tex").write_text(
+        "\\newcommand{\\PaperVersion} {" + version + "}\n", encoding="utf-8"
+    )
+    (paper / "population-model-supplement.pdf").write_bytes(b"%PDF-1.7\nsupplement\n")
+    staged.add("paper/population-model-supplement.pdf")
+    stamp = version.replace(".", "_")
+    for stem in ("population-model", "population-model-supplement"):
+        (paper / f"{stem}-{stamp}.pdf").write_bytes(b"%PDF-1.7\nversioned\n")
+        staged.add(f"paper/{stem}-{stamp}.pdf")
+    return staged
 
 
 def staged_paths(output: Path) -> set[str]:
@@ -48,8 +78,8 @@ def test_build_stages_only_the_reviewed_root_page_and_clears_stale_output(tmp_pa
 
     files = build_public.build(repo, output)
 
-    assert [path.relative_to(output).as_posix() for path in files] == ["index.html"]
-    assert staged_paths(output) == {"index.html"}
+    assert set(path.relative_to(output).as_posix() for path in files) == BASE_FILES
+    assert staged_paths(output) == BASE_FILES
 
 
 def test_build_stages_the_paper_only_as_a_complete_reviewed_pair(tmp_path):
@@ -58,11 +88,45 @@ def test_build_stages_the_paper_only_as_a_complete_reviewed_pair(tmp_path):
 
     build_public.build(repo)
 
-    assert staged_paths(repo / "dist") == {
-        "index.html",
+    assert staged_paths(repo / "dist") == BASE_FILES | {
         "paper/index.html",
         "paper/population-model.pdf",
     }
+
+
+def test_build_stages_the_versioned_pdfs_the_landing_page_links_to(tmp_path):
+    repo = make_repo(tmp_path)
+    expected = add_paper(
+        repo,
+        "<h1 id='abstract'>Paper</h1><a href='population-model-1_2_1.pdf'>PDF</a>",
+        version="1.2.1",
+    )
+
+    build_public.build(repo)
+
+    assert staged_paths(repo / "dist") == BASE_FILES | expected
+
+
+def test_build_fails_when_a_versioned_pdf_the_paper_stamped_is_missing(tmp_path):
+    repo = make_repo(tmp_path)
+    add_paper(repo, version="1.2.1")
+    (repo / "paper" / "population-model-1_2_1.pdf").unlink()
+
+    with pytest.raises(
+        build_public.BuildError,
+        match="required public artifact is missing: paper/population-model-1_2_1.pdf",
+    ):
+        build_public.build(repo)
+
+
+def test_build_requires_the_interactive_map(tmp_path):
+    repo = make_repo(tmp_path)
+    (repo / "map" / "index.html").unlink()
+
+    with pytest.raises(
+        build_public.BuildError, match="required public artifact is missing: map/index.html"
+    ):
+        build_public.build(repo)
 
 
 @pytest.mark.parametrize("present", ["landing", "pdf"])
@@ -110,12 +174,11 @@ def test_external_links_data_urls_and_valid_root_links_do_not_require_files(tmp_
         "<main id='top'><a href='https://example.org'>Source</a>"
         "<img src='data:image/gif;base64,AAAA' alt='fixture'></main>",
     )
-    add_paper(repo, "<a href='/#top'>Back to map</a>")
+    add_paper(repo, "<a href='/#top'>Back to the story</a>")
 
     build_public.build(repo)
 
-    assert staged_paths(repo / "dist") == {
-        "index.html",
+    assert staged_paths(repo / "dist") == BASE_FILES | {
         "paper/index.html",
         "paper/population-model.pdf",
     }

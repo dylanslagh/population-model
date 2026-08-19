@@ -3,16 +3,21 @@
     python scripts/build_public.py
 
 The model inputs and intermediate outputs are intentionally not deployable. This
-command copies only the committed map page and, once both exist, the paper's
-landing page and reviewed stable PDF into ``dist/``. It then checks every local
-HTML link against that staged tree. A missing required file, a half-published
-paper, or a broken local link stops the build.
+command copies only the committed public pages -- the scrollytelling front page,
+the interactive map, and, once both exist, the paper's landing page with its
+reviewed PDFs -- into ``dist/``. It then checks every local HTML link against
+that staged tree. A missing required file, a half-published paper, or a broken
+local link stops the build.
+
+The versioned PDF filenames are read from the paper's own generated results, so
+a new version cannot leave the landing page pointing at a file nobody staged.
 """
 
 from __future__ import annotations
 
 import os
 import posixpath
+import re
 import shutil
 import sys
 import tempfile
@@ -24,8 +29,13 @@ REPO = Path(__file__).resolve().parents[1]
 DIST = REPO / "dist"
 
 INDEX = Path("index.html")
+MAP = Path("map/index.html")
+SOCIAL_CARD_SOURCE = Path("site/social-card.jpg")
+SOCIAL_CARD = Path("social-card.jpg")
 PAPER_LANDING = Path("paper/index.html")
 PAPER_PDF = Path("paper/population-model.pdf")
+PAPER_SUPPLEMENT = Path("paper/population-model-supplement.pdf")
+PAPER_MACROS = Path("paper/generated/results_macros.tex")
 
 
 class BuildError(RuntimeError):
@@ -90,10 +100,25 @@ def _required_source(repo: Path, relative: Path) -> Path:
     return path
 
 
+def _paper_version(repo: Path) -> str | None:
+    """The version the paper build stamped, as it appears in PDF filenames."""
+
+    macros = repo / PAPER_MACROS
+    if not macros.is_file():
+        return None
+    found = re.search(r"\\newcommand\{\\PaperVersion\}\s*\{([^}]+)\}",
+                      macros.read_text(encoding="utf-8"))
+    return found.group(1).strip().replace(".", "_") if found else None
+
+
 def reviewed_sources(repo: Path) -> list[tuple[Path, Path]]:
     """Return the exact source/destination allowlist for this public build."""
 
-    sources = [(_required_source(repo, INDEX), INDEX)]
+    sources = [
+        (_required_source(repo, INDEX), INDEX),
+        (_required_source(repo, MAP), MAP),
+        (_required_source(repo, SOCIAL_CARD_SOURCE), SOCIAL_CARD),
+    ]
     landing = repo / PAPER_LANDING
     pdf = repo / PAPER_PDF
     paper_parts = (landing.is_file(), pdf.is_file())
@@ -111,6 +136,14 @@ def reviewed_sources(repo: Path) -> list[tuple[Path, Path]]:
         if signature != b"%PDF-":
             raise BuildError(f"reviewed paper is not a PDF: {PAPER_PDF.as_posix()}")
         sources.extend(((landing, PAPER_LANDING), (pdf, PAPER_PDF)))
+        supplement = repo / PAPER_SUPPLEMENT
+        if supplement.is_file():
+            sources.append((_required_source(repo, PAPER_SUPPLEMENT), PAPER_SUPPLEMENT))
+        version = _paper_version(repo)
+        if version:
+            for stem in ("population-model", "population-model-supplement"):
+                relative = Path(f"paper/{stem}-{version}.pdf")
+                sources.append((_required_source(repo, relative), relative))
     return sources
 
 

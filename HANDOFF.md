@@ -127,9 +127,11 @@ Czechoslovakia, Sudan and Ethiopia all changed shape inside the window.
 
 ### Phase 3 — map, pyramids, crosswalk, confidence layer
 
-- `index.html` at the repo root: one self-contained page, no external requests,
-  no build step, no framework. Equal Earth projection (equal-area — Mercator
-  would inflate Greenland to look larger than Africa on a *population* map).
+- `map/index.html`: one self-contained page, no external requests, no build
+  step, no framework. Equal Earth projection (equal-area — Mercator would
+  inflate Greenland to look larger than Africa on a *population* map). It lived
+  at the repo root until the public site took that slot; `scripts/build_map.py`
+  writes it to `map/` now.
 - `src/popmodel/crosswalk.py` — all 237 countries matched to map shapes.
 - `src/popmodel/export.py` — per-country pyramids, 1950–2150.
 - `src/popmodel/ingest/census.py` — the data-confidence layer.
@@ -557,12 +559,28 @@ page. The pattern that replaced it, and which is better discipline anyway:
 
 ## 11. Deploying
 
-The map is served at `hub.dylanslagh.com/population-model/`, password-gated,
-and now carries the Phase 4 uncertainty band on every country. The repository
-also contains an early LaTeX/PDF paper scaffold, a paper landing page, and
-`scripts/build_public.py`, which stages the reviewed map and paper surface into
-`dist/`. The scaffold is not an approved paper; see `NEXT_SESSION.md`. No
-genuinely public host is configured yet.
+Three pages make up the public surface, and `scripts/build_public.py` stages
+exactly them into `dist/`, refusing to finish if any local link is broken:
+
+| | |
+|---|---|
+| `index.html` | the public site: the argument told over a rotating, population-lit Earth. Built by `scripts/build_site.py` from `site/`; see `site/README.md` |
+| `map/index.html` | the interactive country map, with the Phase 4 uncertainty band |
+| `paper/index.html` | the paper landing page, with the reviewed and versioned PDFs |
+
+Everything is served today at `hub.dylanslagh.com/population-model/`,
+password-gated. **The genuinely public host is `population.dylanslagh.com`**, a
+Cloudflare Pages project whose build command is `python3 scripts/build_public.py`
+with output directory `dist`. If that project does not exist yet, it is the one
+setup step left; nothing in the repository depends on it.
+
+Two traps in the site build. `scripts/build_site.py` compares every number
+printed on the page against `site/data/story.json` and **fails** rather than
+publish a stale one — if it complains, find out which side moved instead of
+editing the page to agree. And `scripts/build_site_assets.py` reads the
+per-country series out of the built `map/index.html` payload, so rebuilding the
+map is what refreshes the globe; it needs `scripts/fetch_geometry.py` first but
+never needs the 1.1 GB of WPP source data.
 
 The hub is a separate repo (`project-hub`) that clones every project and
 publishes them as one site. Two things that matter here:

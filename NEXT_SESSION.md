@@ -4,9 +4,9 @@ This is the current, session-specific handoff. Read it before `HANDOFF.md`.
 `HANDOFF.md` is the durable technical history; this file records the owner's
 goal, what just finished, and the next piece of work.
 
-**Two of the three central outputs are finished. One is left: the public
-webpage.** The video was rendered on 2026-08-15 and the paper was written the
-same day. Phases 1–5 are built, all eight sourced mechanism parameters are
+**All three central outputs now exist.** The video was rendered on 2026-08-15,
+the paper written the same day, and the public site built on 2026-08-19. What
+is left on the site is not building but launching it: see *Do this next*. Phases 1–5 are built, all eight sourced mechanism parameters are
 verified, and the paired stochastic-migration comparison and its boundary
 robustness receipt have passed. The source work is a fixed base for authoring,
 not a reason to keep expanding the model.
@@ -24,9 +24,10 @@ Dylan wants three finished public outputs:
    legitimacy comes from the source rather than from us. His idea, added
    2026-08-11. `scripts/render_race.py` writes the frames.
 
-**The paper and the video are done; the webpage has not been started.** Treat
-the password-gated hub page as a working document where Dylan can review
-figures, not as the design seed for the eventual public site.
+**All three are done.** The public site is `index.html`, built by
+`scripts/build_site.py` from `site/`; the old hub map page moved to
+`map/index.html` and is now the site's explorable companion rather than its
+front door. Read `site/README.md` before editing any of it.
 
 Notes on each, so the next session does not rediscover them:
 
@@ -145,13 +146,24 @@ are not globally balanced draw by draw and were creating or deleting people.
 
 ## Do this next
 
-### Begin the central outputs
+### Launch the site
 
-**The genuinely public webpage is the remaining output.** Design it from
-scratch rather than as a cleaned-up hub. The paper is now the best statement of
-what the project says and in what order, so use its argument as the page's
-spine: selection first, the boundary as the way selection is made quantitative,
-and the 2100 line drawn explicitly.
+The page is built and pushed on `claude/population-public-site-iaazmd`. Three
+things stand between it and `population.dylanslagh.com`, and all three are
+Dylan's calls rather than code:
+
+1. **The Cloudflare Pages project.** The domain is reserved; the project is not
+   created. Build command `python3 scripts/build_public.py`, output directory
+   `dist`, and the custom domain attached. Nothing in the repository depends on
+   this, and no secrets are involved.
+2. **Whether the repository goes public.** It is private today, so the two
+   GitHub links on the paper landing page were removed rather than shipped
+   broken, and the site links no code. The paper's contributions section says a
+   public conversation record exists; while the repository is private, it does
+   not. Either flip the repository, or publish `conversations/` as pages on the
+   site.
+3. **Licensing.** Still undecided, and now visible: a public page with no
+   licence statement is a choice by default.
 
 Keep the economic-pressure parameter universal: it is a deliberately clean
 sensitivity axis for the boundary figure, not a forecast or a type-specific
@@ -166,10 +178,10 @@ of the disagreement with the UN. HFD bulk downloads now require an account and
 acceptance of its current terms. The public CFE archive already pinned here can
 support some longitudinal work without a login.
 
-### Later output work: the page, when the science is ready
+### Later output work: the interactive map
 
-This is one of the three outputs
-above rather than a separate track. Concrete pieces already scoped:
+The map at `map/index.html` was built before the site and has not been
+redesigned to match it. Concrete pieces already scoped:
 - Per-country uncertainty decomposition, not just the six watch countries. The
   script computes world plus a fixed list; widening it to all 236 is small.
 - The violin should drop out below some screen width and let the numeric readout
@@ -239,6 +251,13 @@ Nothing blocks the work above. Before a genuinely public release: the public
 hostname and the licensing decision. For the paper, which is now written:
 whether the title wording is right, the author line and affiliation,
 acknowledgements, the licence, and whether and where it is released.
+
+*Updated 2026-08-19: the public site was built --- a scrolling account of the
+argument over a rotating Earth lit by the model's own population, one light per
+million people, stopping at 2100 where the UN's assumptions stop. Every number
+it prints is checked against `site/data/story.json` at build time, so the page
+cannot drift from the results; 203 tests pass. The remaining work on it is the
+launch decisions listed under "Do this next", not the page.*
 
 *Updated 2026-08-16: the paper was revised to version 1.1.0 after Dylan's review
 and an adversarial review by ChatGPT 5.6 Sol. The substantive change is that

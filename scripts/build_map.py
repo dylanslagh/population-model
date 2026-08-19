@@ -2,7 +2,7 @@
 
     python scripts/build_map.py
 
-Writes site/index.html with the geometry and the country data embedded. No
+Writes map/index.html with the geometry and the country data embedded. No
 external requests, no build step, no framework - open the file and it works.
 That is a deliberate choice rather than laziness: spec section 9 asks for low
 maintenance cost by design, on the grounds that the project only pays off if it
@@ -34,10 +34,11 @@ from popmodel.ingest import wpp  # noqa: E402
 TOLERANCE = 0.08
 VIEW_WIDTH = 1000.0
 PYRAMID_YEARS = [1950, 1975, 2000, 2024, 2050, 2075, 2100, 2125, 2150]
-# The hub serves each project from /<project>/ and looks for index.html at
-# the repo root, so that is where the page goes. Relative asset paths only,
-# which is free here because everything is embedded in the one file.
-SITE = paths.REPO_ROOT
+# The public front page is scripts/build_site.py's scrollytelling story; this
+# map is the explorable companion to it and lives one level down at /map/.
+# Relative asset paths only, which is free here because everything is embedded
+# in the one file.
+SITE = paths.REPO_ROOT / "map"
 BAND = {}
 BAND_META = None
 
@@ -250,6 +251,7 @@ def main() -> int:
             print(f"  note: {figure}.svg is missing; the page will omit it")
         html = html.replace(token, markup)
     out = SITE / "index.html"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")
     print(f"  {len(shapes_by_iso)} shapes, {len(data)} countries")
     print(f"\nWrote {out.relative_to(paths.REPO_ROOT)} ({out.stat().st_size / 1e6:.1f} MB)")
@@ -327,8 +329,8 @@ footer p{max-width:80ch}
 <body>
 <header>
   <nav class="project-nav" aria-label="Project">
-    <span>Population model to 2150</span>
-    <a href="paper/index.html">Paper and citation</a>
+    <a href="../index.html">&larr; Population to 2150</a>
+    <a href="../paper/index.html">Paper and citation</a>
   </nav>
   <h1>World population to 2150</h1>
   <p class="sub">Colour shows projected change between 2024 and 2100. Click any country
