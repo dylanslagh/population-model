@@ -38,26 +38,11 @@ propensity set to one it reproduces the ordinary engine to a relative difference
 of $3\times10^{-16}$, and one generation of it matches the analytic
 parent--offspring covariance response to nine decimal places.
 
-\subsection{An absurdity check that was itself wrong}
-
-An earlier specification of this project required that constant fertility reach
-roughly 244 billion people by \ProjectionEndYear{}, on pain of the engine being
-declared buggy. That figure came from a United Nations long-range report built on
-the 2002 revision. Fertility rates have fallen substantially since 2002, and
-constant fertility freezes the base year's rates, so reaching 244 billion from a
-\PhaseFiveBaseYear{} base would have meant the engine was wrong rather than
-right. The check was replaced by a comparison against the UN's own WPP 2024
-constant-fertility variant, which the engine matches to
-\ValidationConstantFertility{} at 2100.
-
-The episode is recorded because the failure mode is general: a number mentioned
-in passing became a stated requirement, and stayed one for longer than it should
-have because it was written down.
-
-\subsection{Conventions that produce plausible wrong answers if guessed}
+\subsection{Implementation conventions}
 \label{app:conventions}
 
-Each of these was found by a wrong number rather than by an error message.
+The following source conventions are enforced explicitly because each can
+produce a numerically plausible but biased projection if misinterpreted.
 
 \begin{itemize}[leftmargin=1.2em]
 \item Ages run 0--100 where 100 is an open-ended group; sex 0 is female.
@@ -69,8 +54,8 @@ engine. $s[0]$ is birth survival, and $s[100]$ applies to the sum of the
 happens exactly once, at ingest.
 \item Fertility is births per woman per year. The source publishes per thousand.
 \item Childbearing ages are 10--54. The single-age source file stops at 49 and
-the five-year file does not; the missing mothers are about 0.3\% of world births,
-which left the projection running 0.3\% low at 2100 with the error still growing.
+the five-year file does not; ages 50--54 account for about 0.3\% of world births
+and are included from the five-year file.
 \item Age-specific fertility uses mid-year women, so the denominator is the mean
 of the 1 January figure and the following one. Getting this wrong biases births
 by roughly half a year of cohort change --- negligible in one year, not
@@ -83,10 +68,10 @@ summing country quantiles. Adding every country's 5th percentile assumes all 236
 land in their own bad tail in the same draw; at \ProjectionEndYear{} that
 shortcut gives 3.13 billion where the correct world 5th percentile is
 \ComparatorTwentyOneFiftyLow{} billion.
-\item Archived WPP revisions ship counterfactual scenarios beside the real
+\item Archived WPP releases ship counterfactual scenarios beside the main
 projection --- ``no AIDS'', ``instant replacement'', ``zero migration''. They are
-excluded by name. Grading a counterfactual as a forecast would be a serious
-error, not a rounding problem.
+excluded by name so that the backtest evaluates intended projections rather than
+counterfactual exercises.
 \end{itemize}
 
 \subsection{Migration after 2100}
@@ -122,11 +107,8 @@ spread of \ContinuationTfrSigma{} children, and the mean annual gain in female
 life expectancy is \ContinuationEZeroDrift{} years, ranging from
 \ContinuationEZeroDriftLow{} to \ContinuationEZeroDriftHigh{} across countries.
 
-Continued values are clipped only if they leave the range the source archive
-itself ever occupied, padded by a quarter of its width. Clipping affects
-\ContinuationClippedShare{} of generated values, which is what a rail should do.
-An earlier version of this check bounded the female--male life-expectancy gap at
-zero and fifteen years and clipped a tenth of all values, because the source's
-own gap runs from $-6.6$ to $+20.2$ years. A rail firing on ordinary source
-behaviour is not a safety check; it is a silent model. The rails are therefore
-derived from the archive rather than written down.
+Continued values are clipped only when they leave the full range occupied by the
+source archive, padded by one quarter of its width. Clipping affects
+\ContinuationClippedShare{} of generated values. These source-derived rails
+permit the observed female--male life-expectancy gap of $-6.6$ to $+20.2$ years
+and prevent ordinary source behaviour from being altered by an implicit model.

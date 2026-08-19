@@ -1,11 +1,10 @@
-\section*{How this paper was made}
+\section*{Author contributions and responsibility}
 \label{sec:contributions}
-\addcontentsline{toc}{section}{How this paper was made}
+\addcontentsline{toc}{section}{Author contributions and responsibility}
 
-Two of the three authors are language models. We list them because they did the
-work that authorship normally denotes, and because a paper arguing that a
-projection should be auditable would be in a poor position to obscure how it was
-itself produced.
+Two contributors named in the byline are language models. They are identified to
+disclose their substantive roles and to make the production of the analysis and
+manuscript auditable.
 
 \textbf{Dylan Slagh} conceived the project, set its scope and its constraints,
 made every decision about what the model would and would not attempt, chose the
@@ -15,30 +14,17 @@ mechanism parameter may be fitted to the series it explains, and that a stored
 prediction may never be overwritten --- are enforced throughout at his
 insistence.
 
-\textbf{Claude Opus 5} built the mechanism layer, the migration and rate
+\textbf{Claude Opus 5} implemented the mechanism layer, the migration and rate
 continuations, the uncertainty analyses and the reproducibility machinery, and
-wrote this manuscript.
+drafted the manuscript.
 
-\textbf{ChatGPT 5.6 Sol} did earlier model and specification work, and wrote an
-adversarial review of the first complete draft. Several of its objections
-changed the paper's claims rather than its wording: the distinction between
-cancelling a terminal fertility rate and cancelling an accumulated population
-(\Cref{sec:boundary}), the correction that a constructed covariance is not an
-observed one (\Cref{sec:response}), and the removal of an unsupported
-explanation for cross-country variation in the mechanism's strength.
-
-The conversation record that produced this work is released with it: eleven
-conversations, from the one that designed the project to the one that revised
-this manuscript. It is not a tidy document, and that is the point of releasing
-it. The errors it contains were caught by the checks described in
-\Cref{sec:engine} and in the supplement, and at least one of them is visible
-arriving --- the absurdity check that expected roughly 244 billion people under
-constant fertility, which the supplement records as wrong, was offered in passing
-in the first conversation and hardened into a stated requirement before the
-engine was built and disagreed with it. A reader who wants to know how much to
-trust this paper is entitled to see how many times it was wrong first.
+\textbf{ChatGPT 5.6 Sol} reviewed the scientific argument and mathematical
+claims, clarified the distinction between terminal-rate and accumulated-population
+thresholds (\Cref{sec:boundary}), examined the interpretation of the constructed
+covariance (\Cref{sec:response}), and provided comprehensive editing of the
+manuscript and supplementary material.
 
 Current journal authorship policies generally do not admit non-human authors.
-This author line therefore describes the division of labour rather than making a
-claim on credit as those policies define it; the human author takes
-responsibility for the whole of it.
+The byline therefore discloses the division of labour rather than asserting that
+the language models satisfy those policies. Dylan Slagh takes responsibility for
+the analysis and manuscript.

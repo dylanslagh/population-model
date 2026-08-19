@@ -79,7 +79,7 @@ fetching script, the checksums, the derived per-country statistics and the
 analysis --- everything needed to reproduce the number --- but not the source
 tables. The large trajectory archives are likewise fetched rather than committed.
 
-\subsection*{Conventions that produce plausible wrong answers if guessed}
+\subsection*{Implementation conventions}
 
 \begin{itemize}[leftmargin=1.2em]
 \item Ages run 0--100 where 100 is an open-ended group; sex 0 is female.
@@ -91,7 +91,8 @@ the engine. $s[0]$ is birth survival, and $s[100]$ applies to the sum of the
 happens exactly once, at ingest.
 \item Fertility is births per woman per year. The source publishes per thousand.
 \item Childbearing ages are 10--54. The single-age source file stops at 49 and
-the five-year file does not; the missing mothers are about 0.3\% of world births.
+the five-year file does not; ages 50--54 account for about 0.3\% of world births
+and are included from the five-year file.
 \item Age-specific fertility uses mid-year women, so the denominator is the mean
 of the 1 January figure and the following one. Getting this wrong biases births
 by roughly half a year of cohort change --- negligible in one year, not
@@ -106,7 +107,6 @@ shortcut gives 3.13 billion where the correct world 5th percentile is
 \subsection*{Stored predictions}
 
 Projections intended to be scored later are written as immutable dated records
-with their own checksums; the writer raises rather than overwrite an existing
-record, and has no override flag. The comparator of the main paper's comparator section is
-stored with every quantity marked as not a claim of this project, and was
-deposited before the mechanism results in the main paper's results existed.
+with their own checksums; the writer raises rather than overwrites an existing
+record and has no override flag. Every quantity in the conventional comparator
+is marked as a comparator rather than as a claim of this paper.

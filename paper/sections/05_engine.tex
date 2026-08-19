@@ -1,11 +1,10 @@
 \section{What is validated, and what is not}
 \label{sec:engine}
 
-A mechanism is only worth reporting if a reader can distinguish its effect from
-an arithmetic error. That requirement set the order of the work: the accounting
-layer was built and checked against published outputs before any mechanism went
-near it, and the mechanism was then added as an extra axis on the same code
-rather than as a new model.
+A mechanism is interpretable only if its effect can be distinguished from
+projection arithmetic. The accounting layer is therefore validated against
+published outputs, and the mechanism is implemented as an additional axis on the
+same engine rather than as a separate model.
 
 It also sets a distinction the rest of the paper depends on. Three different
 things are involved here and only one of them is validated:
@@ -54,10 +53,10 @@ unable to change fertility, and in that configuration the typed engine reproduce
 the ordinary engine to a relative difference of $3\times10^{-16}$ --- machine
 precision.
 
-This is not a formality. It means the difference between a run with selection and
-a run without it cannot be a second implementation of the arithmetic, a different
-handling of the open age group, or a changed exposure convention. It is the
-mechanism.
+This identity establishes attribution: the difference between a run with
+selection and a run without it cannot arise from a second implementation of the
+arithmetic, different handling of the open age group, or a changed exposure
+convention.
 
 \subsection{Migration, and what it is allowed to support}
 
@@ -71,10 +70,9 @@ Where migration uncertainty is the object of study --- \Cref{sec:horizon}, and
 the robustness check in \Cref{sec:boundary} --- a stronger construction is used:
 the published Bayesian migration trajectories of \citet{azose2015}, with rates
 applied to each path's own evolving population and every draw-year balanced so
-that world net migration is exactly zero. That constraint matters more than it
-sounds. The public trajectory archive is balanced in expectation but not draw by
-draw, and using it unbalanced lets individual paths create or delete millions of
-people globally. An earlier version of the analysis in \Cref{sec:horizon} did
-exactly that and attributed 1.75 billion of world spread to migration; a
-component that cancels globally by construction cannot do that, and the corrected
-figure is \WidthMigration{} billion.
+that world net migration is exactly zero. The public trajectory archive is
+balanced in expectation but not draw by draw. Without draw-year balancing,
+individual paths can create or delete millions of people globally even though
+migration must sum to zero. Enforcing that accounting constraint yields a
+migration contribution of \WidthMigration{} billion to the world uncertainty
+width.

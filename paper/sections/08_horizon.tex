@@ -39,17 +39,12 @@ comparator ensemble of \Cref{fig:fan}. The two coloured lines are the selection 
 \subsection{What happens after the source stops}
 \label{sec:post-2100}
 
-Until recently this project filled the fifty years after 2100 by holding the
-final rates constant, and described that as housekeeping. It is not. Holding
-rates constant asserts that fertility stops wandering and longevity stops
-improving, both exactly at the boundary, for no reason connected to anything in
-the world. It is a strong claim about half the distance to the horizon, and its
-only merit is that it requires no thought.
-
-The alternative is to continue the source's own late-horizon behaviour, which is
-what \Cref{sec:migration-robustness} already does for migration. Fitted over
-\ExtensionFitStart{}--\ExtensionFitEnd{}, the two components turn out to behave
-quite differently, and the continuation has to respect that.
+Holding final rates constant after 2100 assumes that fertility ceases to vary and
+longevity ceases to improve exactly at the source boundary. Because this
+assumption governs fifty of the projection's 126 years, it is evaluated against
+a continuation of the source's late-horizon behaviour. Fitted over
+\ExtensionFitStart{}--\ExtensionFitEnd{}, the two components exhibit different
+dynamics, which the continuation treats separately.
 
 \textbf{Fertility is stationary within a trajectory.} Each published path
 fluctuates around its own level with an autocorrelation near 0.89, and a
@@ -58,9 +53,8 @@ at 2100 is roughly 0.40 --- three times larger. That is the published model's
 structure: the long-run level is itself uncertain, and most of the fertility
 uncertainty at \ProjectionEndYear{} is already present at the boundary. Each path
 is therefore continued as an autoregression around \emph{its own} 2100 value.
-Pooling across trajectories instead would fit one level per country and drag
-every draw toward it, quietly deleting the posterior spread that is the entire
-reason for having a thousand draws.
+Pooling across trajectories would instead fit one level per country and draw
+every trajectory toward it, substantially reducing the posterior spread.
 
 \textbf{Longevity is still trending.} The annual gain in female life expectancy
 over \ExtensionFitStart{}--\ExtensionFitEnd{} averages
@@ -75,8 +69,8 @@ slightly at the boundary, and centring each path on its 2100 value drops that
 residual drift rather than extrapolating it; extrapolating would subtract roughly
 0.15 children by \ProjectionEndYear{}, so this choice biases the result
 \emph{upward}. And the continuation does not reproduce the published mortality
-model's deceleration, in which gains slow as life expectancy rises, so it runs
-slightly hot on longevity in the same direction. Both are emulators of a model's
+model's deceleration, in which gains slow as life expectancy rises, so it
+slightly overstates longevity in the same direction. Both are emulators of a model's
 output, not continuations of the published model, for the same reason as the
 migration continuation: the public archive omits the fitted posterior state. The
 age \emph{patterns} --- the shape of fertility across ages, and the mortality
@@ -84,10 +78,9 @@ standard the levels are scaled onto --- are still held at their final published
 shape, which is a much weaker assumption than holding a level and is stated
 separately for that reason.
 
-\subsection{What the hold-constant rule was worth}
+\subsection{Sensitivity to post-2100 continuation}
 
-Because both versions exist, the cost of the old assumption can be measured
-rather than estimated by proxy. Holding rates constant after 2100 gives a
+Holding rates constant after 2100 gives a
 \ProjectionEndYear{} world median of \ComparatorTwentyOneFifty{} billion with a
 90\% range of \ComparatorTwentyOneFiftyLow{} to
 \ComparatorTwentyOneFiftyHigh{}. Continuing the source's own behaviour gives
@@ -113,14 +106,12 @@ affecting how fast it opened.}
 \label{fig:fan}
 \end{figure}
 
-The direction is the interesting part. Continuing the source moves the median
+Continuing the source moves the median
 \emph{up}, for the two reasons stated above --- longevity keeps improving and the
 residual fertility drift is not extrapolated --- while the extra fifty years of
 fertility innovation widen the band only modestly, because the published
 fertility process is stationary within a trajectory and most of the eventual
-spread is already there at 2100. The old proxy for this cost, which asked what
-ending the source data ten years early would do, gave \WidthHoldConstant{}
-billion of extra width and is superseded by the direct comparison.
+spread is already there at 2100.
 
 \subsection{Which uncertainty dominates depends on where you look}
 
@@ -146,11 +137,11 @@ Varying one source at a time across \DecompositionDraws{} draws
 migration. The mechanism entry is not directly comparable with the others: it
 varies judgemental ranges against the UN's medium demographic rates rather than
 propagating a posterior, and \Cref{sec:results} explains why its band is a
-sensitivity envelope. It is included because a comparison that omitted the
-paper's own subject would be a strange thing to publish.
+sensitivity envelope. It is included to place uncertainty in the mechanism's
+parameters on the same scale as the demographic inputs.
 
-The country panel (\Cref{fig:decomposition}b) disagrees with the world panel, and
-that disagreement is the point. At 2100, migration uncertainty is
+The country panel (\Cref{fig:decomposition}b) reverses the ordering in the world
+panel. At 2100, migration uncertainty is
 \MigrationOverFertilityUae{} times fertility uncertainty for the United Arab
 Emirates and \MigrationOverFertilityCanada{} times for Canada, but only
 \MigrationOverFertilityNigeria{} times for Nigeria. In the project extension the
@@ -161,21 +152,19 @@ the world total. Any single summary of ``the'' uncertainty in a population
 projection is answering a question about the world that most users of projections
 are not asking.
 
-\subsection{A conventional comparator, recorded in advance}
+\subsection{A conventional comparator}
 \label{sec:comparator}
 
-For a benchmark nobody could accuse us of arranging afterwards, the published
-Bayesian posterior for fertility and mortality
+The published Bayesian posterior for fertility and mortality
 \citep{alkema2011,raftery2012,sevcikova2016bayespop} was propagated through this
 same engine one draw at a time: \ComparatorDraws{} draws,
 \ComparatorCountries{} countries, to \ProjectionEndYear{}. This is the
-conventional mean-reverting view, not this paper's. It was computed, stored as an
-immutable dated record and marked as not a project claim \emph{before} the
-mechanism results existed, precisely so the comparison could not be assembled to
-flatter the mechanism.
+conventional mean-reverting view rather than the compositional specification. It
+is stored as an immutable dated record and marked as a comparator rather than as
+a claim of this paper.
 
-One check on it is worth reporting because nobody arranged it: the wholly
-separate deterministic run on the UN's own published assumptions peaks at
+As an external consistency check, the separate deterministic run on the UN's
+published assumptions peaks at
 \UnEquivalentPeak{} billion in \UnEquivalentPeakYear{}, against the ensemble
 median's \ComparatorPeak{} billion in \ComparatorPeakYear{}. Those two
 calculations share only the engine, and they agree on the peak to within a fifth

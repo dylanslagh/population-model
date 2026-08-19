@@ -9,10 +9,12 @@ for R, Python, Tectonic, and the downloaded UW data are in
 the authority on why the project exists; this file is about what has actually
 been built. [HANDOFF.md](HANDOFF.md) contains the longer technical history.
 
-The intended finished public outputs are a genuinely public webpage and a
-field-quality research paper in LaTeX and PDF. The current files under
-`paper/` are only an early scaffold, not an approved preliminary paper or the
-current work priority.
+The public outputs are the interactive webpage and a field-quality research
+paper in LaTeX and PDF. The current paper is version 1.2.0:
+[`paper/population-model-1_2_0.pdf`](paper/population-model-1_2_0.pdf), with
+[`paper/population-model-supplement-1_2_0.pdf`](paper/population-model-supplement-1_2_0.pdf)
+providing validation, parameter sources, the historical backtest and the full
+reproducibility path.
 
 The short version of the argument: by 2150 essentially nobody alive today is
 still alive, so the answer is dominated entirely by what long-run fertility
@@ -30,7 +32,7 @@ UN-style baseline supplies future fertility, survival, and migration paths.
 This project's mechanism also asks how the fertility environment and the
 changing mix of people generate the fertility path.
 
-That mechanism is now built. It tracks family-size variation and parent-child
+The mechanism tracks family-size variation and parent-child
 persistence in the mainstream population, plus fertility, retention, and
 convergence for named high-fertility groups. Its extra outputs show how
 composition changes, how much selection lifts fertility, whether a rebound
@@ -54,15 +56,14 @@ occurs, and which assumptions make the answer uncertain.
 
 The public migration archive omits its fitted MCMC state, so the continuation
 is explicitly a model-output emulator rather than an official UN projection.
-Every draw-year is balanced to zero world net migration. The full method and
-the correction to the old uncertainty decomposition are in
+Every draw-year is balanced to zero world net migration. The full method is in
 [`docs/migration-extension.md`](docs/migration-extension.md).
 
 ## Selection first, development pressure second
 
 ![Selection and development-pressure break-even](docs/selection-break-even.svg)
 
-The scientifically cleaner benchmark is now **selection only**: retain the
+The benchmark is **selection only**: retain the
 fertility decline already in the data and projected path, remove the assumed
 recovery, add no further post-2050 environmental decline, and let measured
 mainstream composition change. Future development pressure is then a stress-test
@@ -70,9 +71,8 @@ axis rather than a preferred forecast.
 
 At the central measured family-size spread and parent-child persistence,
 mainstream selection reaches a 1.165 fertility multiplier by 2150. An additional
-decline of about **1.53% per decade** after 2050 cancels it. The old 4% path is
-therefore an intentionally severe stress test, not an estimate of the future
-economy.
+decline of about **1.53% per decade** after 2050 cancels it. The 4% path is an
+intentionally severe stress test, not an estimate of the future economy.
 
 The model ladder is a reduction test. Mainstream selection, calculated from two
 verified inputs through a fixed three-type approximation, adds 1.82 billion to

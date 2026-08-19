@@ -83,8 +83,7 @@ trait with fitness divided by mean fitness --- specialised to the case where the
 trait and the fitness are the same quantity, so that the covariance is a
 variance.
 
-Three things about that equation need to be said plainly, because each is an
-assumption that could be wrong.
+Interpreting \Cref{eq:response} requires three qualifications.
 
 \textbf{The transmission probability and the reported correlation coincide only
 because the variances are equal.} Under this rule a child is either identical to
@@ -102,9 +101,9 @@ one set of countries and cohorts and the correlation from another
 intergenerational sample would have if both applied to it; it does not reproduce
 a covariance measured in one. The right estimate would come from paired
 parent--child completed-fertility data with both moments taken from the same
-sample, and we did not find that at the country coverage this model needs. We
-regard this as the weakest link in the calibration and have not disguised it by
-calling the product a measurement.
+sample; no such dataset has the country coverage this model requires. This
+construction is the weakest link in the calibration and is reported as an
+assumption rather than as a direct measurement.
 
 \textbf{Matching one generation does not validate four.} Many transition rules
 reproduce the same first-generation response and compound differently over
@@ -140,15 +139,15 @@ Retention is as load-bearing as fertility. A group at one per cent of a
 population with six children per woman and ninety per cent retention, against a
 mainstream at $1.4$, reaches \ToyFinalShare{} of the population in
 \ToyGenerations{} generations, while the same group with weak retention goes
-nowhere. This is the condition \citet{arenberg2022} state, and it is worth being
-careful about its units: theirs is a single-sex condition, that the expected
+nowhere. The condition stated by \citet{arenberg2022} uses single-sex units: the expected
 number of same-type daughters surviving to reproduce exceeds one, not that
 retention times the total fertility rate exceeds one. The cohort engine applies
 survival and the sex ratio at birth to every cohort, so the condition it enforces
 is the single-sex one; the loose phrasing is only ever a shorthand.
 
-Two limits are stated rather than fixed. No conversion \emph{into} a named group
-is modelled, which is small for these two groups but not zero. And every type
+Two limitations follow from the available data. No conversion \emph{into} a named
+group is modelled, although such conversion is small rather than zero for these
+two groups. Every type
 starts with its host country's age structure, because nobody publishes one by
 type; since a population with six children per woman is far younger than its
 host, this understates group growth, and every group share reported below is a

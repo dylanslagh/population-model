@@ -24,6 +24,8 @@ MAIN = PAPER / "main.tex"
 SUPPLEMENT = PAPER / "supplement.tex"
 STABLE = PAPER / "population-model.pdf"
 STABLE_SUPPLEMENT = PAPER / "population-model-supplement.pdf"
+VERSIONED = PAPER / "population-model-1_2_0.pdf"
+VERSIONED_SUPPLEMENT = PAPER / "population-model-supplement-1_2_0.pdf"
 
 
 def executable(name: str) -> str:
@@ -64,7 +66,7 @@ def build_with_pdftex(source: Path) -> Path:
         str(source),
     ]
     run(latex)
-    run([bibtex, str(BUILD / source.stem)])
+    run([bibtex, str((BUILD / source.stem).relative_to(PAPER))])
     run(latex)
     run(latex)
     return BUILD / f"{source.stem}.pdf"
@@ -91,7 +93,7 @@ def build_one(source: Path) -> Path:
     return candidate
 
 
-def build() -> list[tuple[Path, Path]]:
+def build() -> list[tuple[Path, tuple[Path, ...]]]:
     """Build the paper and its supplement, in that order.
 
     Both are built every time. A supplement that silently stops compiling while
@@ -102,8 +104,8 @@ def build() -> list[tuple[Path, Path]]:
         shutil.rmtree(BUILD)
     BUILD.mkdir(parents=True)
     return [
-        (build_one(MAIN), STABLE),
-        (build_one(SUPPLEMENT), STABLE_SUPPLEMENT),
+        (build_one(MAIN), (STABLE, VERSIONED)),
+        (build_one(SUPPLEMENT), (STABLE_SUPPLEMENT, VERSIONED_SUPPLEMENT)),
     ]
 
 
@@ -115,11 +117,12 @@ def main() -> int:
         help="copy the candidates to their stable paths after review",
     )
     args = parser.parse_args()
-    for candidate, stable in build():
+    for candidate, destinations in build():
         print(f"Built {candidate.relative_to(REPO)}")
         if args.publish:
-            shutil.copy2(candidate, stable)
-            print(f"Published {stable.relative_to(REPO)}")
+            for destination in destinations:
+                shutil.copy2(candidate, destination)
+                print(f"Published {destination.relative_to(REPO)}")
     if not args.publish:
         print("Render and inspect every page before using --publish.")
     return 0

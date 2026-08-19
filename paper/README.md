@@ -3,15 +3,17 @@
 **Selection on Fertility, and the Environmental Decline That Would Cancel It.**
 A compositional mechanism in a 237-country cohort-component projection to 2150.
 
-Version 1.1.0. Authored by Dylan Slagh, Claude Opus 5 and ChatGPT 5.6 Sol; the
-main paper opens with a note on who did what and why the model authors are
-listed. The complete conversation record is intended for release as
-supplementary material and belongs in `conversations/` at the repository root.
+Version 1.2.0. Authored by Dylan Slagh, Claude Opus 5 and ChatGPT 5.6 Sol; the
+main paper includes a standard contribution and responsibility statement. The
+public conversation record in `conversations/` provides optional process
+documentation but is not required to interpret the paper.
 
-Two documents are built: the paper (`population-model.pdf`) and its supplement
-(`population-model-supplement.pdf`), which carries the engine validation, the
-parameter table with sources, the historical backtest and the reproduction
-path.
+Two documents are built: the paper and its supplement, which carries the engine
+validation, parameter table with sources, historical backtest and reproduction
+path. Publishing writes both stable filenames and immutable versioned copies:
+`population-model-1_2_0.pdf` and
+`population-model-supplement-1_2_0.pdf`. Earlier numbered releases remain in
+this directory.
 
 ## What the paper argues
 
@@ -33,7 +35,7 @@ $env:TECTONIC = 'C:\Users\dslag\Documents\Codex\2026-08-09\i\work\tectonic-0.17.
 .\.venv\Scripts\python.exe scripts\build_paper_results.py   # macros + parameter table
 .\.venv\Scripts\python.exe scripts\plot_paper_figures.py    # figures, PDF + review PNG
 .\.venv\Scripts\python.exe scripts\build_paper.py           # -> paper/build/main.pdf
-.\.venv\Scripts\python.exe scripts\build_paper.py --publish # -> paper/population-model.pdf
+.\.venv\Scripts\python.exe scripts\build_paper.py --publish # -> stable + versioned PDFs
 ```
 
 `build_paper.py` never reruns the model. If a result file is stale, regenerate it
@@ -85,6 +87,8 @@ PDF into `out/paper-figures/` for exactly this reason.
 | `index.html` | The landing page, kept in step with the paper |
 | `population-model.pdf` | The reviewed, published paper |
 | `population-model-supplement.pdf` | The reviewed, published supplement |
+| `population-model-X_Y_Z.pdf` | Immutable numbered paper release |
+| `population-model-supplement-X_Y_Z.pdf` | Immutable numbered supplement release |
 
 ## Decisions still owned by Dylan
 

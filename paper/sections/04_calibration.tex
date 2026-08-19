@@ -28,9 +28,8 @@ or mothers only; children ever born, including childless women; whole
 birth-cohort bins whose members were all aged 50--59 at observation; and one
 estimate per country, with education categories summed.
 
-The open highest-parity category has to be handled, and it does not have to be
-guessed at, because the database supplies exact total children and therefore
-identifies that category's mean. The primary estimate distributes it
+The database reports exact total children, which identifies the mean of the open
+highest-parity category. The primary estimate distributes that category
 geometrically, the maximum-entropy integer distribution with that mean.
 Substituting the minimum-variance integer tail instead moves the coefficient of
 variation by $0.005$ at the median across all \CVAllCountries{} countries and by
@@ -60,15 +59,14 @@ These parity marginals do not identify a latent trait with coefficient of
 variation \FamilySizeCV{}; realised family size also contains timing,
 infertility, partnership history and measurement error.
 
-Two things follow. The parameter is used as an \emph{effective phenotypic
-spread}, paired with the observed intergenerational correlation, and the pair
-reproduces a covariance (\Cref{sec:response}) rather than asserting a variance
-decomposition. And the correction that would look natural is unavailable: most of
-these low-fertility distributions are \emph{under}-dispersed relative to Poisson,
-consistent with targeted family sizes, so subtracting a Poisson variance to
-manufacture a latent-trait coefficient would be invalid. That is why the
-empirical range \FamilySizeCVLow{}--\FamilySizeCVHigh{} is carried through every
-result rather than collapsed to a point.
+The parameter is therefore used as an \emph{effective phenotypic spread}, paired
+with the observed intergenerational correlation; together they reproduce a
+covariance (\Cref{sec:response}) without asserting a variance decomposition.
+Subtracting a Poisson variance to estimate a latent-trait coefficient would not
+resolve the problem, because most of these low-fertility distributions are
+\emph{under}-dispersed relative to Poisson, consistent with targeted family
+sizes. The empirical range \FamilySizeCVLow{}--\FamilySizeCVHigh{} is consequently
+propagated through every result rather than collapsed to a point.
 
 \subsection{Parent--child transmission}
 
@@ -81,8 +79,9 @@ in Northern Europe, 0.15 in Western Europe, 0.17 in Southern Europe and 0.19 in
 Eastern Europe. We adopt \Persistence{}, with a deliberately conservative
 cross-setting interval of \PersistenceLow{} to \PersistenceHigh{}.
 
-That is the whole of the transmission assumption, and it is worth saying what it
-excludes. Twin studies report substantial genetic variance components for
+This transmission assumption excludes evidence that is not numerically
+commensurable with a parent--child correlation. Twin studies report substantial
+genetic variance components for
 fertility behaviour \citep{kohler1999}, and there is molecular evidence of
 contemporary selection on fertility-associated variants
 \citep{beauchamp2016,kong2017}. None of it is used. A heritability is a variance
@@ -94,20 +93,19 @@ continuity, whatever produces it.
 \subsection{How far the evidence is being stretched}
 \label{sec:extrapolation}
 
-Both parameters are then applied to all 237 countries, and this is a larger step
-than the preceding two subsections make it sound.
+Both parameters are applied to all 237 countries, despite the much narrower
+geographic coverage of the evidence.
 
 The dispersion comes from \CVCountries{} low-fertility countries, almost all
 European, and the transmission literature is concentrated in Europe and North
 America. Neither source covers sub-Saharan Africa, where most of the century's
 births will happen, or South and East Asia, where most of the departure from
 replacement now is. Applying a European parent--child correlation to Nigeria is
-not a small extrapolation dressed up as a global constant; it is a global
-constant with European evidence behind it and nothing behind it elsewhere.
+therefore an unsupported geographic extrapolation, represented transparently as
+a global constant rather than as a locally estimated parameter.
 
-We use one value because the alternative --- inventing regional values --- would
-break the rule above in the least visible way possible. What can be done instead
-is to carry the range honestly, which is why \FamilySizeCVLow{} to
+Using one value avoids introducing regional parameters without evidence. The
+stated range is propagated instead, which is why \FamilySizeCVLow{} to
 \FamilySizeCVHigh{} and \PersistenceLow{} to \PersistenceHigh{} propagate through
 every result and why \Cref{sec:boundary} reports a threshold across that whole
 grid rather than at the central pair. A reader who thinks transmission is weaker
@@ -148,8 +146,8 @@ has documented instances but no established general value. And two describe the
 fertility environment: the additional proportional decline per decade, and the
 floor beneath it.
 
-The last is the important one, and it is the quantity this project exists to be
-uncertain about. It cannot be looked up, and it must not be fitted, because
+The environmental path is the consequential unmeasured quantity. It cannot be
+observed in advance and must not be fitted, because
 fitting it to observed fertility would consume exactly the evidence the mechanism
 is supposed to explain. \Cref{sec:boundary} is the response: rather than choosing
 a value and reporting the population it implies, we report the value at which the

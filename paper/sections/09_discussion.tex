@@ -15,10 +15,10 @@ that transmission produces growth at all.
 Both are right about what they are arguing. The disagreement is not really about
 the mechanism, which nobody disputes; it is about whether a model carrying only a
 transmission coefficient can support a conclusion about population size. It
-cannot, and the fix is to put the mechanism inside a projection that carries
-levels.
+cannot; the mechanism must instead be embedded in a projection that carries
+absolute levels.
 
-Doing that gives a result neither side would predict from the other's setup. The
+Embedding the mechanism produces a result intermediate between these positions. The
 mechanism is real, its direction is unambiguous, and it is worth
 \LadderMainstreamGain{} billion people at \ProjectionEndYear{} --- too large to
 leave out of a long-run projection. It is also not a return to growth. Under the
@@ -38,28 +38,27 @@ is something national statistical offices already measure.
 
 \subsection{Why a threshold is the right output}
 
-The honest position on the fertility environment is that nobody knows what it
-will do. The literature contains coherent arguments both ways: the low-fertility
+The future fertility environment is unidentified. The literature contains
+coherent arguments in both directions: the low-fertility
 trap hypothesis \citep{lutz2006} describes self-reinforcing downward pressure
 through ideal family size and cohort experience, while the mean-reverting
 specifications in official projections \citep{alkema2011,raftery2012} embed an
 eventual recovery. Neither is settled, and a 2150 world total is enormously
 sensitive to the difference.
 
-A projection whose headline is controlled by that quantity is reporting its
-author's intuition with extra steps. \Cref{eq:break-even} is the alternative.
+A projection whose headline is controlled by an assigned value for that quantity
+conflates an assumption with a result. \Cref{eq:break-even} provides an alternative.
 Because both forces multiply fertility, the model can be asked for the
 environmental decline that exactly offsets the measured compositional gain, and
 those numbers --- \BoundaryPaired{} per decade for the rate,
 \BoundaryPopulation{} for the population --- are determined by the two measured
 parameters and the arithmetic rather than by a preference.
 
-We would defend this as the right output for a problem of this shape. It is
+For this class of problem, the threshold is a more informative output. It is
 falsifiable in the parameters that are measurable, explicit about the one that is
-not, and it turns a disagreement about the future into a disagreement about a
-rate. Someone who believes conditions will keep deteriorating rapidly and someone
-who believes they have nearly bottomed out can locate their disagreement on
-\Cref{fig:boundary} instead of trading projections.
+not, and expresses disagreement about the future as disagreement about a rate.
+Alternative assumptions about the future fertility environment can therefore be
+located directly on \Cref{fig:boundary}.
 
 \subsection{Limitations}
 \label{sec:limitations}
@@ -71,15 +70,15 @@ threshold a single clean number and it is the assumption most likely to be wrong
 Rising costs of housing, childcare and foregone earnings plausibly fall hardest
 on exactly the people whose disposition would otherwise produce large families,
 in which case the environment would interact with selection rather than merely
-oppose it and no single threshold would exist. Modelling that needs evidence on
-how fertility declines have differed across the family-size distribution within
-cohorts, which we did not find at the coverage required. This is the most
-valuable single extension available.
+oppose it and no single threshold would exist. Modelling that requires evidence
+on how fertility declines differ across the family-size distribution within
+cohorts, for which comparable cross-national data are not currently available.
+This is the most valuable single extension available.
 
 \item[Two parameters estimated in Europe are applied to the world.]
 \Cref{sec:extrapolation} states this at length. Nothing in the calibration
 covers sub-Saharan Africa, where most of the century's births will occur. The
-propagated ranges are the only defence offered, and they are a weak one.
+propagated ranges represent this limitation only imperfectly.
 
 \item[The covariance is constructed from two sources, not measured in one.]
 \Cref{sec:response}. A single paired parent--child sample with both moments would
@@ -132,21 +131,16 @@ completed family sizes are unchanged \citep{bongaarts1998}, so a mechanism
 predicting a rise in completed cohort fertility could be scored as failing for
 decades by a measure that is not measuring it.
 
-The implication is uncomfortable and should be stated: the first genuinely
-informative test arrives when the cohorts born around 1990 complete their
+The first genuinely informative test arrives when the cohorts born around 1990 complete their
 childbearing, in the late 2030s. What can be checked before then is narrower ---
 whether the dispersion of completed family size behaves as \Cref{sec:cv} measures
 it in countries not yet in the sample, whether the parent--child correlation
 holds outside Europe and North America, and whether the composition drift in
 \Cref{fig:mechanism}b is visible in successive cohorts of the same country. Each
-of those is a test of an input rather than of the projection, which is the honest
-description of what is available.
+of those evaluates an input rather than the projection itself.
 
-Because a claim resolving in 2038 is easy to revise quietly in 2035, the
-projections behind this paper are written as immutable dated records with proper
-scoring rules attached \citep{gneiting2007}, and the storage layer raises rather
-than overwrite an existing record. The comparator of \Cref{sec:comparator} was
-deposited before the mechanism results existed and is marked as not a claim of
-this project. That record-keeping, rather than any particular number in
-\Cref{sec:results}, is the part of this work most likely to still be useful in
-thirty years.
+To preserve a testable claim through 2038, the projections are written as
+immutable dated records with proper scoring rules attached \citep{gneiting2007},
+and the storage layer raises rather than overwrites an existing record. This
+record-keeping framework is intended to preserve the model's evidentiary value as
+the relevant cohort outcomes become observable.
