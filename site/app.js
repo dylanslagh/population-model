@@ -535,6 +535,11 @@
     tip.style.top = (event.clientY - 14) + "px";
   }
   function hideTip() { tip.style.opacity = "0"; }
+  window.addEventListener("scroll", hideTip, { passive: true });
+  window.addEventListener("touchmove", hideTip, { passive: true });
+  document.addEventListener("pointerdown", function (event) {
+    if (!event.target.closest || !event.target.closest("#fig-grid")) hideTip();
+  }, { passive: true });
   function hoverable(node, html) {
     node.style.cursor = "crosshair";
     node.addEventListener("mousemove", function (e) { showTip(e, html); });
