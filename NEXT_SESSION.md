@@ -4,9 +4,17 @@ This is the current, session-specific handoff. Read it before `HANDOFF.md`.
 `HANDOFF.md` is the durable technical history; this file records the owner's
 goal, what just finished, and the next piece of work.
 
-**All three central outputs now exist.** The video was rendered on 2026-08-15,
-the paper written the same day, and the public site built on 2026-08-19. What
-is left on the site is not building but launching it: see *Do this next*. Phases 1–5 are built, all eight sourced mechanism parameters are
+**All three central outputs now exist**, and the repository has been prepared
+for publication. The video was rendered on 2026-08-15, the paper written the
+same day, the public site built on 2026-08-19, and the licences, citation file
+and history clean-up landed on 2026-08-20. What is left is not building
+anything: it is one push and three decisions. See *Do this next*.
+
+**The one thing to read before touching git:** the working branch is a
+*rewritten copy* of `main`, not a descendant of it. Never merge it. There is a
+section on this below and it is the only way to undo work already done.
+
+Phases 1–5 are built, all eight sourced mechanism parameters are
 verified, and the paired stochastic-migration comparison and its boundary
 robustness receipt have passed. The source work is a fixed base for authoring,
 not a reason to keep expanding the model.
@@ -92,8 +100,18 @@ holds. `HANDOFF.md` section 2 lists the notable ones. The standing rules in
 - Repository: `C:\Users\dslag\Documents\GitHub\population-model`. The only copy.
 - R, Rtools and Tectonic live outside it; exact paths in [`LOCAL_TOOLS.md`](LOCAL_TOOLS.md).
 - Live page: <https://hub.dylanslagh.com/population-model/>, password-gated.
-- The map source of truth is `scripts/build_map.py`; root `index.html` is its
-  generated, committed output. **Pushing does not rebuild the hub** —
+  The public host, `population.dylanslagh.com`, is reserved but not yet built.
+- **Three public pages**, each generated and committed, none edited by hand:
+
+  | Page | Built by | Source |
+  |---|---|---|
+  | `index.html` — the public site | `scripts/build_site.py` | `site/` |
+  | `map/index.html` — the country map | `scripts/build_map.py` | `out/site/` |
+  | `paper/index.html` — the paper landing | hand-written | — |
+
+  `scripts/build_public.py` stages exactly those into `dist/` and fails on a
+  broken local link. Read `site/README.md` before editing the site.
+- **Pushing does not rebuild the hub** —
   `gh workflow run publish.yml --repo dylanslagh/project-hub`.
 
 ## What the model now says
@@ -146,24 +164,72 @@ are not globally balanced draw by draw and were creating or deleting people.
 
 ## Do this next
 
-### Launch the site
+### Launch the site, and finish going public
 
-The page is built and pushed on `claude/population-public-site-iaazmd`. Three
-things stand between it and `population.dylanslagh.com`, and all three are
-Dylan's calls rather than code:
+Everything is built and pushed on `claude/population-public-site-iaazmd`.
+Dylan's plan as of 2026-08-20: **keep the site as a hub preview until he is
+happy with the design and with the rest of the project.** So none of the below
+is urgent, and none of it is code.
 
-1. **The Cloudflare Pages project.** The domain is reserved; the project is not
+1. **Reset `main` to the branch.** *Reset, never merge* — see the section
+   below. Must happen before whichever comes first, going public or merging;
+   until it does, `main` still carries the old commit history. One command, and
+   a cloud session can run it:
+
+   ```
+   git push --force origin refs/remotes/origin/claude/population-public-site-iaazmd:refs/heads/main
+   ```
+
+2. **The Cloudflare Pages project.** The domain is reserved; the project is not
    created. Build command `python3 scripts/build_public.py`, output directory
-   `dist`, and the custom domain attached. Nothing in the repository depends on
-   this, and no secrets are involved.
-2. **Whether the repository goes public.** It is private today, so the two
-   GitHub links on the paper landing page were removed rather than shipped
+   `dist`, custom domain attached. Only Dylan can do this — it is dashboard
+   work, and no secrets belong in the repo.
+3. **Whether the repository goes public.** Private today. Because of that the
+   two GitHub links on the paper landing page were removed rather than shipped
    broken, and the site links no code. The paper's contributions section says a
    public conversation record exists; while the repository is private, it does
    not. Either flip the repository, or publish `conversations/` as pages on the
    site.
-3. **Licensing.** Still undecided, and now visible: a public page with no
-   licence statement is a choice by default.
+4. **Confirm the UW terms.** `bayespop.csss.washington.edu/download/` was
+   returning 503 when checked on 2026-08-20, so the redistribution terms for
+   the trajectories behind the map page's uncertainty band are the one
+   unverified licence item. Azose and Raftery are already cited, which is the
+   substantive obligation.
+
+Everything else on the pre-publication audit is done: MIT and CC BY 4.0
+licences, `CITATION.cff`, the README section recording what is *not* ours to
+license, and the history clean-up.
+
+### The history rewrite, and what not to do with it
+
+On 2026-08-20 the history was rewritten, once, before the repository could go
+public:
+
+- 53 of the 55 original commits carried a personal email address that appears
+  nowhere Dylan chose to publish. All commits now carry his GitHub noreply
+  address.
+- One 2026-08-08 commit had briefly added a `.wrangler` cache holding a
+  Cloudflare account ID and the private hub's Pages project name. No
+  credentials were ever committed — every blob in the history was scanned. The
+  cache is purged.
+- Verified afterwards: 54 commits keep a byte-identical file tree, exactly one
+  changed (the `.wrangler` commit), and the final tree is identical to the one
+  the tests ran against.
+
+**The consequence, which matters:** the branch shares no ancestry with
+`origin/main`. Merging it would pull the old commits back in as ancestors and
+silently undo all of the above. `main` has to be *reset* to the branch.
+
+Two traps for a cloud session doing this:
+
+- **A cloud clone may be shallow.** This one was: it began on 2026-08-08 and
+  was missing the first five commits, and the first rewrite attempt silently
+  truncated the history because of it. Check `git rev-list --count origin/main`
+  is 55 or more, and that `git log --reverse` starts at `Initial commit`,
+  before rewriting anything.
+- **The old objects stay reachable by direct SHA** on GitHub until it garbage
+  collects. One more reason to reset `main` before the repository is public
+  rather than after.
 
 Keep the economic-pressure parameter universal: it is a deliberately clean
 sensitivity axis for the boundary figure, not a forecast or a type-specific
@@ -228,6 +294,18 @@ meaningful completed-cohort-fertility grade arrives around 2038.
 .\.venv\Scripts\python.exe scripts\run_phase5.py --ensemble 200
 ```
 
+To rebuild the public site — no WPP data needed, standard library only:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\build_site_assets.py
+.\.venv\Scripts\python.exe scripts\build_site.py
+.\.venv\Scripts\python.exe scripts\build_public.py
+```
+
+`build_site.py` compares every number printed on the page against
+`site/data/story.json` and **fails** rather than publish a stale one. If it
+complains, find out which side moved; do not edit the page to agree.
+
 To rebuild the paper (Tectonic path is in [`LOCAL_TOOLS.md`](LOCAL_TOOLS.md)):
 
 ```powershell
@@ -242,15 +320,25 @@ To rebuild the paper (Tectonic path is in [`LOCAL_TOOLS.md`](LOCAL_TOOLS.md)):
 - Fail loudly on unmatched countries or changed source files.
 - Never fit a mechanism parameter to the outcome it is meant to explain.
 - Keep archives and build outputs out of git; commit manifests and readers.
-- Work directly on `main`, commit and push after verifying.
+- Work directly on `main`, commit and push after verifying — **except** while
+  the rewritten branch is unmerged, when `main` is the stale side.
 - Rebuild the hub whenever `index.html` changes.
 
 ## What Dylan needs to decide later
 
-Nothing blocks the work above. Before a genuinely public release: the public
-hostname and the licensing decision. For the paper, which is now written:
-whether the title wording is right, the author line and affiliation,
-acknowledgements, the licence, and whether and where it is released.
+Nothing blocks the work above. The hostname and the repository licences are now
+settled — MIT for the code, CC BY 4.0 for the writing, figures and derived
+tables. What is still open: whether the repository itself goes public, and for
+the paper, whether the title wording is right, the author line and affiliation,
+acknowledgements, the paper's own licence, and whether and where it is
+released.
+
+*Updated 2026-08-20: the pre-publication audit ran. Every blob in the history
+was scanned and no credential was ever committed. Added MIT and CC BY 4.0
+licences, `CITATION.cff`, and a README section recording the upstream data
+terms that travel with any reuse. Rewrote the history to drop a personal email
+address and a `.wrangler` cache. `main` still has to be reset to the branch —
+see "The history rewrite" above, and do not merge. 203 tests pass.*
 
 *Updated 2026-08-19: the public site was built --- a scrolling account of the
 argument over a rotating Earth lit by the model's own population, one light per
