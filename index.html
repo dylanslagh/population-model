@@ -292,10 +292,6 @@ footer li{margin-bottom:5px}
 .flow-step.selection b{color:var(--seq-6)}
 .flow-step.total b{color:#d9e4f2}
 .flow-arrow{text-align:center; color:var(--muted); font:400 26px/1 var(--display)}
-.quiet-finding{max-width:850px; margin:28px 0 0 auto; padding-left:24px; border-left:2px solid var(--seq-5)}
-.quiet-finding p{margin:0; color:var(--ink-2); font-size:16px; line-height:1.65}
-.quiet-finding b{color:var(--ink)}
-
 .mechanism-line{display:grid; grid-template-columns:1fr minmax(44px,100px) 1fr minmax(44px,100px) 1fr;
   align-items:center; gap:18px; margin-top:54px}
 .mechanism-line>div{min-height:190px; padding:24px 22px 20px; border-top:1px solid var(--line-2);
@@ -306,13 +302,6 @@ footer li{margin-bottom:5px}
 .mechanism-link{height:1px; background:linear-gradient(90deg,var(--line-2),var(--seq-5),var(--line-2)); position:relative}
 .mechanism-link::after{content:""; position:absolute; right:-1px; top:-3px; width:7px; height:7px;
   border-top:1px solid var(--seq-5); border-right:1px solid var(--seq-5); transform:rotate(45deg)}
-.evidence-strip{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin-top:24px; background:var(--line)}
-.evidence-strip>div{background:rgba(8,12,20,.92); padding:17px 18px}
-.evidence-strip span{display:block; color:var(--muted); font-size:11px; line-height:1.35}
-.evidence-strip b{display:block; margin-top:7px; font:500 24px/1 var(--display); color:#dce5f1}
-.evidence-strip b span{display:inline; color:inherit; font:inherit}
-.source-note{max-width:760px; margin:26px 0 0; color:var(--muted); font-size:13.5px; line-height:1.65}
-
 .boundary-head{display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,.46fr); align-items:end;
   gap:clamp(38px,8vw,110px); margin-bottom:46px}
 .boundary-number{padding:18px 0 4px; border-top:1px solid var(--seq-5)}
@@ -322,16 +311,6 @@ footer li{margin-bottom:5px}
 .responsive-figure{padding:clamp(16px,2.5vw,28px); overflow:hidden}
 .thesis-line{max-width:860px; margin:34px auto 0; text-align:center; color:#d7dfeb;
   font:500 clamp(20px,2.8vw,30px)/1.45 var(--display); letter-spacing:-.02em}
-
-.uncertainty-bars{max-width:980px; margin-top:54px; padding:26px 0; border-top:1px solid var(--line-2);
-  border-bottom:1px solid var(--line)}
-.bar-row{display:grid; grid-template-columns:180px minmax(0,1fr) 84px; align-items:center; gap:18px; min-height:54px}
-.bar-row>span{color:var(--ink-2); font-size:13.5px}
-.bar-row i{display:block; height:15px; border-radius:2px; background:#111927; overflow:hidden}
-.bar-row em{display:block; height:100%; min-width:4px; background:linear-gradient(90deg,var(--seq-2),var(--seq-5)); border-radius:2px}
-.bar-row b{text-align:right; color:var(--ink); font:500 17px/1 var(--display)}
-.method-note{display:flex; flex-wrap:wrap; gap:10px 20px; margin-top:24px; color:var(--muted); font-size:13px}
-.method-note b{color:var(--ink-2); font-weight:600}
 
 .paper-cta{text-align:center; min-height:84svh; display:flex; align-items:center}
 .paper-cta .wrap{max-width:960px}
@@ -364,18 +343,13 @@ footer li{margin-bottom:5px}
   .flow-step{padding:19px 0; border-bottom:1px solid var(--line)}
   .flow-arrow{display:none}
   .flow-step .flow-k{font-size:10px}
-  .quiet-finding{margin-top:26px}
   .mechanism-line{grid-template-columns:1fr; gap:0; margin-top:40px}
   .mechanism-line>div{min-height:auto; padding:20px 18px}
   .mechanism-line h3{margin:16px 0 6px}
   .mechanism-link{width:1px; height:32px; margin-left:30px; background:linear-gradient(180deg,var(--line-2),var(--seq-5))}
   .mechanism-link::after{right:-3px; top:auto; bottom:-1px; transform:rotate(135deg)}
-  .evidence-strip{grid-template-columns:1fr 1fr}
   .boundary-head{grid-template-columns:1fr; gap:28px}
   .boundary-number{max-width:420px}
-  .bar-row{grid-template-columns:130px minmax(0,1fr) 68px; gap:10px}
-  .bar-row>span{font-size:12px}
-  .bar-row b{font-size:14px}
   .resource-links{grid-template-columns:1fr 1fr}
   .footer-v2{grid-template-columns:1fr}
 }
@@ -389,13 +363,8 @@ footer li{margin-bottom:5px}
   .hero-actions .button{flex:1}
   .section-intro h2{font-size:38px}
   .section-intro>p:not(.eyebrow){font-size:16px; line-height:1.63}
-  .evidence-strip{grid-template-columns:1fr}
   figure{padding:14px 10px}
   .fig-title,.fig-sub,figcaption{padding-left:4px; padding-right:4px}
-  .bar-row{grid-template-columns:1fr 64px; gap:8px 10px; padding:8px 0}
-  .bar-row>span{grid-column:1/2}
-  .bar-row i{grid-column:1/2; height:12px}
-  .bar-row b{grid-column:2; grid-row:1/3; align-self:center}
   .resource-links{grid-template-columns:1fr}
   .cta-actions{flex-direction:column}
 }
@@ -500,12 +469,6 @@ footer li{margin-bottom:5px}
         </div>
       </div>
 
-      <div class="quiet-finding rise">
-        <p>Named high-fertility religious groups add another
-        <b><span class="v" data-v="ladder.2.change" data-dp="2">0.05</span> billion</b> under generous
-        assumptions—only <span class="v" data-v="selection.namedGroupShare">2.5%</span> as much as
-        unlabelled variation in the general population. The mechanism is mostly about everyone else.</p>
-      </div>
     </div>
   </section>
 
@@ -543,17 +506,6 @@ footer li{margin-bottom:5px}
         </div>
       </div>
 
-      <div class="evidence-strip rise">
-        <div><span>Measured spread</span><b class="num"><span class="v" data-v="dispersion.cvLow" data-dp="2">0.44</span>&ndash;<span class="v" data-v="dispersion.cvHigh" data-dp="2">0.80</span></b></div>
-        <div><span>Persistence range</span><b class="num"><span class="v" data-v="dispersion.persistenceLow" data-dp="2">0.05</span>&ndash;<span class="v" data-v="dispersion.persistenceHigh" data-dp="2">0.30</span></b></div>
-        <div><span>Independent U.S. check</span><b class="num"><span class="v" data-v="dispersion.usCheck" data-dp="2">0.69</span></b></div>
-        <div><span>Countries in full database</span><b class="num"><span class="v" data-v="dispersion.allCountries">43</span></b></div>
-      </div>
-
-      <p class="source-note rise">These inputs were estimated from completed-family data collected for
-      other purposes, not fitted to the population series they change. At the central values, the
-      selection mechanism multiplies the 2150 population by
-      <span class="v" data-v="selection.effect" data-dp="3">1.164</span>.</p>
     </div>
   </section>
 
@@ -596,42 +548,6 @@ footer li{margin-bottom:5px}
       <p class="thesis-line rise">Present evidence does not establish which side of this boundary the
       world is on. It does turn a vague disagreement about the far future into a rate that can be
       observed.</p>
-    </div>
-  </section>
-
-  <section class="chapter act" id="uncertainty"
-           data-stage='{"year":2100,"scale":0.44,"cx":0.08,"cy":0.75,"veil":0.96,"hud":0}'>
-    <div class="wrap">
-      <div class="section-intro rise">
-        <p class="eyebrow">What controls the answer</p>
-        <h2>At 2150, uncertainty about fertility dwarfs everything else.</h2>
-        <p>Let one source vary at a time. Fertility alone produces a
-        <span class="v" data-v="uncertainty.fertility" data-dp="2">7.26</span>-billion-person span in
-        world population. The mechanism itself produces
-        <span class="v" data-v="uncertainty.mechanism" data-dp="2">5.72</span> billion. Mortality and
-        migration are small by comparison at the world level.</p>
-      </div>
-
-      <div class="uncertainty-bars rise" role="img" aria-label="Width of the 2150 world population distribution by source of uncertainty">
-        <div class="bar-row">
-          <span>Fertility path</span><i><em style="width:100%"></em></i><b class="num"><span class="v" data-v="uncertainty.fertility" data-dp="2">7.26</span> bn</b>
-        </div>
-        <div class="bar-row">
-          <span>Mechanism parameters</span><i><em style="width:78.8%"></em></i><b class="num"><span class="v" data-v="uncertainty.mechanism" data-dp="2">5.72</span> bn</b>
-        </div>
-        <div class="bar-row">
-          <span>Mortality</span><i><em style="width:7.2%"></em></i><b class="num"><span class="v" data-v="uncertainty.mortality" data-dp="2">0.52</span> bn</b>
-        </div>
-        <div class="bar-row">
-          <span>Migration</span><i><em style="width:4.7%"></em></i><b class="num"><span class="v" data-v="uncertainty.migration" data-dp="2">0.34</span> bn</b>
-        </div>
-      </div>
-
-      <div class="method-note rise">
-        <b><span class="v" data-v="parameters.sourced">8</span> sourced parameters.</b>
-        <b><span class="v" data-v="parameters.knobs">5</span> declared scenario knobs.</b>
-        <span>No mechanism parameter is fitted to the population series it is meant to explain.</span>
-      </div>
     </div>
   </section>
 
@@ -693,6 +609,7 @@ footer li{margin-bottom:5px}
   var GLOBE = JSON.parse(document.getElementById("globe-data").textContent);
   var STORY = JSON.parse(document.getElementById("story-data").textContent);
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var mobile = window.matchMedia("(max-width: 820px), (pointer: coarse)").matches;
 
   /* ------------------------------------------------------------- helpers */
 
@@ -801,7 +718,7 @@ footer li{margin-bottom:5px}
   var W = 0, H = 0, dpr = 1;
   var stars = document.createElement("canvas");
   var lamp = document.createElement("canvas");
-  var stride = 1, frameCost = 16;
+  var stride = mobile ? 2 : 1, frameCost = 16;
 
   function buildLamp() {
     var size = 34;
@@ -851,7 +768,9 @@ footer li{margin-bottom:5px}
   function resize() {
     W = window.innerWidth;
     H = window.innerHeight;
-    dpr = Math.min(window.devicePixelRatio || 1, W < 700 ? 1.6 : 2);
+    mobile = window.matchMedia("(max-width: 820px), (pointer: coarse)").matches;
+    dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 2);
+    stride = mobile ? 2 : Math.min(stride, 3);
     canvas.width = Math.floor(W * dpr);
     canvas.height = Math.floor(H * dpr);
     canvas.style.width = W + "px";
@@ -1097,8 +1016,8 @@ footer li{margin-bottom:5px}
   }
 
   var view = { year: 1950, scale: 1, cx: 0.5, cy: 0.5, veil: 0, hud: 0 };
-  function readScroll() {
-    var focus = window.scrollY + window.innerHeight * 0.5;
+  function readScroll(scrollY) {
+    var focus = scrollY + window.innerHeight * 0.5;
     var prev = stops[0], next = stops[0];
     for (var i = 0; i < stops.length; i++) {
       if (stops[i].anchor <= focus) { prev = stops[i]; next = stops[Math.min(i + 1, stops.length - 1)]; }
@@ -1116,19 +1035,22 @@ footer li{margin-bottom:5px}
   var veil = document.getElementById("veil");
   var lastYearShown = null, lastHud = null;
 
-  function paint(time) {
-    readScroll();
+  function paint(time, scrollY) {
+    readScroll(scrollY);
     var minSide = Math.min(W, H * 1.25);
     var state = {
       R: minSide * 0.37 * view.scale,
       cx: W * view.cx,
       cy: H * view.cy,
       year: view.year,
-      rot: (reduced ? 0 : time * 0.0042) + window.scrollY * 0.012 + 18,
+      /* Phones use one source of motion: a smoothed scroll position. Combining
+         raw iOS scroll updates with a clock-driven spin made the globe judder. */
+      rot: (reduced ? 0 : mobile ? scrollY * 0.007 : time * 0.0042 + scrollY * 0.012) + 18,
       flare: clamp(1 - view.veil * 0.85, 0.12, 1),
       /* Behind a nearly opaque veil the globe is a suggestion, so it is drawn
          as one: most of the story is figures, and this is most of the scroll. */
-      detail: view.veil > 0.88 ? 3 : view.veil > 0.78 ? 2 : 1
+      detail: mobile ? (view.veil > 0.88 ? 3 : 2)
+        : view.veil > 0.88 ? 3 : view.veil > 0.78 ? 2 : 1
     };
     drawGlobe(state);
 
@@ -1146,19 +1068,44 @@ footer li{margin-bottom:5px}
   }
 
   var last = performance.now();
+  var scrollTarget = window.scrollY;
+  var scrollPainted = scrollTarget;
+  var needsPaint = true;
+  window.addEventListener("scroll", function () {
+    scrollTarget = window.scrollY;
+  }, { passive: true });
+
   function frame(time) {
-    var dt = time - last; last = time;
+    var dt = Math.min(time - last, 50); last = time;
     frameCost = frameCost * 0.9 + dt * 0.1;
-    if (frameCost > 26 && stride < 3) stride++;
-    else if (frameCost < 15 && stride > 1) stride--;
-    paint(time);
+    if (!mobile) {
+      if (frameCost > 26 && stride < 3) stride++;
+      else if (frameCost < 15 && stride > 1) stride--;
+      scrollPainted = scrollTarget = window.scrollY;
+      paint(time, scrollPainted);
+    } else {
+      /* Safari reports scroll in coarse jumps while the compositor is moving.
+         Ease those jumps, and stop redrawing the expensive canvas at rest. */
+      scrollTarget = window.scrollY;
+      var delta = scrollTarget - scrollPainted;
+      if (Math.abs(delta) > 0.12) {
+        var follow = 1 - Math.exp(-dt / 72);
+        scrollPainted += delta * follow;
+        paint(time, scrollPainted);
+        needsPaint = false;
+      } else if (needsPaint || scrollPainted !== scrollTarget) {
+        scrollPainted = scrollTarget;
+        paint(time, scrollPainted);
+        needsPaint = false;
+      }
+    }
     requestAnimationFrame(frame);
   }
 
   buildLamp();
   resize();
-  window.addEventListener("resize", resize);
-  window.addEventListener("orientationchange", resize);
+  window.addEventListener("resize", function () { resize(); needsPaint = true; });
+  window.addEventListener("orientationchange", function () { resize(); needsPaint = true; });
   requestAnimationFrame(function (t) { last = t; frame(t); });
 
   /* ------------------------------------------------------------- reveals */

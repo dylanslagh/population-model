@@ -11,6 +11,7 @@
   var GLOBE = JSON.parse(document.getElementById("globe-data").textContent);
   var STORY = JSON.parse(document.getElementById("story-data").textContent);
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var mobile = window.matchMedia("(max-width: 820px), (pointer: coarse)").matches;
 
   /* ------------------------------------------------------------- helpers */
 
@@ -119,7 +120,7 @@
   var W = 0, H = 0, dpr = 1;
   var stars = document.createElement("canvas");
   var lamp = document.createElement("canvas");
-  var stride = 1, frameCost = 16;
+  var stride = mobile ? 2 : 1, frameCost = 16;
 
   function buildLamp() {
     var size = 34;
@@ -169,7 +170,9 @@
   function resize() {
     W = window.innerWidth;
     H = window.innerHeight;
-    dpr = Math.min(window.devicePixelRatio || 1, W < 700 ? 1.6 : 2);
+    mobile = window.matchMedia("(max-width: 820px), (pointer: coarse)").matches;
+    dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 2);
+    stride = mobile ? 2 : Math.min(stride, 3);
     canvas.width = Math.floor(W * dpr);
     canvas.height = Math.floor(H * dpr);
     canvas.style.width = W + "px";
@@ -415,8 +418,8 @@
   }
 
   var view = { year: 1950, scale: 1, cx: 0.5, cy: 0.5, veil: 0, hud: 0 };
-  function readScroll() {
-    var focus = window.scrollY + window.innerHeight * 0.5;
+  function readScroll(scrollY) {
+    var focus = scrollY + window.innerHeight * 0.5;
     var prev = stops[0], next = stops[0];
     for (var i = 0; i < stops.length; i++) {
       if (stops[i].anchor <= focus) { prev = stops[i]; next = stops[Math.min(i + 1, stops.length - 1)]; }
@@ -434,19 +437,22 @@
   var veil = document.getElementById("veil");
   var lastYearShown = null, lastHud = null;
 
-  function paint(time) {
-    readScroll();
+  function paint(time, scrollY) {
+    readScroll(scrollY);
     var minSide = Math.min(W, H * 1.25);
     var state = {
       R: minSide * 0.37 * view.scale,
       cx: W * view.cx,
       cy: H * view.cy,
       year: view.year,
-      rot: (reduced ? 0 : time * 0.0042) + window.scrollY * 0.012 + 18,
+      /* Phones use one source of motion: a smoothed scroll position. Combining
+         raw iOS scroll updates with a clock-driven spin made the globe judder. */
+      rot: (reduced ? 0 : mobile ? scrollY * 0.007 : time * 0.0042 + scrollY * 0.012) + 18,
       flare: clamp(1 - view.veil * 0.85, 0.12, 1),
       /* Behind a nearly opaque veil the globe is a suggestion, so it is drawn
          as one: most of the story is figures, and this is most of the scroll. */
-      detail: view.veil > 0.88 ? 3 : view.veil > 0.78 ? 2 : 1
+      detail: mobile ? (view.veil > 0.88 ? 3 : 2)
+        : view.veil > 0.88 ? 3 : view.veil > 0.78 ? 2 : 1
     };
     drawGlobe(state);
 
@@ -464,19 +470,44 @@
   }
 
   var last = performance.now();
+  var scrollTarget = window.scrollY;
+  var scrollPainted = scrollTarget;
+  var needsPaint = true;
+  window.addEventListener("scroll", function () {
+    scrollTarget = window.scrollY;
+  }, { passive: true });
+
   function frame(time) {
-    var dt = time - last; last = time;
+    var dt = Math.min(time - last, 50); last = time;
     frameCost = frameCost * 0.9 + dt * 0.1;
-    if (frameCost > 26 && stride < 3) stride++;
-    else if (frameCost < 15 && stride > 1) stride--;
-    paint(time);
+    if (!mobile) {
+      if (frameCost > 26 && stride < 3) stride++;
+      else if (frameCost < 15 && stride > 1) stride--;
+      scrollPainted = scrollTarget = window.scrollY;
+      paint(time, scrollPainted);
+    } else {
+      /* Safari reports scroll in coarse jumps while the compositor is moving.
+         Ease those jumps, and stop redrawing the expensive canvas at rest. */
+      scrollTarget = window.scrollY;
+      var delta = scrollTarget - scrollPainted;
+      if (Math.abs(delta) > 0.12) {
+        var follow = 1 - Math.exp(-dt / 72);
+        scrollPainted += delta * follow;
+        paint(time, scrollPainted);
+        needsPaint = false;
+      } else if (needsPaint || scrollPainted !== scrollTarget) {
+        scrollPainted = scrollTarget;
+        paint(time, scrollPainted);
+        needsPaint = false;
+      }
+    }
     requestAnimationFrame(frame);
   }
 
   buildLamp();
   resize();
-  window.addEventListener("resize", resize);
-  window.addEventListener("orientationchange", resize);
+  window.addEventListener("resize", function () { resize(); needsPaint = true; });
+  window.addEventListener("orientationchange", function () { resize(); needsPaint = true; });
   requestAnimationFrame(function (t) { last = t; frame(t); });
 
   /* ------------------------------------------------------------- reveals */
