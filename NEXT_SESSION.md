@@ -341,18 +341,48 @@ To rebuild the paper (Tectonic path is in [`LOCAL_TOOLS.md`](LOCAL_TOOLS.md)):
 - Fail loudly on unmatched countries or changed source files.
 - Never fit a mechanism parameter to the outcome it is meant to explain.
 - Keep archives and build outputs out of git; commit manifests and readers.
-- Work directly on `main`, commit and push after verifying — **except** while
-  the rewritten branch is unmerged, when `main` is the stale side.
-- Rebuild the hub whenever `index.html` changes.
+- **Work directly on `main`**, commit and push after verifying. The stale
+  exception about the unmerged rewritten branch is gone — `main` *is* the
+  rewritten history now.
+
+  This is a deliberate override of Dylan's global rule that public projects get
+  a branch and a preview before merge, and he made it on 2026-08-19, the day the
+  repository went public: *"No need to preview it, since there is no live site
+  yet. It's in the hub and that's where it belongs for now."* The reasoning is
+  that the preview rule exists so he can approve before the world sees a page,
+  and no world-visible page exists until the Cloudflare Pages project is
+  created. **Revisit this the day that project is created, and not before.**
+- Rebuild the hub whenever `index.html` changes:
+  `gh workflow run publish.yml --repo dylanslagh/project-hub`. The hub is the
+  review surface for now; the public host is not.
 
 ## What Dylan needs to decide later
 
-Nothing blocks the work above. The hostname and the repository licences are now
-settled — MIT for the code, CC BY 4.0 for the writing, figures and derived
-tables. What is still open: whether the repository itself goes public, and for
-the paper, whether the title wording is right, the author line and affiliation,
-acknowledgements, the paper's own licence, and whether and where it is
-released.
+Nothing blocks the work above. Settled now: the hostname, the repository
+licences (MIT for the code, CC BY 4.0 for the writing, figures and derived
+tables), and **the repository is public**.
+
+Still open, and all of it about the paper rather than the code: whether the
+title wording is right, the author line and affiliation, acknowledgements, the
+paper's own licence, and whether and where it is released. Plus the one piece of
+infrastructure nobody else can do — creating the Cloudflare Pages project for
+`population.dylanslagh.com`.
+
+*Updated 2026-08-19 (evening): the repository went public —
+<https://github.com/dylanslagh/population-model>. That closed the last two open
+items on the launch list: the UW download page came back up and publishes no
+licence or redistribution terms at all, only a citation requirement this project
+already meets; and `main` turned out to have been reset to the rewritten history
+already, so nothing needed pushing. The links that had been removed only because
+the repository was private are restored on the paper landing page and added to
+the site, each checked to resolve anonymously. Two things broke quietly and were
+fixed: `check_map.py` had been pointing at the root `index.html` since the public
+site took that filename on 2026-08-19, so the map had gone unverified for days,
+and `decompose_uncertainty.py` stored per-country band widths for six countries
+when it already held 236. The decomposition was rerun across all of them and
+every world figure reproduced to the last digit. 203 tests pass; the paper's
+generated macros came out byte-identical. What is left is the Cloudflare Pages
+project, which only Dylan can create.*
 
 *Updated 2026-08-20: the pre-publication audit ran. Every blob in the history
 was scanned and no credential was ever committed. Added MIT and CC BY 4.0
