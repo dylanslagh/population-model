@@ -308,6 +308,36 @@ data/, out/      downloaded and generated; not committed, all regenerable
 vintages/        stored predictions; committed, and never overwritten
 ```
 
+## Licence and reuse
+
+Two licences, because a repository like this contains two different kinds of
+thing.
+
+| | |
+|---|---|
+| **Code** — everything under `src/`, `scripts/`, `tests/`, `r/`, and the site sources in `site/` | [MIT](LICENSE) |
+| **Writing, figures and derived tables** — the paper and supplement, `docs/`, the built pages, `data/reference/`, `vintages/` | [CC BY 4.0](LICENSE-CC-BY-4.0.txt) |
+
+`CITATION.cff` carries the citation; GitHub renders it as a *Cite this
+repository* button. Cite the paper rather than the repository.
+
+### What is not ours to license
+
+The CC BY 4.0 grant above extends only as far as this project's own work.
+Everything the model is built from belongs to somebody else and arrives with
+its own terms, which travel with any reuse:
+
+| Source | Terms | What this repository does with it |
+|---|---|---|
+| [UN World Population Prospects 2024](https://population.un.org/wpp/) | CC BY 3.0 IGO | Not redistributed. Population figures derived from it appear in the built pages, attributed. |
+| [EURREP Cohort Fertility and Education database](https://www.eurrep.org/database/database/) | [Research use; original tabulations may not be passed on](https://www.eurrep.org/database/about/terms-of-use/) | The tabulations stay downloaded-only and gitignored. Only derived statistics — means, variances, coefficients of variation — are committed. |
+| [University of Washington bayesPop / bayesMig](https://bayespop.csss.washington.edu/) | A University of Washington product, not an official UN product | Not redistributed. Percentile bands derived from the published trajectories appear in the map page, attributed to Azose and Raftery. |
+| [Natural Earth](https://www.naturalearthdata.com/) | Public domain | Simplified outlines are committed in `site/data/`. |
+| [CDC/NCHS cohort fertility tables](https://www.cdc.gov/nchs/nvss/cohort_fertility_tables.htm) | US federal work, public domain | Used for the independent United States check. |
+
+If you reuse the derived tables, the obligation to acknowledge the sources above
+comes with them.
+
 ## What is next
 
 The one-country accessor checkpoint is complete. The next Phase 4 checkpoint is

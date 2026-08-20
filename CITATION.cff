@@ -1,0 +1,51 @@
+cff-version: 1.2.0
+title: "Population to 2150"
+message: >-
+  If you use this work, please cite the paper rather than the repository.
+type: software
+abstract: >-
+  A 237-country, single-year, two-sex cohort-component population projection to
+  2150, built on the United Nations' own inputs, carrying a compositional
+  fertility mechanism that a national fertility average cannot represent, and
+  reporting the environmental decline that would exactly cancel it.
+authors:
+  - family-names: Slagh
+    given-names: Dylan
+    email: dylanslagh@gmail.com
+    city: Atlanta
+    region: Georgia
+    country: US
+  - name: "Claude Opus 5"
+    website: "https://www.anthropic.com"
+  - name: "ChatGPT 5.6 Sol"
+    website: "https://openai.com"
+repository-code: "https://github.com/dylanslagh/population-model"
+url: "https://population.dylanslagh.com"
+license:
+  - MIT
+  - CC-BY-4.0
+version: 1.2.1
+date-released: "2026-08-19"
+keywords:
+  - demography
+  - population projection
+  - cohort-component
+  - fertility
+  - natural selection
+  - World Population Prospects
+preferred-citation:
+  type: manuscript
+  title: >-
+    Selection on Fertility, and the Environmental Decline That Would Cancel It:
+    a compositional mechanism in a 237-country cohort-component projection to
+    2150
+  authors:
+    - family-names: Slagh
+      given-names: Dylan
+      email: dylanslagh@gmail.com
+    - name: "Claude Opus 5"
+    - name: "ChatGPT 5.6 Sol"
+  year: 2026
+  month: 8
+  url: "https://population.dylanslagh.com/paper/"
+  notes: "Working paper, version 1.2.1, 19 August 2026."
