@@ -867,6 +867,7 @@
   (function gridFigure() {
     var svg = document.getElementById("fig-grid");
     if (!svg) return;
+    var compact = window.innerWidth <= 600;
     var b = STORY.boundary;
     var cvs = [], pers = [];
     b.grid.forEach(function (cell) {
@@ -876,7 +877,12 @@
     cvs.sort(function (a, c) { return a - c; });
     pers.sort(function (a, c) { return a - c; });
 
-    var Wd = 960, Ht = 340, L = 96, Rm = 30, T = 76, B = 96;
+    var Wd = compact ? 360 : 960;
+    var Ht = compact ? 390 : 340;
+    var L = compact ? 55 : 96;
+    var Rm = compact ? 12 : 30;
+    var T = compact ? 82 : 76;
+    var B = compact ? 112 : 96;
     svg.setAttribute("viewBox", "0 0 " + Wd + " " + Ht);
     var cw = (Wd - L - Rm) / pers.length, ch = (Ht - T - B) / cvs.length;
     var max = 0, min = Infinity;
@@ -928,7 +934,8 @@
           stroke: "#ffffff", "stroke-width": 1, "stroke-opacity": 0.55
         }, svg);
         var mark = axisLabel(svg, x + cw / 2, T - 18,
-          "benchmark: " + fmt(cell.breakEven, 2) + "% per decade", "mark-label");
+          (compact ? "benchmark " : "benchmark: ") + fmt(cell.breakEven, 2) +
+          (compact ? "%" : "% per decade"), "mark-label");
         mark.setAttribute("font-size", "12.5");
       }
     });
@@ -941,12 +948,14 @@
       if (col % 2 !== 0 && pers.length > 6) return;
       axisLabel(svg, L + col * cw + cw / 2, Ht - B + 22, fmt(p, 3));
     });
-    var yTitle = axisLabel(svg, 4, T - 8, "spread of\u00a0family size", "ax-text", "start");
+    var yTitle = axisLabel(svg, 4, T - 8,
+      compact ? "family-size spread" : "spread of\u00a0family size", "ax-text", "start");
     yTitle.setAttribute("fill", "#7d8ca6");
     axisLabel(svg, L + (Wd - L - Rm) / 2, Ht - B + 46,
-      "parent–child correlation in completed family size", "ax-text big");
+      compact ? "parent–child persistence" : "parent–child correlation in completed family size", "ax-text big");
     var note = axisLabel(svg, L + (Wd - L - Rm) / 2, Ht - B + 68,
-      "cell colour: additional decline per decade that exactly cancels selection", "ax-text");
+      compact ? "colour: extra decline per decade" :
+        "cell colour: additional decline per decade that exactly cancels selection", "ax-text");
     note.setAttribute("fill", "#7d8ca6");
 
     /* ramp legend */

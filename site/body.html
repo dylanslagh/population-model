@@ -3,491 +3,261 @@
 <div id="grain" aria-hidden="true"></div>
 
 <div id="hud" aria-hidden="true">
-  <div class="year num" id="hud-year">1950</div>
-  <div class="people num">world population <b id="hud-people">2.47 billion</b></div>
+  <div class="year num" id="hud-year">2024</div>
+  <div class="people num">world population <b id="hud-people">8.16 billion</b></div>
   <div class="basis" id="hud-basis">UN estimate</div>
 </div>
 
 <div class="tip" id="tip" role="status" aria-live="polite"></div>
 
+<header class="topbar">
+  <a class="wordmark" href="#hero">Population to 2150</a>
+  <nav aria-label="Primary navigation">
+    <a href="#finding">Finding</a>
+    <a href="#evidence">Evidence</a>
+    <a href="#boundary">Threshold</a>
+    <a class="nav-paper" href="paper/population-model-1_2_1.pdf">Read the paper</a>
+  </nav>
+</header>
+
 <main>
-
-  <!-- ------------------------------------------------------------- hero -->
-  <section class="chapter" id="hero" data-stage='{"year":1950,"scale":1,"cx":0.5,"cy":0.5,"veil":0.02,"hud":0}'>
-    <div class="wrap">
-      <p class="kicker">237 countries &middot; 1950&ndash;2150 &middot; WPP 2024</p>
-      <h1>Population<br>to <em>2150</em></h1>
-      <p class="sub">A cohort&#8209;component projection built on the United Nations' own inputs,
-      and a mechanism inside it that a national fertility average cannot see.</p>
-      <p class="by">Dylan Slagh, Claude Opus&nbsp;5 and ChatGPT&nbsp;5.6&nbsp;Sol
-      &middot; working paper v<b class="v" data-v="paper.version">1.2.1</b></p>
-    </div>
-    <div class="cue" aria-hidden="true"><span></span>Scroll</div>
-  </section>
-
-  <!-- ------------------------------------------------------------ beats -->
-  <section class="chapter beat" data-stage='{"year":1950,"scale":1.02,"cx":0.66,"cy":0.5,"veil":0.1,"hud":1}'>
-    <div class="wrap">
-      <div class="panel rise">
-        <p class="eyebrow">What you are looking at</p>
-        <h2>Every light is a million&nbsp;people</h2>
-        <p>Not a photograph. Each point stands for a million people, scattered at random
-        inside its own country &mdash; the model has no cities in it. What it has is
-        <b class="v" data-v="horizon.countries">237</b> countries, each with its own population
-        by single year of age and sex, its own fertility schedule, its own survival, its own
-        migration.</p>
-        <p class="dim">Scroll, and the years pass.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="chapter beat" data-stage='{"year":2024,"scale":1.02,"cx":0.65,"cy":0.5,"veil":0.12,"hud":1}'>
-    <div class="wrap">
-      <div class="panel rise">
-        <p class="eyebrow">1950 &rarr; 2024</p>
-        <h2>Three times as many lights</h2>
-        <p>2.5&nbsp;billion people become 8.1&nbsp;billion inside a single human lifetime.
-        Most of the new light appears across Africa and South Asia. Europe and East Asia
-        hold roughly still, then begin to dim.</p>
-        <p class="dim">Everything to this point is what the UN says already happened.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="chapter beat tall" data-stage='{"year":2100,"scale":1,"cx":0.63,"cy":0.5,"veil":0.16,"hud":1}'>
-    <div class="wrap">
-      <div class="panel rise">
-        <p class="eyebrow">2024 &rarr; 2100</p>
-        <h2>Then the projection&nbsp;begins</h2>
-        <p>From 2024 the lights follow the UN's medium projection, run through this project's
-        own engine. The two agree to <b class="v" data-v="horizon.validationWorld">0.001%</b>
-        of world population at 2100, and to
-        <b class="v" data-v="horizon.validationCountry">0.13%</b> for the worst single country.</p>
-        <p>That agreement is the whole point of building it this way. It means anything the
-        model says afterwards is the mechanism talking, and not a second, subtly different
-        implementation of the arithmetic.</p>
-        <p class="dim">Watch the 2080s. The lights stop multiplying, and start going out.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="chapter beat" data-stage='{"year":2100,"scale":0.92,"cx":0.6,"cy":0.46,"veil":0.3,"hud":1}'>
-    <div class="wrap">
-      <div class="panel rise">
-        <p class="eyebrow">2100</p>
-        <h2>Where the published assumptions&nbsp;stop</h2>
-        <p>The UN's projection ends here, and so does the globe. Everything past this line is
-        labelled for what it is: this project's own extension, or this project's own model.
-        Nothing after 2100 is the United Nations speaking.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ------------------------------------------------------------- act 1 -->
-  <section class="chapter act" id="horizon"
-           data-stage='{"year":2100,"scale":0.52,"cx":0.85,"cy":0.24,"veil":0.9,"hud":0}'>
-    <div class="wrap">
-      <div class="head rise">
-        <p class="eyebrow">The horizon</p>
-        <h2>A projection to 2150 is a statement about births</h2>
-        <p>At a 150-year horizon almost nobody alive at the start is alive at the end, so the
-        answer is barely about today's population at all. Run the same base data through the
-        same engine twice, changing only the assumed fertility path, and you get
-        <b class="v" data-v="horizon.frozenFertility2150">53</b>&nbsp;billion or
-        <b class="v" data-v="horizon.unEquivalent2150">8.8</b>&nbsp;billion. Everything else
-        &mdash; mortality, migration, the age structure you started from &mdash; washes out.</p>
-      </div>
-
-      <div class="stats rise">
-        <div class="stat">
-          <b class="gold num"><span class="v" data-v="horizon.frozenFertility2150">53</span>&nbsp;bn</b>
-          <span class="k">if today's fertility rates never moved again</span>
-          <span class="n">Arithmetic, not a scenario. Nobody proposes this.</span>
-        </div>
-        <div class="stat">
-          <b class="cyan num"><span class="v" data-v="horizon.unEquivalent2150">8.78</span>&nbsp;bn</b>
-          <span class="k">on the UN's medium assumptions, carried to 2150</span>
-          <span class="n">Same base data, same engine. Only the fertility path differs.</span>
-        </div>
-        <div class="stat">
-          <b class="num"><span class="v" data-v="horizon.validationWorld">0.001%</span></b>
-          <span class="k">disagreement with the UN's own published total at 2100</span>
-          <span class="n">Worst single country: <span class="v" data-v="horizon.validationCountry">0.13%</span>.</span>
+  <section class="chapter hero-v2" id="hero"
+           data-stage='{"year":2024,"scale":1.04,"cx":0.72,"cy":0.52,"veil":0.08,"hud":0}'>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="kicker">A 237-country demographic model &middot; working paper v<span class="v" data-v="paper.version">1.2.1</span></p>
+        <h1>Population forecasts forget <em>who has the children.</em></h1>
+        <p class="hero-lede">Families differ in size, and part of that difference persists between
+        generations. A national fertility average cannot represent the resulting change in population
+        composition. This project puts that missing mechanism inside a full cohort-component model.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="paper/population-model-1_2_1.pdf">Read the paper</a>
+          <a class="button secondary" href="#finding">See the result</a>
         </div>
       </div>
 
-      <figure class="rise">
-        <p class="fig-title">World population, 1950&ndash;2150</p>
-        <p class="fig-sub">UN estimates, the UN's medium projection reproduced here, and this
-        project's own extension past the point where the UN stops.</p>
-        <ul class="legend">
-          <li style="color:var(--seq-6)"><i></i><span style="color:var(--ink-2)">UN estimates, 1950&ndash;2023</span></li>
-          <li style="color:var(--cyan)"><i></i><span style="color:var(--ink-2)">UN medium projection to 2100, reproduced here</span></li>
-          <li style="color:var(--violet)"><i class="dash"></i><span style="color:var(--ink-2)">Project extension, 2100&ndash;2150</span></li>
-          <li style="color:var(--violet)"><i class="band"></i><span style="color:var(--ink-2)">5th&ndash;95th percentile of <span class="v" data-v="extension.paths">1000</span> migration paths</span></li>
-        </ul>
-        <div class="scroll-x"><svg id="fig-world" class="plot" role="img"
-          aria-label="World population from 1950 to 2150: rising from 2.5 billion to a peak above 10 billion in the 2080s, then declining to about 8.7 billion by 2150."></svg></div>
-        <figcaption>The extension holds the final UN fertility and mortality schedules constant and
-        continues migration with <b><span class="v" data-v="extension.paths">1000</span> stochastic paths</b>,
-        each forced to zero net world migration. It is drawn through the three years the published
-        summary records &mdash; 2100, 2125 and 2150 &mdash; and marked at each. The narrow world band is
-        not evidence that migration is predictable: a migrant has an origin as well as a destination,
-        so the world total mostly cancels while single countries stay enormously uncertain.</figcaption>
-        <details class="numbers"><summary>Show the numbers</summary>
-          <div class="scroll-x"><table id="tbl-world"></table></div>
-        </details>
-      </figure>
-
-      <p class="note rise"><b>This is not a forecast.</b> Every comparison on this page is
-      conditional on a stated path. The model reports where its answer changes sign, not what
-      the answer is.</p>
+      <div class="hero-result" aria-label="Headline result">
+        <p class="result-label">Benchmark result at 2150</p>
+        <div class="result-pair">
+          <div>
+            <b class="num">+<span class="v" data-v="ladder.1.change" data-dp="2">1.82</span> bn</b>
+            <span>from measured mainstream selection</span>
+          </div>
+          <div>
+            <b class="num"><span class="v" data-v="boundary.rate" data-dp="2">1.52%</span></b>
+            <span>extra fertility decline per decade cancels it</span>
+          </div>
+        </div>
+        <p class="result-note">A boundary, not a forecast. The two effects push in opposite directions.</p>
+      </div>
     </div>
+    <div class="globe-key" aria-hidden="true"><i></i> Earth in 2024 &middot; one light per million people</div>
   </section>
 
-  <!-- ------------------------------------------------------------- act 2 -->
-  <section class="chapter act" id="composition"
-           data-stage='{"year":2100,"scale":0.5,"cx":0.9,"cy":0.2,"veil":0.93,"hud":0}'>
+  <section class="chapter act first-act" id="finding"
+           data-stage='{"year":2024,"scale":0.72,"cx":0.84,"cy":0.32,"veil":0.86,"hud":0}'>
     <div class="wrap">
-      <div class="head rise">
-        <p class="eyebrow">The mechanism</p>
-        <h2>A national average has no composition in it</h2>
-        <p>A conventional projection carries one fertility number per country per year: it walks
-        down through the demographic transition and then drifts probabilistically back toward some
-        long-run level. The UN and IHME disagree about the level, but they agree about the object
-        being modelled &mdash; one number, evolving by its own history.</p>
-        <p>Women differ a great deal in how many children they have. Across
-        <b class="v" data-v="dispersion.countries">19</b> low-fertility countries with completed
-        cohort data, covering <b class="v" data-v="dispersion.women" data-fmt="millions">29.1</b>&nbsp;million
-        women, the median coefficient of variation of completed family size is
-        <b class="v" data-v="dispersion.median" data-dp="2">0.57</b> &mdash; the standard deviation is
-        more than half the mean.</p>
+      <div class="section-intro rise">
+        <p class="eyebrow">The finding</p>
+        <h2>Selection is large enough to matter, and small enough to cancel.</h2>
+        <p>The stable-low benchmark reaches <b><span class="v" data-v="ladder.0.value" data-dp="2">8.54</span>
+        billion</b> people in 2150. Adding ordinary variation in family size and its measured
+        intergenerational persistence raises the same model to <b><span class="v" data-v="ladder.1.value" data-dp="2">10.36</span>
+        billion</b>. That is a <span class="v" data-v="derived.mainstreamGainPercent">21%</span> increase,
+        without assuming a fertility rebound.</p>
       </div>
 
-      <figure class="rise">
-        <p class="fig-title">The spread of completed family size</p>
-        <p class="fig-sub">One dot per country: women observed at ages 50&ndash;59, so their families
-        are finished. Coefficient of variation of children ever born.</p>
-        <ul class="legend">
-          <li style="color:var(--seq-6)"><i class="dot"></i><span style="color:var(--ink-2)">Low-fertility countries (mean &le; 2.2 children)</span></li>
-          <li style="color:var(--cyan)"><i class="dot"></i><span style="color:var(--ink-2)">Other countries in the database</span></li>
-          <li style="color:var(--rose)"><i class="dot"></i><span style="color:var(--ink-2)">United States, independent CDC check</span></li>
-        </ul>
-        <div class="scroll-x"><svg id="fig-cv" class="plot" role="img"
-          aria-label="Coefficient of variation of completed family size for 43 countries, ranging from 0.44 to 0.79, with a median of 0.57 among low-fertility countries."></svg></div>
-        <figcaption>Source: the Cohort Fertility and Education database, plus an independent check
-        against the CDC's cohort fertility tables, which gives
-        <b><span class="v" data-v="dispersion.usCheck" data-dp="2">0.69</span></b> for United States
-        women born 1947&ndash;1956 at a mean of
-        <span class="v" data-v="dispersion.usMean" data-dp="2">2.04</span> children. The model uses
-        <b><span class="v" data-v="dispersion.cv" data-dp="2">0.57</span></b>, the low-fertility median,
-        with <span class="v" data-v="dispersion.cvLow" data-dp="2">0.44</span>&ndash;<span class="v" data-v="dispersion.cvHigh" data-dp="2">0.80</span>
-        carried through every result as a range. None of these numbers come from the projection they
-        are used to alter.</figcaption>
-        <details class="numbers"><summary>Show the numbers</summary>
-          <div class="scroll-x"><table id="tbl-cv"></table></div>
-        </details>
-      </figure>
-
-      <div class="head rise" style="margin-top:clamp(30px,5vw,54px)">
-        <p>Family size is also transmitted. Reported parent&ndash;child correlations in completed
-        family size sit between 0.1 and 0.2; the model uses
-        <b class="v" data-v="dispersion.persistence" data-dp="2">0.15</b>. Put dispersion and
-        persistence together and the parents of the next generation are not a random sample of this
-        one. They are sampled in proportion to how many children they had.</p>
+      <div class="result-flow rise" aria-label="World population in 2150 as assumptions are added">
+        <div class="flow-step base">
+          <span class="flow-k">Stable-low benchmark</span>
+          <b class="num"><span class="v" data-v="ladder.0.value" data-dp="2">8.54</span> bn</b>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">+</div>
+        <div class="flow-step selection">
+          <span class="flow-k">Mainstream selection</span>
+          <b class="num"><span class="v" data-v="ladder.1.change" data-dp="2">1.82</span> bn</b>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">=</div>
+        <div class="flow-step total">
+          <span class="flow-k">Selection benchmark</span>
+          <b class="num"><span class="v" data-v="ladder.1.value" data-dp="2">10.36</span> bn</b>
+        </div>
       </div>
 
-      <figure class="rise">
-        <p class="fig-title">Why the next generation is not a random sample</p>
-        <p class="fig-sub">A hundred women, and the generation they produce.</p>
-        <div class="scroll-x"><svg id="fig-sampling" class="plot" role="img"
-          aria-label="Illustration: a hundred women with varying family sizes, and the next generation drawn from them in proportion to family size, which shifts the average upward."></svg></div>
-        <figcaption><b>Illustration, not model output.</b> Family sizes are drawn to match the
-        measured mean and spread, not taken from any country. The point it makes is arithmetic and
-        holds regardless: children are produced by the women who had children, so whatever inclined
-        a woman toward four rather than one is over-represented among the people raising the next
-        cohort. If any of it carries &mdash; genetically, materially, culturally; the model does not
-        need to know which &mdash; the composition of the population moves toward it. This is selection
-        in the sense used since Fisher, and its direction on fertility is always upward, because
-        fertility is at once the trait and the measure of reproductive success.</figcaption>
-      </figure>
+      <div class="quiet-finding rise">
+        <p>Named high-fertility religious groups add another
+        <b><span class="v" data-v="ladder.2.change" data-dp="2">0.05</span> billion</b> under generous
+        assumptions—only <span class="v" data-v="selection.namedGroupShare">2.5%</span> as much as
+        unlabelled variation in the general population. The mechanism is mostly about everyone else.</p>
+      </div>
     </div>
   </section>
 
-  <!-- ------------------------------------------------------------- act 3 -->
-  <section class="chapter act" id="ladder"
-           data-stage='{"year":2100,"scale":0.5,"cx":0.1,"cy":0.22,"veil":0.93,"hud":0}'>
+  <section class="chapter act" id="evidence"
+           data-stage='{"year":2024,"scale":0.54,"cx":0.08,"cy":0.20,"veil":0.94,"hud":0}'>
     <div class="wrap">
-      <div class="head rise">
-        <p class="eyebrow">The result</p>
-        <h2>Real, measurable, and smaller than its advocates suggest</h2>
-        <p>That selection acts on fertility is not a new claim. What the existing arguments lack is
-        absolute levels: a transmission coefficient on its own can say which dispositions spread,
-        but not whether the population grows. So the mechanism goes inside a real cohort-component
-        engine carrying the UN's own age-specific schedules, where the levels are present at every
-        step. Switch the mechanism off and the extended engine returns the ordinary one to machine
-        precision.</p>
+      <div class="section-intro rise">
+        <p class="eyebrow">Why the average misses it</p>
+        <h2>Fertility has a distribution, not just a mean.</h2>
+        <p>Among <span class="v" data-v="dispersion.countries">19</span> low-fertility countries with
+        completed cohort data—<span class="v" data-v="dispersion.women" data-fmt="millions">29.1</span>
+        million women—the median coefficient of variation in completed family size is
+        <b><span class="v" data-v="dispersion.median" data-dp="2">0.57</span></b>. The model combines
+        that measured spread with a parent-child correlation of
+        <b><span class="v" data-v="dispersion.persistence" data-dp="2">0.15</span></b>.</p>
       </div>
 
-      <figure class="rise">
-        <p class="fig-title">World population in 2150, one assumption at a time</p>
-        <p class="fig-sub">Each step adds one thing to the step before it. Hover any bar for what it rests on.</p>
-        <ul class="legend">
-          <li style="color:var(--gold)"><i></i><span style="color:var(--ink-2)">Added by the mechanism</span></li>
-          <li style="color:var(--rose)"><i></i><span style="color:var(--ink-2)">Removed by the pressure scenario</span></li>
-          <li style="color:var(--muted)"><i></i><span style="color:var(--ink-2)">Level reached</span></li>
-        </ul>
-        <div class="scroll-x"><svg id="fig-ladder" class="plot" role="img"
-          aria-label="Waterfall: a benchmark of 8.54 billion in 2150, plus 1.82 billion from mainstream selection, plus 0.05 billion from named high-fertility groups, minus 2.79 billion under a four percent development pressure scenario, ending at 7.61 billion."></svg></div>
-        <figcaption>The benchmark keeps the fertility decline already observed and projected, removes
-        the conventional recovery, and adds no further decline. Against it, measured selection adds
-        <b><span class="v" data-v="ladder.1.change" data-dp="2">1.82</span>&nbsp;billion</b> by 2150 &mdash;
-        about <span class="v" data-v="derived.mainstreamGainPercent">21%</span> &mdash; by changing the
-        level at which the curve settles, not by restoring growth. The last step is an illustrative
-        scenario knob, not a finding.</figcaption>
-        <details class="numbers"><summary>Show the numbers</summary>
-          <div class="scroll-x"><table id="tbl-ladder"></table></div>
-        </details>
-      </figure>
+      <div class="mechanism-line rise" role="img" aria-label="Variation in family size plus intergenerational persistence leads to a shift in population composition">
+        <div>
+          <span class="mechanism-no">01</span>
+          <h3>Variation</h3>
+          <p>Some families have more children than others.</p>
+        </div>
+        <span class="mechanism-link" aria-hidden="true"></span>
+        <div>
+          <span class="mechanism-no">02</span>
+          <h3>Persistence</h3>
+          <p>Children resemble their parents imperfectly.</p>
+        </div>
+        <span class="mechanism-link" aria-hidden="true"></span>
+        <div>
+          <span class="mechanism-no">03</span>
+          <h3>Composition</h3>
+          <p>Higher-fertility lineages become more common.</p>
+        </div>
+      </div>
 
-      <p class="note rise">The high-fertility religious groups that dominate public discussion of
-      this &mdash; Haredi, Amish, and the rest &mdash; contribute
-      <b><span class="v" data-v="selection.namedGroupShare">2.5%</span> as much</b> as ordinary,
-      unlabelled variation inside the general population, and the model is generous to them at every
-      choice point. The mechanism is a property of everybody.</p>
+      <div class="evidence-strip rise">
+        <div><span>Measured spread</span><b class="num"><span class="v" data-v="dispersion.cvLow" data-dp="2">0.44</span>&ndash;<span class="v" data-v="dispersion.cvHigh" data-dp="2">0.80</span></b></div>
+        <div><span>Persistence range</span><b class="num"><span class="v" data-v="dispersion.persistenceLow" data-dp="2">0.05</span>&ndash;<span class="v" data-v="dispersion.persistenceHigh" data-dp="2">0.30</span></b></div>
+        <div><span>Independent U.S. check</span><b class="num"><span class="v" data-v="dispersion.usCheck" data-dp="2">0.69</span></b></div>
+        <div><span>Countries in full database</span><b class="num"><span class="v" data-v="dispersion.allCountries">43</span></b></div>
+      </div>
+
+      <p class="source-note rise">These inputs were estimated from completed-family data collected for
+      other purposes, not fitted to the population series they change. At the central values, the
+      selection mechanism multiplies the 2150 population by
+      <span class="v" data-v="selection.effect" data-dp="3">1.164</span>.</p>
     </div>
   </section>
 
-  <!-- ------------------------------------------------------------- act 4 -->
   <section class="chapter act" id="boundary"
-           data-stage='{"year":2100,"scale":0.5,"cx":0.08,"cy":0.24,"veil":0.94,"hud":0}'>
+           data-stage='{"year":2100,"scale":0.48,"cx":0.92,"cy":0.18,"veil":0.95,"hud":0}'>
     <div class="wrap">
-      <div class="head rise">
-        <p class="eyebrow">The threshold</p>
-        <h2>The number nobody can look&nbsp;up</h2>
-        <p>Whether the conditions of parenthood keep getting harder &mdash; the fertility
-        <em>environment</em>, as distinct from who is having the children &mdash; cannot be measured in
-        advance. It is exactly where a 150-year projection can be made to say anything you like.</p>
-        <p>Rather than pick a value, the model reports a threshold. Selection and the environment
-        both multiply fertility, so there is some further rate of environmental decline that exactly
-        cancels measured selection. That rate is observable in principle, which an assumption is not.</p>
-      </div>
-
-      <div class="stats rise">
-        <div class="stat">
-          <b class="gold num"><span class="v" data-v="boundary.rate" data-dp="2">1.52%</span></b>
-          <span class="k">per decade after <span class="v" data-v="boundary.from">2050</span>
-          cancels selection in the <em>fertility rate</em></span>
-          <span class="n">Median across <span class="v" data-v="boundary.paths">50</span> paired migration paths.</span>
+      <div class="boundary-head rise">
+        <div class="section-intro">
+          <p class="eyebrow">The useful answer</p>
+          <h2>How much decline would cancel selection?</h2>
+          <p>Rather than choose the future fertility environment, the model solves for the point where
+          its effect exactly offsets selection. At the benchmark, an additional universal decline of
+          <b><span class="v" data-v="boundary.rate" data-dp="2">1.52%</span> per decade</b> after
+          <span class="v" data-v="boundary.from">2050</span> cancels selection in the fertility rate.</p>
         </div>
-        <div class="stat">
-          <b class="rose num"><span class="v" data-v="boundary.population" data-dp="2">2.45%</span></b>
-          <span class="k">per decade to cancel it in the 2150 <em>population</em></span>
-          <span class="n">More, because the extra people selection has already produced are still alive.</span>
-        </div>
-        <div class="stat">
-          <b class="num"><span class="v" data-v="boundary.floor" data-dp="2">0.33</span>&ndash;<span class="v" data-v="boundary.ceiling" data-dp="2">4.49%</span></b>
-          <span class="k">across the measured range of the two parameters</span>
-          <span class="n">The threshold is a range because the inputs are.</span>
+        <div class="boundary-number">
+          <b class="num"><span class="v" data-v="boundary.rate" data-dp="2">1.52%</span></b>
+          <span>per decade</span>
+          <small><span class="v" data-v="boundary.rateLow" data-dp="2">1.51%</span>&ndash;<span class="v" data-v="boundary.rateHigh" data-dp="2">1.53%</span> across <span class="v" data-v="boundary.paths">50</span> paired migration paths</small>
         </div>
       </div>
 
-      <figure class="rise">
-        <p class="fig-title">What it would take to cancel selection</p>
-        <p class="fig-sub">Additional decline in the fertility environment, per decade after
-        <span class="v" data-v="boundary.from">2050</span>, at every combination of the two measured
-        parameters. Hover a cell.</p>
+      <figure class="rise responsive-figure">
+        <p class="fig-title">The break-even boundary across measured parameter ranges</p>
+        <p class="fig-sub">Rows vary the spread of completed family size; columns vary parent-child
+        persistence. The outlined cell is the benchmark.</p>
         <div class="scroll-x"><svg id="fig-grid" class="plot" role="img"
           aria-label="Grid of 33 parameter combinations: the break-even decline per decade rises from 0.33 percent at the lowest dispersion and persistence to 4.49 percent at the highest."></svg></div>
-        <figcaption>Rows are the spread of completed family size; columns are the parent&ndash;child
-        correlation. The outlined cell is the benchmark the paper reports. Neither axis is fitted to
-        the population series it changes &mdash; both come from cohort data collected for other reasons,
-        which is what lets the grid be read as a sensitivity rather than a fit. The benchmark cell reads
-        <b><span class="v" data-v="boundary.rateDeterministic" data-dp="2">1.53%</span></b>: this grid
-        is the deterministic sweep, while the <span class="v" data-v="boundary.rate" data-dp="2">1.52%</span>
-        quoted above is the median across
-        <span class="v" data-v="boundary.paths">50</span> paired migration paths, where the run with
-        selection and the run without it share their migration draw.</figcaption>
+        <figcaption>The full measured range runs from
+        <b><span class="v" data-v="boundary.floor" data-dp="2">0.33</span>% to
+        <span class="v" data-v="boundary.ceiling" data-dp="2">4.49%</span> per decade</b>. Cancelling
+        the selection effect in the 2150 population requires
+        <span class="v" data-v="boundary.population" data-dp="2">2.45%</span> per decade because people
+        born before the paths converge remain alive.</figcaption>
         <details class="numbers"><summary>Show the numbers</summary>
           <div class="scroll-x"><table id="tbl-grid"></table></div>
         </details>
       </figure>
 
-      <p class="note rise">Present evidence does not establish which side of this threshold the world
-      is on. <b>That is the honest end of the argument</b> &mdash; and a rate of change that could in
-      principle be observed is a more useful thing to report than a number somebody chose.</p>
+      <p class="thesis-line rise">Present evidence does not establish which side of this boundary the
+      world is on. It does turn a vague disagreement about the far future into a rate that can be
+      observed.</p>
     </div>
   </section>
 
-  <!-- ------------------------------------------------------------- act 5 -->
   <section class="chapter act" id="uncertainty"
-           data-stage='{"year":2100,"scale":0.46,"cx":0.9,"cy":0.78,"veil":0.94,"hud":0}'>
+           data-stage='{"year":2100,"scale":0.44,"cx":0.08,"cy":0.75,"veil":0.96,"hud":0}'>
     <div class="wrap">
-      <div class="head rise">
-        <p class="eyebrow">What is uncertain</p>
-        <h2>Almost all of it is fertility</h2>
-        <p>Vary everything at once and the 2150 answer spans
-        <b class="v" data-v="uncertainty.everything" data-dp="2">7.12</b>&nbsp;billion. Vary fertility
-        alone and it spans <b class="v" data-v="uncertainty.fertility" data-dp="2">7.26</b>. Mortality
-        contributes half a billion; migration, at the world level, a third of one.</p>
+      <div class="section-intro rise">
+        <p class="eyebrow">What controls the answer</p>
+        <h2>At 2150, uncertainty about fertility dwarfs everything else.</h2>
+        <p>Let one source vary at a time. Fertility alone produces a
+        <span class="v" data-v="uncertainty.fertility" data-dp="2">7.26</span>-billion-person span in
+        world population. The mechanism itself produces
+        <span class="v" data-v="uncertainty.mechanism" data-dp="2">5.72</span> billion. Mortality and
+        migration are small by comparison at the world level.</p>
       </div>
 
-      <figure class="rise">
-        <p class="fig-title">Width of the 2150 distribution, by what is allowed to vary</p>
-        <p class="fig-sub">5th to 95th percentile of world population in 2150, in billions of people,
-        from <span class="v" data-v="uncertainty.draws">200</span> draws.</p>
-        <div class="scroll-x"><svg id="fig-width" class="plot" role="img"
-          aria-label="Bars: fertility alone produces a 7.26 billion spread in 2150 world population, the mechanism parameters 5.72, everything at once 7.12, mortality 0.52 and migration 0.34."></svg></div>
-        <figcaption>Migration looks small only because this is the <b>world</b> total, where each
-        migrant is counted out of one country and into another. For the United Arab Emirates the
-        2150 range runs from about one million people to over 260 million.</figcaption>
-        <details class="numbers"><summary>Show the numbers</summary>
-          <div class="scroll-x"><table id="tbl-width"></table></div>
-        </details>
-      </figure>
+      <div class="uncertainty-bars rise" role="img" aria-label="Width of the 2150 world population distribution by source of uncertainty">
+        <div class="bar-row">
+          <span>Fertility path</span><i><em style="width:100%"></em></i><b class="num"><span class="v" data-v="uncertainty.fertility" data-dp="2">7.26</span> bn</b>
+        </div>
+        <div class="bar-row">
+          <span>Mechanism parameters</span><i><em style="width:78.8%"></em></i><b class="num"><span class="v" data-v="uncertainty.mechanism" data-dp="2">5.72</span> bn</b>
+        </div>
+        <div class="bar-row">
+          <span>Mortality</span><i><em style="width:7.2%"></em></i><b class="num"><span class="v" data-v="uncertainty.mortality" data-dp="2">0.52</span> bn</b>
+        </div>
+        <div class="bar-row">
+          <span>Migration</span><i><em style="width:4.7%"></em></i><b class="num"><span class="v" data-v="uncertainty.migration" data-dp="2">0.34</span> bn</b>
+        </div>
+      </div>
 
-      <figure class="rise">
-        <p class="fig-title">Where the mechanism's parameters come from</p>
-        <p class="fig-sub"><span class="v" data-v="parameters.total">13</span> parameters:
-        <span class="v" data-v="parameters.sourced">8</span> sourced and checked against the
-        literature, <span class="v" data-v="parameters.knobs">5</span> scenario knobs that cannot be
-        verified by definition.</p>
-        <div class="scroll-x"><svg id="fig-params" class="plot" role="img"
-          aria-label="Thirteen markers: eight filled, representing sourced parameters, and five hollow, representing scenario knobs."></svg></div>
-        <figcaption>A scenario knob is a value nobody can source &mdash; how a person who leaves a
-        high-fertility group behaves afterwards, for instance. The standing rule in this project is
-        that a parameter which cannot be sourced independently is never fitted to the series it is
-        meant to explain; it is declared a knob and carried openly. The magnitudes on this page stay
-        conditional on those five.</figcaption>
-      </figure>
-
-      <p class="note rise">And the conventional method has a record worth knowing.
-      <b><span class="v" data-v="backtest.vintages">8</span> archived UN vintages</b> from
-      <span class="v" data-v="backtest.first">1992</span> to
-      <span class="v" data-v="backtest.last">2008</span>, graded against what actually happened, came
-      in <span class="v" data-v="derived.backtestBiasMagnitude">2.45%</span> low on the world total &mdash; and
-      only <span class="v" data-v="derived.backtestShare">35%</span> of country-decade outcomes landed
-      inside the UN's own published high&ndash;low range.</p>
+      <div class="method-note rise">
+        <b><span class="v" data-v="parameters.sourced">8</span> sourced parameters.</b>
+        <b><span class="v" data-v="parameters.knobs">5</span> declared scenario knobs.</b>
+        <span>No mechanism parameter is fitted to the population series it is meant to explain.</span>
+      </div>
     </div>
   </section>
 
-  <!-- ------------------------------------------------------------- video -->
-  <section class="chapter act" id="watch"
-           data-stage='{"year":2100,"scale":0.44,"cx":0.5,"cy":1.25,"veil":0.95,"hud":0}'>
+  <section class="chapter act paper-cta" id="read"
+           data-stage='{"year":2100,"scale":0.62,"cx":0.5,"cy":1.20,"veil":0.91,"hud":0}'>
     <div class="wrap">
-      <div class="head rise">
-        <p class="eyebrow">Watch</p>
-        <h2>Twelve countries, 1950 to 2100, with the uncertainty shown</h2>
-        <p>Through 2023 these are the UN's own figures for what already happened. At 0:51 the video
-        crosses into 2024 and a whisker appears on every bar &mdash; the range the projection actually
-        covers, which keeps widening for the rest of the run. Most population timelapses draw one
-        confident line to 2100 and never show it.</p>
+      <p class="eyebrow rise">The work itself</p>
+      <h2 class="rise">The model is open. The argument is testable.</h2>
+      <p class="cta-lede rise">The paper gives the derivation and substantive case. The supplement
+      carries the engine validation, parameter audit, historical backtest, and reproducibility record.
+      Every number on this page is checked against the same result files used to build both documents.</p>
+      <div class="cta-actions rise">
+        <a class="button primary large" href="paper/population-model-1_2_1.pdf">Read the paper</a>
+        <a class="button secondary large" href="paper/population-model-supplement-1_2_1.pdf">Open the supplement</a>
       </div>
-      <div class="video rise">
-        <iframe src="https://www.youtube-nocookie.com/embed/R0z4HbkDI0I" loading="lazy"
-          title="Biggest Countries by Population - Timelapse (2024 UN Estimates - With Uncertainty)"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-      </div>
-      <p class="dim rise" style="margin-top:14px">The bars are WPP 2024. The whiskers are the 5th to
-      95th percentile of 1,000 draws from the University of Washington's Bayesian posterior &mdash; a
-      separate publication, though the UN's own probabilistic work uses that group's method.</p>
-    </div>
-  </section>
-
-  <!-- -------------------------------------------------------------- read -->
-  <section class="chapter act" id="read"
-           data-stage='{"year":2100,"scale":0.6,"cx":0.5,"cy":1.4,"veil":0.9,"hud":0}'>
-    <div class="wrap">
-      <div class="head rise">
-        <p class="eyebrow">The work itself</p>
-        <h2>Read it properly</h2>
-        <p>The paper carries the derivations, the calibration, the backtest and every caveat this
-        page has room only to gesture at. The supplement carries the engine's specification and the
-        reproducibility record.</p>
-      </div>
-      <div class="cards rise">
-        <a class="card" href="paper/population-model-1_2_1.pdf">
-          <span class="t">The paper (PDF)
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12L12 4M6 4h6v6"/></svg></span>
-          <span class="d">Selection on fertility, and the environmental decline that would cancel it.
-          Version <span class="v" data-v="paper.version">1.2.1</span>,
-          <span class="v" data-v="paper.date">19 August 2026</span>.</span>
-        </a>
-        <a class="card" href="paper/population-model-supplement-1_2_1.pdf">
-          <span class="t">The supplement (PDF)
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12L12 4M6 4h6v6"/></svg></span>
-          <span class="d">Engine specification, parameter audit, historical backtest and
-          reproducibility.</span>
-        </a>
-        <a class="card" href="paper/index.html">
-          <span class="t">Abstract and citation</span>
-          <span class="d">What the paper claims, what it explicitly does not, and how to cite it.</span>
-        </a>
-        <a class="card" href="map/index.html">
-          <span class="t">The interactive map</span>
-          <span class="d">Every one of the <span class="v" data-v="horizon.countries">237</span>
-          countries: its projected path to 2150, its population pyramid, and when it was last
-          counted.</span>
-        </a>
-        <a class="card" href="https://github.com/dylanslagh/population-model">
-          <span class="t">The code
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12L12 4M6 4h6v6"/></svg></span>
-          <span class="d">The engine, the ingest, the scenarios and the tests. MIT for the code,
-          CC&nbsp;BY&nbsp;4.0 for the writing and figures.</span>
-        </a>
-        <a class="card" href="https://github.com/dylanslagh/population-model/tree/main/conversations">
-          <span class="t">The conversation record
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12L12 4M6 4h6v6"/></svg></span>
-          <span class="d">Every session that built this, transcribed. Two of the three authors are
-          language models, so the record is part of the method.</span>
-        </a>
+      <div class="resource-links rise">
+        <a href="map/index.html"><span>Explore</span> Interactive country map</a>
+        <a href="paper/index.html"><span>Cite</span> Abstract and citation</a>
+        <a href="https://github.com/dylanslagh/population-model"><span>Inspect</span> Code and data pipeline</a>
+        <a href="https://github.com/dylanslagh/population-model/tree/main/conversations"><span>Trace</span> Complete conversation record</a>
       </div>
     </div>
   </section>
 </main>
 
 <footer>
-  <div class="wrap">
+  <div class="wrap footer-v2">
     <div>
-      <h3>The project</h3>
-      <p style="margin:0 0 10px">A 237-country cohort-component projection to 2150, built to be
-      mechanistically explicit rather than accurate &mdash; the trade goes that way on purpose.</p>
-      <p style="margin:0">Dylan Slagh, Claude Opus&nbsp;5 and ChatGPT&nbsp;5.6&nbsp;Sol.
-      Correspondence: <a href="mailto:dylanslagh@gmail.com">dylanslagh@gmail.com</a>.</p>
+      <h3>Population to 2150</h3>
+      <p>Selection on Fertility, and the Environmental Decline That Would Cancel It.</p>
+      <p>Dylan Slagh, Claude Opus&nbsp;5 and ChatGPT&nbsp;5.6&nbsp;Sol &middot;
+      <span class="v" data-v="paper.date">19 August 2026</span></p>
     </div>
     <div>
-      <h3>Data</h3>
-      <ul>
-        <li><a href="https://population.un.org/wpp/">UN World Population Prospects, 2024 revision</a></li>
-        <li><a href="https://bayespop.csss.washington.edu/">University of Washington, bayesPop and bayesMig</a></li>
-        <li><a href="https://www.eurrep.org/database/database/">Cohort Fertility and Education database</a></li>
-        <li><a href="https://www.cdc.gov/nchs/nvss/cohort_fertility_tables.htm">CDC/NCHS cohort fertility tables</a></li>
-        <li><a href="https://www.naturalearthdata.com/">Natural Earth, for the outlines</a></li>
-      </ul>
+      <h3>Sources</h3>
+      <p><a href="https://population.un.org/wpp/">UN World Population Prospects 2024</a><br>
+      <a href="https://www.eurrep.org/database/database/">Cohort Fertility and Education database</a><br>
+      <a href="https://bayespop.csss.washington.edu/">UW Bayesian population models</a></p>
     </div>
     <div>
-      <h3>The source</h3>
-      <ul>
-        <li><a href="https://github.com/dylanslagh/population-model">Code and data pipeline on GitHub</a></li>
-        <li><a href="https://github.com/dylanslagh/population-model/tree/main/conversations">The conversation record</a></li>
-      </ul>
-      <h3>On this page</h3>
-      <ul>
-        <li><a href="#horizon">The horizon</a></li>
-        <li><a href="#composition">The mechanism</a></li>
-        <li><a href="#ladder">The result</a></li>
-        <li><a href="#boundary">The threshold</a></li>
-        <li><a href="#uncertainty">What is uncertain</a></li>
-        <li><a href="#watch">The video</a></li>
-        <li><a href="#read">The paper</a></li>
-      </ul>
-    </div>
-    <div>
-      <h3>Honest defaults</h3>
-      <p style="margin:0">Every figure here is drawn from the same result files the paper is built
-      from, and the page fails to build if a number on it disagrees with them. Nothing after 2100 is
-      a UN projection. Nothing anywhere is a forecast.</p>
+      <h3>Contact</h3>
+      <p><a href="mailto:dylanslagh@gmail.com">dylanslagh@gmail.com</a></p>
     </div>
   </div>
 </footer>
