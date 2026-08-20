@@ -57,6 +57,8 @@ from popmodel.ingest import uw_bundle, uw_mig, wpp  # noqa: E402
 
 END_YEAR = 2150
 REPORT_YEARS = (2050, 2100, 2150)
+# Printed summary only. The stored per-country widths cover every
+# country in the bundle.
 WATCH = ("CAN", "USA", "NGA", "JPN", "ARE", "PHL")
 SOURCES = ("fertility", "mortality", "migration", "everything", "stop-at-2090")
 
@@ -319,13 +321,16 @@ def main() -> int:
             entry["maximum_world_imbalance_people"] = dynamic.maximum_world_imbalance_people
             entry["post_2100"] = migration_fit.source
         index_2100 = int(np.where(years == 2100)[0][0])
-        for iso3 in WATCH:
-            if iso3 not in bundle.iso3:
-                continue
-            j = bundle.iso3.index(iso3)
-            column = totals[:, index_2100, j]
-            lo, hi = np.quantile(column, (0.05, 0.95))
-            entry["countries_2100_width_millions"][iso3] = float(hi - lo) / 1e6
+        # Every country, not just the watch list. The array already holds them
+        # all, so this costs one vectorised quantile and about 40 kB of JSON,
+        # and it is what lets the map say what drives a *particular* country's
+        # band rather than only the world's.
+        column = totals[:, index_2100, :]
+        lo, hi = np.quantile(column, (0.05, 0.95), axis=0)
+        entry["countries_2100_width_millions"] = {
+            iso3: float(hi[j] - lo[j]) / 1e6
+            for j, iso3 in enumerate(bundle.iso3)
+        }
         results[name] = entry
         print(
             f"  {name:<11} world 90% width: "

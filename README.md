@@ -331,7 +331,7 @@ its own terms, which travel with any reuse:
 |---|---|---|
 | [UN World Population Prospects 2024](https://population.un.org/wpp/) | CC BY 3.0 IGO | Not redistributed. Population figures derived from it appear in the built pages, attributed. |
 | [EURREP Cohort Fertility and Education database](https://www.eurrep.org/database/database/) | [Research use; original tabulations may not be passed on](https://www.eurrep.org/database/about/terms-of-use/) | The tabulations stay downloaded-only and gitignored. Only derived statistics — means, variances, coefficients of variation — are committed. |
-| [University of Washington bayesPop / bayesMig](https://bayespop.csss.washington.edu/) | A University of Washington product, not an official UN product | Not redistributed. Percentile bands derived from the published trajectories appear in the map page, attributed to Azose and Raftery. |
+| [University of Washington bayesPop / bayesMig](https://bayespop.csss.washington.edu/) | [No licence or redistribution terms are published](https://bayespop.csss.washington.edu/download/); the download page states only a citation requirement, and that these are a University of Washington product and not an official UN product (checked 2026-08-19) | Not redistributed. Percentile bands derived from the published trajectories appear in the map page, attributed to Azose and Raftery. |
 | [Natural Earth](https://www.naturalearthdata.com/) | Public domain | Simplified outlines are committed in `site/data/`. |
 | [CDC/NCHS cohort fertility tables](https://www.cdc.gov/nchs/nvss/cohort_fertility_tables.htm) | US federal work, public domain | Used for the independent United States check. |
 

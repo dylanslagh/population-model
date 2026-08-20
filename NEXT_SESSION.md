@@ -166,35 +166,56 @@ are not globally balanced draw by draw and were creating or deleting people.
 
 ### Launch the site, and finish going public
 
-Everything is built and pushed on `claude/population-public-site-iaazmd`.
 Dylan's plan as of 2026-08-20: **keep the site as a hub preview until he is
 happy with the design and with the rest of the project.** So none of the below
 is urgent, and none of it is code.
 
-1. **Reset `main` to the branch.** *Reset, never merge* — see the section
-   below. Must happen before whichever comes first, going public or merging;
-   until it does, `main` still carries the old commit history. One command, and
-   a cloud session can run it:
+1. ~~**Reset `main` to the branch.**~~ **Done.** Verified 2026-08-19: local and
+   `origin/main` are byte-identical to `claude/population-public-site-iaazmd`,
+   58 commits, starting at `Initial commit`, with the rewritten history in
+   place. The branch is now redundant and can be deleted whenever convenient.
 
-   ```
-   git push --force origin refs/remotes/origin/claude/population-public-site-iaazmd:refs/heads/main
-   ```
+   The rewrite left 55 commits on Dylan's GitHub noreply address and **three on
+   `noreply@anthropic.com`** — the public site build, the licences commit, and
+   the handoff update. He was asked before the repository went public and chose
+   to keep them: the project was openly built with Claude and ChatGPT, so an
+   Anthropic author line on three commits is accurate rather than a leak.
+   **Settled. Do not raise it again.**
 
 2. **The Cloudflare Pages project.** The domain is reserved; the project is not
    created. Build command `python3 scripts/build_public.py`, output directory
    `dist`, custom domain attached. Only Dylan can do this — it is dashboard
    work, and no secrets belong in the repo.
-3. **Whether the repository goes public.** Private today. Because of that the
-   two GitHub links on the paper landing page were removed rather than shipped
-   broken, and the site links no code. The paper's contributions section says a
-   public conversation record exists; while the repository is private, it does
-   not. Either flip the repository, or publish `conversations/` as pages on the
-   site.
-4. **Confirm the UW terms.** `bayespop.csss.washington.edu/download/` was
-   returning 503 when checked on 2026-08-20, so the redistribution terms for
-   the trajectories behind the map page's uncertainty band are the one
-   unverified licence item. Azose and Raftery are already cited, which is the
-   substantive obligation.
+3. ~~**Whether the repository goes public.**~~ **Done, 2026-08-19.**
+   <https://github.com/dylanslagh/population-model> is public. Dylan's reason,
+   in his words: the project was completely transparently created by Claude and
+   ChatGPT, so the three commits authored as `noreply@anthropic.com` do not
+   bother him and were deliberately left alone. **Do not offer to rewrite them
+   again.**
+
+   The three things that were waiting on the flip are done and verified:
+   the paper landing page has its conversation-record and code links back, the
+   site's closing card row and footer link both, and every link was checked to
+   resolve anonymously (HTTP 200 without credentials). The paper's claim that a
+   public conversation record exists is now true — the 11 transcripts under
+   `conversations/` are readable by anyone.
+4. ~~**Confirm the UW terms.**~~ **Done, 2026-08-19.** The page is back up
+   (HTTP 200) and was read in full. It publishes **no licence and no
+   redistribution terms at all** — the only stated obligation is *"If you
+   publish work that uses these objects, please cite the following"*, listing
+   Raftery et al. 2012, WPP 2024, Azose & Raftery 2015, and Azose, Ševčíková &
+   Raftery 2016, plus the disclaimer that *"These objects are not products of
+   the United Nations."* All four citations are already carried, and nothing is
+   redistributed, so the obligation is met. The README row now records this
+   rather than the older paraphrase.
+
+   One thing worth reading later, not a blocker: the page says of the
+   *probabilistic-migration* trajectory set that "the projected migration
+   trajectories sum to zero over the 201 countries". That is a different,
+   older file (2015–2100, 201 countries) from the WPP-2024 `bayesMig`
+   trajectories this project actually uses, so it does not contradict the
+   finding that the paths in hand are not balanced draw by draw — but anyone
+   re-checking that result should know the sentence exists.
 
 Everything else on the pre-publication audit is done: MIT and CC BY 4.0
 licences, `CITATION.cff`, the README section recording what is *not* ours to
