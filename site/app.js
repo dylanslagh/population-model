@@ -438,16 +438,20 @@
   var lastYearShown = null, lastHud = null;
 
   function paint(time, scrollY) {
-    readScroll(scrollY);
+    if (mobile) {
+      /* The phone treatment is a poster, not scroll choreography. Keep the
+         opening composition fixed behind the document. */
+      for (var fixedKey in view) view[fixedKey] = stops[0].state[fixedKey];
+    } else {
+      readScroll(scrollY);
+    }
     var minSide = Math.min(W, H * 1.25);
     var state = {
       R: minSide * 0.37 * view.scale,
       cx: W * view.cx,
       cy: H * view.cy,
       year: view.year,
-      /* Phones use one source of motion: a smoothed scroll position. Combining
-         raw iOS scroll updates with a clock-driven spin made the globe judder. */
-      rot: (reduced ? 0 : mobile ? scrollY * 0.007 : time * 0.0042 + scrollY * 0.012) + 18,
+      rot: (reduced || mobile ? 0 : time * 0.0042 + scrollY * 0.012) + 18,
       flare: clamp(1 - view.veil * 0.85, 0.12, 1),
       /* Behind a nearly opaque veil the globe is a suggestion, so it is drawn
          as one: most of the story is figures, and this is most of the scroll. */
@@ -471,48 +475,45 @@
 
   var last = performance.now();
   var scrollTarget = window.scrollY;
-  var scrollPainted = scrollTarget;
   var needsPaint = true;
   window.addEventListener("scroll", function () {
-    scrollTarget = window.scrollY;
+    if (!mobile) scrollTarget = window.scrollY;
   }, { passive: true });
 
   function frame(time) {
     var dt = Math.min(time - last, 50); last = time;
-    frameCost = frameCost * 0.9 + dt * 0.1;
-    if (!mobile) {
-      if (frameCost > 26 && stride < 3) stride++;
-      else if (frameCost < 15 && stride > 1) stride--;
-      scrollPainted = scrollTarget = window.scrollY;
-      paint(time, scrollPainted);
-    } else {
-      /* Safari reports scroll in coarse jumps while the compositor is moving.
-         Ease those jumps, and stop redrawing the expensive canvas at rest. */
-      scrollTarget = window.scrollY;
-      var delta = scrollTarget - scrollPainted;
-      if (Math.abs(delta) > 0.12) {
-        var follow = 1 - Math.exp(-dt / 72);
-        scrollPainted += delta * follow;
-        paint(time, scrollPainted);
-        needsPaint = false;
-      } else if (needsPaint || scrollPainted !== scrollTarget) {
-        scrollPainted = scrollTarget;
-        paint(time, scrollPainted);
+    if (mobile) {
+      if (needsPaint) {
+        paint(time, 0);
         needsPaint = false;
       }
+    } else {
+      frameCost = frameCost * 0.9 + dt * 0.1;
+      if (frameCost > 26 && stride < 3) stride++;
+      else if (frameCost < 15 && stride > 1) stride--;
+      scrollTarget = window.scrollY;
+      paint(time, scrollTarget);
     }
     requestAnimationFrame(frame);
   }
 
   buildLamp();
   resize();
-  window.addEventListener("resize", function () { resize(); needsPaint = true; });
+  window.addEventListener("resize", function () {
+    /* Mobile Safari changes viewport height as its toolbar collapses. Treating
+       each of those changes as a canvas resize caused full globe repaints in
+       the middle of a scroll. Only a width change needs a new phone render. */
+    if (mobile && window.innerWidth === W) return;
+    resize(); needsPaint = true;
+  });
   window.addEventListener("orientationchange", function () { resize(); needsPaint = true; });
   requestAnimationFrame(function (t) { last = t; frame(t); });
 
   /* ------------------------------------------------------------- reveals */
 
-  if ("IntersectionObserver" in window) {
+  if (mobile) {
+    [].forEach.call(document.querySelectorAll(".rise"), function (n) { n.classList.add("seen"); });
+  } else if ("IntersectionObserver" in window) {
     var seen = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) { entry.target.classList.add("seen"); seen.unobserve(entry.target); }
