@@ -601,11 +601,11 @@
     if (!svg) return;
     var compact = window.innerWidth <= 600;
     var Wd = compact ? 360 : 960;
-    var Ht = compact ? 310 : 440;
+    var Ht = compact ? 280 : 440;
     var L = compact ? 34 : 54, Rm = compact ? 8 : 22;
-    var T = compact ? 36 : 26, B = compact ? 42 : 46;
+    var T = compact ? 20 : 26, B = compact ? 38 : 46;
     svg.setAttribute("viewBox", "0 0 " + Wd + " " + Ht);
-    var x0 = 1950, x1 = 2150, y1max = 11.5;
+    var x0 = 1950, x1 = 2150, y1max = compact ? 11.2 : 11.5;
     var X = function (y) { return L + (y - x0) / (x1 - x0) * (Wd - L - Rm); };
     var Y = function (v) { return Ht - B - v / y1max * (Ht - T - B); };
 
@@ -670,8 +670,10 @@
         x1: X(mark[0]), x2: X(mark[0]), y1: T - 4, y2: Y(0),
         stroke: "#2c3a4d", "stroke-width": 1, "stroke-dasharray": "3 5"
       }, svg);
-      var label = axisLabel(svg, X(mark[0]) + 6, T + 8, mark[1], "ax-text", "start");
-      label.setAttribute("fill", "#7d8ca6");
+      if (!compact) {
+        var label = axisLabel(svg, X(mark[0]) + 6, T + 8, mark[1], "ax-text", "start");
+        label.setAttribute("fill", "#7d8ca6");
+      }
     });
 
     /* the peak of the drawn curve, read off the curve itself */
@@ -679,19 +681,23 @@
     for (var i = 0; i <= 2100 - GLOBE.firstYear; i++) {
       if (GLOBE.world[i] > peak) { peak = GLOBE.world[i]; peakYear = GLOBE.firstYear + i; }
     }
-    el("circle", { cx: X(peakYear), cy: Y(peak), r: 3.5, fill: CYAN }, svg);
-    var peakText = axisLabel(svg, X(peakYear), Y(peak) - 14, fmt(peak, 2) + " bn, " + peakYear, "mark-label");
-    peakText.setAttribute("text-anchor", "middle");
+    if (!compact) {
+      el("circle", { cx: X(peakYear), cy: Y(peak), r: 3.5, fill: CYAN }, svg);
+      var peakText = axisLabel(svg, X(peakYear), Y(peak) - 14, fmt(peak, 2) + " bn, " + peakYear, "mark-label");
+      peakText.setAttribute("text-anchor", "middle");
+    }
 
     var endLabel = axisLabel(svg, X(2150), Y(ext.at2150[1]) + 26,
-      fmt(ext.at2150[1], 2) + " bn", "mark-label", "end");
+      compact ? "Extension " + fmt(ext.at2150[1], 2) : fmt(ext.at2150[1], 2) + " bn", "mark-label", "end");
     endLabel.setAttribute("fill", VIOLET);
-    var endRange = axisLabel(svg, X(2150), Y(ext.at2150[1]) + 42,
-      "5th–95th " + fmt(ext.at2150[0], 2) + "–" + fmt(ext.at2150[2], 2), "ax-text", "end");
-    endRange.setAttribute("font-size", "11.5");
+    if (!compact) {
+      var endRange = axisLabel(svg, X(2150), Y(ext.at2150[1]) + 42,
+        "5th–95th " + fmt(ext.at2150[0], 2) + "–" + fmt(ext.at2150[2], 2), "ax-text", "end");
+      endRange.setAttribute("font-size", "11.5");
+    }
     var selectionEnd = selectionAt(2150);
     var selectionLabel = axisLabel(svg, X(2150), Y(selectionEnd) - 12,
-      fmt(selectionEnd, 2) + " bn selection", "mark-label", "end");
+      compact ? "Selection " + fmt(selectionEnd, 2) : fmt(selectionEnd, 2) + " bn selection", "mark-label", "end");
     selectionLabel.setAttribute("fill", GOLD);
 
     /* crosshair */
