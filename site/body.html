@@ -10,16 +10,6 @@
 
 <div class="tip" id="tip" role="status" aria-live="polite"></div>
 
-<header class="topbar">
-  <a class="wordmark" href="#hero">Population to 2150</a>
-  <nav aria-label="Primary navigation">
-    <a href="#finding">Finding</a>
-    <a href="#evidence">Evidence</a>
-    <a href="#boundary">Threshold</a>
-    <a class="nav-paper" href="paper/population-model-1_2_1.pdf">Read the paper</a>
-  </nav>
-</header>
-
 <main>
   <section class="chapter hero-v2" id="hero"
            data-stage='{"year":2024,"scale":1.04,"cx":0.72,"cy":0.52,"veil":0.08,"hud":0}'>
@@ -69,6 +59,29 @@
           <b class="num"><span class="v" data-v="ladder.1.value" data-dp="2">10.36</span> bn</b>
         </div>
       </div>
+
+      <figure class="rise responsive-figure population-figure">
+        <p class="fig-title">World population, 1950&ndash;2150</p>
+        <p class="fig-sub">The UN record, its medium projection, this project's post-2100 extension,
+        and the paper's selection benchmark.</p>
+        <ul class="legend">
+          <li style="color:var(--seq-6)"><i></i><span style="color:var(--ink-2)">UN estimates</span></li>
+          <li style="color:var(--cyan)"><i></i><span style="color:var(--ink-2)">UN medium projection</span></li>
+          <li style="color:var(--violet)"><i class="dash"></i><span style="color:var(--ink-2)">Project extension after 2100</span></li>
+          <li style="color:var(--gold)"><i></i><span style="color:var(--ink-2)">Selection benchmark</span></li>
+          <li style="color:var(--violet)"><i class="band"></i><span style="color:var(--ink-2)">Extension's 5th&ndash;95th percentile</span></li>
+        </ul>
+        <div class="scroll-x"><svg id="fig-world" class="plot" role="img"
+          aria-label="World population from 1950 to 2150, comparing the UN record and projection, this project's extension after 2100, and the selection benchmark that forks in 2024."></svg></div>
+        <figcaption>The UN path ends at 2100. The dashed continuation after that point is this
+        project's extension, holding final fertility and mortality schedules constant while varying
+        migration. The selection line forks in 2024 and reaches
+        <b><span class="v" data-v="ladder.1.value" data-dp="2">10.36</span> billion</b> under the
+        stable-low fertility environment and measured mainstream selection.</figcaption>
+        <details class="numbers"><summary>Show the numbers</summary>
+          <div class="scroll-x"><table id="tbl-world"></table></div>
+        </details>
+      </figure>
 
     </div>
   </section>

@@ -599,7 +599,11 @@
   (function worldFigure() {
     var svg = document.getElementById("fig-world");
     if (!svg) return;
-    var Wd = 960, Ht = 440, L = 54, Rm = 22, T = 26, B = 46;
+    var compact = window.innerWidth <= 600;
+    var Wd = compact ? 360 : 960;
+    var Ht = compact ? 310 : 440;
+    var L = compact ? 34 : 54, Rm = compact ? 8 : 22;
+    var T = compact ? 36 : 26, B = compact ? 42 : 46;
     svg.setAttribute("viewBox", "0 0 " + Wd + " " + Ht);
     var x0 = 1950, x1 = 2150, y1max = 11.5;
     var X = function (y) { return L + (y - x0) / (x1 - x0) * (Wd - L - Rm); };
@@ -609,7 +613,8 @@
       el("line", { x1: L, x2: Wd - Rm, y1: Y(v), y2: Y(v), class: "grid-line" }, svg);
       axisLabel(svg, L - 10, Y(v) + 4, v === 0 ? "0" : v + (v === 10 ? " bn" : ""), "ax-text", "end");
     }
-    [1950, 1975, 2000, 2025, 2050, 2075, 2100, 2125, 2150].forEach(function (year) {
+    (compact ? [1950, 2000, 2050, 2100, 2150] :
+      [1950, 1975, 2000, 2025, 2050, 2075, 2100, 2125, 2150]).forEach(function (year) {
       axisLabel(svg, X(year), Ht - B + 22, year);
     });
     el("line", { x1: L, x2: Wd - Rm, y1: Y(0), y2: Y(0), class: "ax-line" }, svg);
@@ -621,6 +626,17 @@
       { year: 2125, lo: ext.at2125[0], mid: ext.at2125[1], hi: ext.at2125[2] },
       { year: 2150, lo: ext.at2150[0], mid: ext.at2150[1], hi: ext.at2150[2] }
     ];
+    var selectionPath = STORY.selection.worldPath;
+    function selectionAt(year) {
+      if (year < selectionPath[0][0] || year > selectionPath[selectionPath.length - 1][0]) return null;
+      for (var j = 0; j < selectionPath.length - 1; j++) {
+        var a = selectionPath[j], b = selectionPath[j + 1];
+        if (year < a[0] || year > b[0]) continue;
+        var fraction = (year - a[0]) / (b[0] - a[0]);
+        return a[1] + (b[1] - a[1]) * fraction;
+      }
+      return selectionPath[selectionPath.length - 1][1];
+    }
     var band = anchors.map(function (a) { return X(a.year) + "," + Y(a.hi); })
       .concat(anchors.slice().reverse().map(function (a) { return X(a.year) + "," + Y(a.lo); }));
     el("polygon", { points: band.join(" "), fill: VIOLET, "fill-opacity": 0.3 }, svg);
@@ -642,9 +658,14 @@
     }
     segment(1950, GLOBE.estimatesTo, LAMPC);
     segment(GLOBE.estimatesTo, 2100, CYAN);
+    el("polyline", {
+      points: selectionPath.map(function (point) { return X(point[0]) + "," + Y(point[1]); }).join(" "),
+      class: "series-line", stroke: GOLD, "stroke-width": 2.7
+    }, svg);
 
     /* the two boundaries that matter */
-    [[2024, "projection begins"], [2100, "UN assumptions stop"]].forEach(function (mark) {
+    [[2024, compact ? "projection" : "projection begins"],
+      [2100, compact ? "UN stops" : "UN assumptions stop"]].forEach(function (mark) {
       el("line", {
         x1: X(mark[0]), x2: X(mark[0]), y1: T - 4, y2: Y(0),
         stroke: "#2c3a4d", "stroke-width": 1, "stroke-dasharray": "3 5"
@@ -668,10 +689,15 @@
     var endRange = axisLabel(svg, X(2150), Y(ext.at2150[1]) + 42,
       "5th–95th " + fmt(ext.at2150[0], 2) + "–" + fmt(ext.at2150[2], 2), "ax-text", "end");
     endRange.setAttribute("font-size", "11.5");
+    var selectionEnd = selectionAt(2150);
+    var selectionLabel = axisLabel(svg, X(2150), Y(selectionEnd) - 12,
+      fmt(selectionEnd, 2) + " bn selection", "mark-label", "end");
+    selectionLabel.setAttribute("fill", GOLD);
 
     /* crosshair */
     var hitLine = el("line", { y1: T - 6, y2: Y(0), stroke: "#4a5b73", "stroke-width": 1, opacity: 0 }, svg);
     var hitDot = el("circle", { r: 4.5, fill: "#fff", opacity: 0 }, svg);
+    var selectionDot = el("circle", { r: 4.5, fill: GOLD, stroke: "#0a0f18", "stroke-width": 1.5, opacity: 0 }, svg);
     var hit = el("rect", { x: L, y: T - 6, width: Wd - L - Rm, height: Ht - T - B + 6, fill: "transparent" }, svg);
     hit.style.cursor = "crosshair";
     hit.addEventListener("mousemove", function (event) {
@@ -696,12 +722,23 @@
       hitDot.setAttribute("cx", X(year));
       hitDot.setAttribute("cy", Y(value));
       hitDot.setAttribute("opacity", 1);
-      showTip(event, "<b>" + year + "</b> &middot; " + fmt(value, 2) +
-        " billion<br><span class='k'>" + basis + "</span>");
+      var selectionValue = selectionAt(year);
+      if (selectionValue !== null) {
+        selectionDot.setAttribute("cx", X(year));
+        selectionDot.setAttribute("cy", Y(selectionValue));
+        selectionDot.setAttribute("opacity", 1);
+      } else {
+        selectionDot.setAttribute("opacity", 0);
+      }
+      showTip(event, "<b>" + year + "</b><br>" + fmt(value, 2) +
+        " billion <span class='k'>" + basis + "</span>" +
+        (selectionValue === null ? "" : "<br>" + fmt(selectionValue, 2) +
+          " billion <span class='k'>selection benchmark</span>"));
     });
     hit.addEventListener("mouseleave", function () {
       hitLine.setAttribute("opacity", 0);
       hitDot.setAttribute("opacity", 0);
+      selectionDot.setAttribute("opacity", 0);
       hideTip();
     });
 
@@ -709,11 +746,12 @@
     var rows = [];
     for (var year = 1950; year <= 2100; year += 25) {
       rows.push([year, fmt(GLOBE.world[year - GLOBE.firstYear], 2),
+        selectionAt(year) === null ? "—" : fmt(selectionAt(year), 2),
         year <= GLOBE.estimatesTo ? "UN estimate" : "UN medium, run here"]);
     }
-    rows.push([2125, fmt(ext.at2125[1], 2) + " (" + fmt(ext.at2125[0], 2) + "–" + fmt(ext.at2125[2], 2) + ")", "project extension"]);
-    rows.push([2150, fmt(ext.at2150[1], 2) + " (" + fmt(ext.at2150[0], 2) + "–" + fmt(ext.at2150[2], 2) + ")", "project extension"]);
-    table("tbl-world", ["Year", "World population, billions", "Basis"], rows, [0, 1]);
+    rows.push([2125, fmt(ext.at2125[1], 2) + " (" + fmt(ext.at2125[0], 2) + "–" + fmt(ext.at2125[2], 2) + ")", fmt(selectionAt(2125), 2), "project extension"]);
+    rows.push([2150, fmt(ext.at2150[1], 2) + " (" + fmt(ext.at2150[0], 2) + "–" + fmt(ext.at2150[2], 2) + ")", fmt(selectionAt(2150), 2), "project extension"]);
+    table("tbl-world", ["Year", "UN / extension, billions", "Selection, billions", "Basis"], rows, [0, 1, 2]);
   })();
 
   /* --- dispersion of completed family size ----------------------------- */

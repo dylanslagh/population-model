@@ -246,6 +246,10 @@ def main() -> int:
         "persistence_values": list(PERSISTENCE_VALUES),
         "rows": rows,
         "model_ladder": ladder,
+        "selection_world_path": {
+            "years": [int(year) for year in central_mainstream.years],
+            "billions": [float(value / 1e9) for value in central_mainstream.world],
+        },
         "parameter_caveat": base.caveat(),
     }
     OUT.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")

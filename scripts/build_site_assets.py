@@ -537,6 +537,13 @@ def build_story() -> dict:
         "ladder": ladder,
         "selection": {
             "effect": number(macros, "MainstreamSelectionMultiplier"),
+            "worldPath": [
+                [int(year), round(float(value), 4)]
+                for year, value in zip(
+                    break_even["selection_world_path"]["years"],
+                    break_even["selection_world_path"]["billions"],
+                )
+            ],
             "namedGroupShare": text(macros, "NamedGroupShareOfMechanism"),
             "overtakesYear": int(number(macros, "SelectionOvertakesYear")),
             "compositionStart": number(macros, "CompositionStartShare"),
