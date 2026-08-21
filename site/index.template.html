@@ -302,18 +302,39 @@ footer li{margin-bottom:5px}
 .thesis-line{max-width:860px; margin:34px auto 0; text-align:center; color:#d7dfeb;
   font:500 clamp(20px,2.8vw,30px)/1.45 var(--display); letter-spacing:-.02em}
 
+.making{background:linear-gradient(180deg,rgba(6,9,15,.90),rgba(8,12,20,.96))}
+.author-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:54px;
+  border-top:1px solid var(--line-2); border-bottom:1px solid var(--line)}
+.author-entry{display:grid; grid-template-columns:82px minmax(0,1fr); gap:18px; align-content:start;
+  padding:26px 24px 28px 0}
+.author-entry+.author-entry{border-left:1px solid var(--line); padding-left:24px}
+.author-portrait,.author-logo{width:82px; height:82px; border-radius:50%; border:1px solid var(--line-2);
+  background:#0c121c}
+.author-portrait{display:block; object-fit:cover}
+.author-logo{display:grid; place-items:center}
+.author-logo img{display:block; width:43px; height:43px; filter:invert(1); opacity:.90}
+.author-company{margin:1px 0 6px; color:var(--seq-5); font-size:9.5px; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase}
+.author-entry h3{font-size:22px; margin:0 0 10px}
+.author-entry>div>p:last-child{margin:0; color:var(--ink-2); font-size:13px; line-height:1.58}
+.record-link{margin:24px 0 0; font-size:13px}
+.record-link a{color:var(--ink-2); text-decoration-color:var(--line-2); text-underline-offset:4px}
+.record-link a:hover{color:var(--ink)}
+
 .paper-cta{text-align:center; min-height:84svh; display:flex; align-items:center}
 .paper-cta .wrap{max-width:960px}
 .paper-cta h2{font-size:clamp(42px,7vw,78px); margin-bottom:24px}
 .cta-lede{max-width:720px; margin:0 auto; color:var(--ink-2); font-size:17px; line-height:1.7}
 .cta-actions{justify-content:center}
-.resource-links{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin-top:54px; text-align:left;
+.resource-links{display:grid; grid-template-columns:repeat(2,1fr); gap:1px; margin-top:54px; text-align:left;
   background:var(--line)}
-.resource-links a{background:rgba(8,12,20,.94); text-decoration:none; color:var(--ink-2); padding:18px 16px;
+.resource-links a,.resource-links button{background:rgba(8,12,20,.94); text-decoration:none; color:var(--ink-2); padding:18px 16px;
   font-size:12.5px; line-height:1.45; transition:background .2s ease,color .2s ease}
-.resource-links a:hover{background:var(--panel-2); color:var(--ink)}
+.resource-links button{border:0; border-radius:0; font-family:inherit; text-align:left; cursor:pointer}
+.resource-links a:hover,.resource-links button:hover{background:var(--panel-2); color:var(--ink)}
 .resource-links span{display:block; color:var(--seq-5); font-size:9.5px; font-weight:600; letter-spacing:.14em;
   text-transform:uppercase; margin-bottom:7px}
+.resource-links b{font-weight:400}
 .footer-v2{grid-template-columns:1.6fr 1fr .6fr}
 .footer-v2 p{margin:0 0 8px}
 
@@ -342,6 +363,9 @@ footer li{margin-bottom:5px}
   .mechanism-link::after{right:-3px; top:auto; bottom:-1px; transform:rotate(135deg)}
   .boundary-head{grid-template-columns:1fr; gap:28px}
   .boundary-number{max-width:420px}
+  .author-strip{grid-template-columns:1fr}
+  .author-entry{padding:22px 0}
+  .author-entry+.author-entry{border-left:0; border-top:1px solid var(--line); padding-left:0}
   .resource-links{grid-template-columns:1fr 1fr}
   .footer-v2{grid-template-columns:1fr}
 }

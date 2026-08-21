@@ -32,6 +32,12 @@ INDEX = Path("index.html")
 MAP = Path("map/index.html")
 SOCIAL_CARD_SOURCE = Path("site/social-card.jpg")
 SOCIAL_CARD = Path("social-card.jpg")
+AUTHOR_PORTRAIT_SOURCE = Path("site/author-dylan.webp")
+AUTHOR_PORTRAIT = Path("authors/dylan-slagh.webp")
+ANTHROPIC_MARK_SOURCE = Path("site/anthropic.svg")
+ANTHROPIC_MARK = Path("authors/anthropic.svg")
+OPENAI_MARK_SOURCE = Path("site/openai.svg")
+OPENAI_MARK = Path("authors/openai.svg")
 PAPER_LANDING = Path("paper/index.html")
 PAPER_PDF = Path("paper/population-model.pdf")
 PAPER_SUPPLEMENT = Path("paper/population-model-supplement.pdf")
@@ -118,6 +124,9 @@ def reviewed_sources(repo: Path) -> list[tuple[Path, Path]]:
         (_required_source(repo, INDEX), INDEX),
         (_required_source(repo, MAP), MAP),
         (_required_source(repo, SOCIAL_CARD_SOURCE), SOCIAL_CARD),
+        (_required_source(repo, AUTHOR_PORTRAIT_SOURCE), AUTHOR_PORTRAIT),
+        (_required_source(repo, ANTHROPIC_MARK_SOURCE), ANTHROPIC_MARK),
+        (_required_source(repo, OPENAI_MARK_SOURCE), OPENAI_MARK),
     ]
     landing = repo / PAPER_LANDING
     pdf = repo / PAPER_PDF

@@ -302,18 +302,39 @@ footer li{margin-bottom:5px}
 .thesis-line{max-width:860px; margin:34px auto 0; text-align:center; color:#d7dfeb;
   font:500 clamp(20px,2.8vw,30px)/1.45 var(--display); letter-spacing:-.02em}
 
+.making{background:linear-gradient(180deg,rgba(6,9,15,.90),rgba(8,12,20,.96))}
+.author-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:54px;
+  border-top:1px solid var(--line-2); border-bottom:1px solid var(--line)}
+.author-entry{display:grid; grid-template-columns:82px minmax(0,1fr); gap:18px; align-content:start;
+  padding:26px 24px 28px 0}
+.author-entry+.author-entry{border-left:1px solid var(--line); padding-left:24px}
+.author-portrait,.author-logo{width:82px; height:82px; border-radius:50%; border:1px solid var(--line-2);
+  background:#0c121c}
+.author-portrait{display:block; object-fit:cover}
+.author-logo{display:grid; place-items:center}
+.author-logo img{display:block; width:43px; height:43px; filter:invert(1); opacity:.90}
+.author-company{margin:1px 0 6px; color:var(--seq-5); font-size:9.5px; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase}
+.author-entry h3{font-size:22px; margin:0 0 10px}
+.author-entry>div>p:last-child{margin:0; color:var(--ink-2); font-size:13px; line-height:1.58}
+.record-link{margin:24px 0 0; font-size:13px}
+.record-link a{color:var(--ink-2); text-decoration-color:var(--line-2); text-underline-offset:4px}
+.record-link a:hover{color:var(--ink)}
+
 .paper-cta{text-align:center; min-height:84svh; display:flex; align-items:center}
 .paper-cta .wrap{max-width:960px}
 .paper-cta h2{font-size:clamp(42px,7vw,78px); margin-bottom:24px}
 .cta-lede{max-width:720px; margin:0 auto; color:var(--ink-2); font-size:17px; line-height:1.7}
 .cta-actions{justify-content:center}
-.resource-links{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin-top:54px; text-align:left;
+.resource-links{display:grid; grid-template-columns:repeat(2,1fr); gap:1px; margin-top:54px; text-align:left;
   background:var(--line)}
-.resource-links a{background:rgba(8,12,20,.94); text-decoration:none; color:var(--ink-2); padding:18px 16px;
+.resource-links a,.resource-links button{background:rgba(8,12,20,.94); text-decoration:none; color:var(--ink-2); padding:18px 16px;
   font-size:12.5px; line-height:1.45; transition:background .2s ease,color .2s ease}
-.resource-links a:hover{background:var(--panel-2); color:var(--ink)}
+.resource-links button{border:0; border-radius:0; font-family:inherit; text-align:left; cursor:pointer}
+.resource-links a:hover,.resource-links button:hover{background:var(--panel-2); color:var(--ink)}
 .resource-links span{display:block; color:var(--seq-5); font-size:9.5px; font-weight:600; letter-spacing:.14em;
   text-transform:uppercase; margin-bottom:7px}
+.resource-links b{font-weight:400}
 .footer-v2{grid-template-columns:1.6fr 1fr .6fr}
 .footer-v2 p{margin:0 0 8px}
 
@@ -342,6 +363,9 @@ footer li{margin-bottom:5px}
   .mechanism-link::after{right:-3px; top:auto; bottom:-1px; transform:rotate(135deg)}
   .boundary-head{grid-template-columns:1fr; gap:28px}
   .boundary-number{max-width:420px}
+  .author-strip{grid-template-columns:1fr}
+  .author-entry{padding:22px 0}
+  .author-entry+.author-entry{border-left:0; border-top:1px solid var(--line); padding-left:0}
   .resource-links{grid-template-columns:1fr 1fr}
   .footer-v2{grid-template-columns:1fr}
 }
@@ -526,6 +550,51 @@ footer li{margin-bottom:5px}
     </div>
   </section>
 
+  <section class="chapter act making" id="making"
+           data-stage='{"year":2100,"scale":0.48,"cx":0.08,"cy":0.72,"veil":0.96,"hud":0}'>
+    <div class="wrap">
+      <div class="section-intro rise">
+        <p class="eyebrow">How the paper was made</p>
+        <h2>One question, three authors, a complete record.</h2>
+        <p>The project was developed through eleven recorded conversations over nine days. Dylan set
+        the scientific direction and accepted responsibility for the result; Claude and ChatGPT made
+        substantive contributions to the model, evidence and paper.</p>
+      </div>
+
+      <div class="author-strip rise" aria-label="Author contributions">
+        <article class="author-entry">
+          <img class="author-portrait" src="authors/dylan-slagh.webp" width="1200" height="1200" alt="Dylan Slagh">
+          <div>
+            <p class="author-company">Independent researcher</p>
+            <h3>Dylan Slagh</h3>
+            <p>Conceived the question and 2150 horizon, chose the scientific architecture, adjudicated
+            modelling decisions and reviewed the analysis and manuscript.</p>
+          </div>
+        </article>
+        <article class="author-entry">
+          <div class="author-logo"><img src="authors/anthropic.svg" alt="Anthropic logo"></div>
+          <div>
+            <p class="author-company">Anthropic</p>
+            <h3>Claude Opus 5</h3>
+            <p>Built the cohort-component engine, backtest, Bayesian baseline, selection mechanism,
+            stochastic extension and first complete manuscript.</p>
+          </div>
+        </article>
+        <article class="author-entry">
+          <div class="author-logo"><img src="authors/openai.svg" alt="OpenAI logo"></div>
+          <div>
+            <p class="author-company">OpenAI</p>
+            <h3>ChatGPT 5.6 Sol</h3>
+            <p>Developed the hierarchical selection specification, parameter calibration, migration and
+            boundary analysis, then independently reviewed and edited the final paper.</p>
+          </div>
+        </article>
+      </div>
+
+      <p class="record-link rise"><a href="https://github.com/dylanslagh/population-model/tree/main/conversations">Read the complete conversation record &rarr;</a></p>
+    </div>
+  </section>
+
   <section class="chapter act paper-cta" id="read"
            data-stage='{"year":2100,"scale":0.62,"cx":0.5,"cy":1.20,"veil":0.91,"hud":0}'>
     <div class="wrap">
@@ -539,10 +608,11 @@ footer li{margin-bottom:5px}
         <a class="button secondary large" href="paper/population-model-supplement-1_2_1.pdf">Open the supplement</a>
       </div>
       <div class="resource-links rise">
-        <a href="map/index.html"><span>Explore</span> Interactive country map</a>
-        <a href="paper/index.html"><span>Cite</span> Abstract and citation</a>
         <a href="https://github.com/dylanslagh/population-model"><span>Inspect</span> Code and data pipeline</a>
-        <a href="https://github.com/dylanslagh/population-model/tree/main/conversations"><span>Trace</span> Complete conversation record</a>
+        <button type="button" id="copy-citation"
+          data-citation="Slagh, Dylan, Claude Opus 5 and ChatGPT 5.6 Sol. 2026. &ldquo;Selection on Fertility, and the Environmental Decline That Would Cancel It: A Compositional Mechanism in a 237-Country Cohort-Component Projection to 2150.&rdquo; Working paper, version 1.2.1, 19 August 2026.">
+          <span>Cite</span><b class="copy-label">Looking to cite? Click here to copy.</b>
+        </button>
       </div>
     </div>
   </section>
@@ -1124,6 +1194,33 @@ footer li{margin-bottom:5px}
     });
     node.addEventListener("blur", hideTip);
   }
+
+  /* ------------------------------------------------------ citation copy */
+
+  var copyCitation = document.getElementById("copy-citation");
+  if (copyCitation) copyCitation.addEventListener("click", function () {
+    var citation = copyCitation.dataset.citation;
+    var label = copyCitation.querySelector(".copy-label");
+    function finish(ok) {
+      label.textContent = ok ? "Citation copied." : "Could not copy — select the citation in the paper.";
+      window.setTimeout(function () { label.textContent = "Looking to cite? Click here to copy."; }, 2400);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(citation).then(function () { finish(true); }, function () { finish(false); });
+      return;
+    }
+    var field = document.createElement("textarea");
+    field.value = citation;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    document.body.appendChild(field);
+    field.select();
+    var copied = false;
+    try { copied = document.execCommand("copy"); } catch (error) { copied = false; }
+    document.body.removeChild(field);
+    finish(copied);
+  });
 
   /* ------------------------------------------------------------- figures */
 

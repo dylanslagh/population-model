@@ -552,6 +552,33 @@
     node.addEventListener("blur", hideTip);
   }
 
+  /* ------------------------------------------------------ citation copy */
+
+  var copyCitation = document.getElementById("copy-citation");
+  if (copyCitation) copyCitation.addEventListener("click", function () {
+    var citation = copyCitation.dataset.citation;
+    var label = copyCitation.querySelector(".copy-label");
+    function finish(ok) {
+      label.textContent = ok ? "Citation copied." : "Could not copy — select the citation in the paper.";
+      window.setTimeout(function () { label.textContent = "Looking to cite? Click here to copy."; }, 2400);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(citation).then(function () { finish(true); }, function () { finish(false); });
+      return;
+    }
+    var field = document.createElement("textarea");
+    field.value = citation;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    document.body.appendChild(field);
+    field.select();
+    var copied = false;
+    try { copied = document.execCommand("copy"); } catch (error) { copied = false; }
+    document.body.removeChild(field);
+    finish(copied);
+  });
+
   /* ------------------------------------------------------------- figures */
 
   var GOLD = css("--gold") || "#c38617";

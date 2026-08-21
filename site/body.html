@@ -152,6 +152,51 @@
     </div>
   </section>
 
+  <section class="chapter act making" id="making"
+           data-stage='{"year":2100,"scale":0.48,"cx":0.08,"cy":0.72,"veil":0.96,"hud":0}'>
+    <div class="wrap">
+      <div class="section-intro rise">
+        <p class="eyebrow">How the paper was made</p>
+        <h2>One question, three authors, a complete record.</h2>
+        <p>The project was developed through eleven recorded conversations over nine days. Dylan set
+        the scientific direction and accepted responsibility for the result; Claude and ChatGPT made
+        substantive contributions to the model, evidence and paper.</p>
+      </div>
+
+      <div class="author-strip rise" aria-label="Author contributions">
+        <article class="author-entry">
+          <img class="author-portrait" src="authors/dylan-slagh.webp" width="1200" height="1200" alt="Dylan Slagh">
+          <div>
+            <p class="author-company">Independent researcher</p>
+            <h3>Dylan Slagh</h3>
+            <p>Conceived the question and 2150 horizon, chose the scientific architecture, adjudicated
+            modelling decisions and reviewed the analysis and manuscript.</p>
+          </div>
+        </article>
+        <article class="author-entry">
+          <div class="author-logo"><img src="authors/anthropic.svg" alt="Anthropic logo"></div>
+          <div>
+            <p class="author-company">Anthropic</p>
+            <h3>Claude Opus 5</h3>
+            <p>Built the cohort-component engine, backtest, Bayesian baseline, selection mechanism,
+            stochastic extension and first complete manuscript.</p>
+          </div>
+        </article>
+        <article class="author-entry">
+          <div class="author-logo"><img src="authors/openai.svg" alt="OpenAI logo"></div>
+          <div>
+            <p class="author-company">OpenAI</p>
+            <h3>ChatGPT 5.6 Sol</h3>
+            <p>Developed the hierarchical selection specification, parameter calibration, migration and
+            boundary analysis, then independently reviewed and edited the final paper.</p>
+          </div>
+        </article>
+      </div>
+
+      <p class="record-link rise"><a href="https://github.com/dylanslagh/population-model/tree/main/conversations">Read the complete conversation record &rarr;</a></p>
+    </div>
+  </section>
+
   <section class="chapter act paper-cta" id="read"
            data-stage='{"year":2100,"scale":0.62,"cx":0.5,"cy":1.20,"veil":0.91,"hud":0}'>
     <div class="wrap">
@@ -165,10 +210,11 @@
         <a class="button secondary large" href="paper/population-model-supplement-1_2_1.pdf">Open the supplement</a>
       </div>
       <div class="resource-links rise">
-        <a href="map/index.html"><span>Explore</span> Interactive country map</a>
-        <a href="paper/index.html"><span>Cite</span> Abstract and citation</a>
         <a href="https://github.com/dylanslagh/population-model"><span>Inspect</span> Code and data pipeline</a>
-        <a href="https://github.com/dylanslagh/population-model/tree/main/conversations"><span>Trace</span> Complete conversation record</a>
+        <button type="button" id="copy-citation"
+          data-citation="Slagh, Dylan, Claude Opus 5 and ChatGPT 5.6 Sol. 2026. &ldquo;Selection on Fertility, and the Environmental Decline That Would Cancel It: A Compositional Mechanism in a 237-Country Cohort-Component Projection to 2150.&rdquo; Working paper, version 1.2.1, 19 August 2026.">
+          <span>Cite</span><b class="copy-label">Looking to cite? Click here to copy.</b>
+        </button>
       </div>
     </div>
   </section>
