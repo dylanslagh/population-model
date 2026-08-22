@@ -27,10 +27,23 @@ def make_repo(tmp_path: Path, html: str | None = "<!doctype html><title>Story</t
     (repo / "map" / "index.html").write_text("<!doctype html><title>Map</title>", encoding="utf-8")
     (repo / "site").mkdir()
     (repo / "site" / "social-card.jpg").write_bytes(b"\xff\xd8\xff fixture")
+    # The author strip on the front page: the build requires these three, so a
+    # fixture repo that omits them fails before reaching whatever a test is for.
+    (repo / "authors").mkdir()
+    (repo / "authors" / "dylan-slagh.webp").write_bytes(b"RIFF\x00\x00\x00\x00WEBP fixture")
+    (repo / "authors" / "anthropic.svg").write_text("<svg xmlns='http://www.w3.org/2000/svg'/>", encoding="utf-8")
+    (repo / "authors" / "openai.svg").write_text("<svg xmlns='http://www.w3.org/2000/svg'/>", encoding="utf-8")
     return repo
 
 
-BASE_FILES = {"index.html", "map/index.html", "social-card.jpg"}
+BASE_FILES = {
+    "index.html",
+    "map/index.html",
+    "social-card.jpg",
+    "authors/dylan-slagh.webp",
+    "authors/anthropic.svg",
+    "authors/openai.svg",
+}
 
 
 def add_paper(

@@ -245,8 +245,11 @@ footer li{margin-bottom:5px}
 .section-intro>p:not(.eyebrow){color:#bcc6d6; font-size:clamp(17px,1.7vw,20px); line-height:1.7; margin:0}
 .section-intro b{color:var(--ink); font-weight:600}
 
+.flow-year{display:flex; align-items:baseline; gap:14px; margin-top:52px}
+.flow-year span{color:var(--muted); font-size:12px; letter-spacing:.14em; text-transform:uppercase}
+.flow-year b{color:var(--seq-6); font:500 clamp(52px,8vw,104px)/.86 var(--display); letter-spacing:-.05em}
 .result-flow{display:grid; grid-template-columns:1fr 34px 1fr 34px 1fr; align-items:center;
-  gap:12px; margin-top:52px; padding:24px 0; border-top:1px solid var(--line-2); border-bottom:1px solid var(--line)}
+  gap:12px; margin-top:18px; padding:24px 0; border-top:1px solid var(--line-2); border-bottom:1px solid var(--line)}
 .flow-step{min-width:0}
 .flow-step .flow-k{display:block; color:var(--muted); font-size:11px; letter-spacing:.11em;
   text-transform:uppercase; line-height:1.45}
@@ -329,7 +332,8 @@ footer li{margin-bottom:5px}
   .act{background:linear-gradient(180deg,rgba(5,7,12,.91),rgba(5,7,12,.87))}
   .rise,.rise.seen{opacity:1; transform:none; transition:none}
   .globe-key{left:18px; right:auto; bottom:18px}
-  .result-flow{grid-template-columns:1fr; gap:0; padding:0; border-bottom:0}
+  .flow-year{margin-top:40px; gap:10px}
+  .result-flow{grid-template-columns:1fr; gap:0; padding:0; border-bottom:0; margin-top:14px}
   .flow-step{padding:19px 0; border-bottom:1px solid var(--line)}
   .flow-arrow{display:none}
   .flow-step .flow-k{font-size:10px}

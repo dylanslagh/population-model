@@ -35,27 +35,35 @@
     <div class="wrap">
       <div class="section-intro rise">
         <p class="eyebrow">The finding</p>
-        <h2>Selection is large enough to matter, and small enough to cancel.</h2>
-        <p>The stable-low benchmark reaches <b><span class="v" data-v="ladder.0.value" data-dp="2">8.54</span>
-        billion</b> people in 2150. Adding ordinary variation in family size and its measured
-        intergenerational persistence raises the same model to <b><span class="v" data-v="ladder.1.value" data-dp="2">10.36</span>
-        billion</b>. That is a <span class="v" data-v="derived.mainstreamGainPercent">21%</span> increase,
-        without assuming a fertility rebound.</p>
+        <h2>Who has the children adds
+        <span class="v" data-v="ladder.1.change" data-dp="1">1.8</span> billion people.</h2>
+        <p>Hold fertility low and flat and the model reaches
+        <b><span class="v" data-v="ladder.0.value" data-dp="2">8.54</span> billion</b> people.
+        Now allow what is actually true — families differ in size, and larger families tend to run in
+        families — and the same model reaches
+        <b><span class="v" data-v="ladder.1.value" data-dp="2">10.36</span> billion</b>. That is
+        <span class="v" data-v="derived.mainstreamGainPercent">21%</span> more people, and nothing in
+        it assumes fertility bounces back.</p>
+      </div>
+
+      <div class="flow-year rise" aria-hidden="true">
+        <span>World population in</span>
+        <b class="num">2150</b>
       </div>
 
       <div class="result-flow rise" aria-label="World population in 2150 as assumptions are added">
         <div class="flow-step base">
-          <span class="flow-k">Stable-low benchmark</span>
+          <span class="flow-k">Fertility low and flat</span>
           <b class="num"><span class="v" data-v="ladder.0.value" data-dp="2">8.54</span> bn</b>
         </div>
         <div class="flow-arrow" aria-hidden="true">+</div>
         <div class="flow-step selection">
-          <span class="flow-k">Mainstream selection</span>
+          <span class="flow-k">Who has the children</span>
           <b class="num"><span class="v" data-v="ladder.1.change" data-dp="2">1.82</span> bn</b>
         </div>
         <div class="flow-arrow" aria-hidden="true">=</div>
         <div class="flow-step total">
-          <span class="flow-k">Selection benchmark</span>
+          <span class="flow-k">This model</span>
           <b class="num"><span class="v" data-v="ladder.1.value" data-dp="2">10.36</span> bn</b>
         </div>
       </div>
@@ -113,13 +121,17 @@
     <div class="wrap">
       <div class="section-intro rise">
         <p class="eyebrow">Why the average misses it</p>
-        <h2>Fertility has a distribution, not just a mean.</h2>
-        <p>Among <span class="v" data-v="dispersion.countries">19</span> low-fertility countries with
-        completed cohort data—<span class="v" data-v="dispersion.women" data-fmt="millions">29.1</span>
-        million women—the median coefficient of variation in completed family size is
-        <b><span class="v" data-v="dispersion.median" data-dp="2">0.57</span></b>. The model combines
-        that measured spread with a parent-child correlation of
-        <b><span class="v" data-v="dispersion.persistence" data-dp="2">0.15</span></b>.</p>
+        <h2>An average hides who is having the children.</h2>
+        <p>Two countries can share the same average family size and be nothing alike underneath. In one,
+        nearly everyone has two children. In the other, many people have none and some have five — and
+        the next generation is drawn from the ones who had five. Across
+        <span class="v" data-v="dispersion.countries">19</span> low-fertility countries —
+        <span class="v" data-v="dispersion.women" data-fmt="millions">29.1</span> million women who have
+        finished having children — family size varies by
+        <b><span class="v" data-v="dispersion.median" data-dp="2">0.57</span></b> of the average, and how
+        many children people have tracks their parents at
+        <b><span class="v" data-v="dispersion.persistence" data-dp="2">0.15</span></b>: weak, but not
+        zero.</p>
       </div>
 
       <div class="mechanism-line rise" role="img" aria-label="Variation in family size plus intergenerational persistence leads to a shift in population composition">
@@ -151,11 +163,12 @@
       <div class="boundary-head rise">
         <div class="section-intro">
           <p class="eyebrow">The useful answer</p>
-          <h2>How much decline would cancel selection?</h2>
-          <p>Rather than choose the future fertility environment, the model solves for the point where
-          its effect exactly offsets selection. At the benchmark, an additional universal decline of
-          <b><span class="v" data-v="boundary.rate" data-dp="2">1.52%</span> per decade</b> after
-          <span class="v" data-v="boundary.from">2050</span> cancels selection in the fertility rate.</p>
+          <h2>How much further would fertility have to fall to erase it?</h2>
+          <p>Nobody knows where fertility finally settles, so the model does not guess. It asks a
+          sharper question instead: how much further would fertility have to keep falling for those
+          extra people never to arrive? After <span class="v" data-v="boundary.from">2050</span>, the
+          answer is <b><span class="v" data-v="boundary.rate" data-dp="2">1.52%</span> more decline
+          per decade</b>.</p>
         </div>
         <div class="boundary-number">
           <b class="num"><span class="v" data-v="boundary.rate" data-dp="2">1.52%</span></b>
@@ -165,25 +178,25 @@
       </div>
 
       <figure class="rise responsive-figure">
-        <p class="fig-title">The break-even boundary across measured parameter ranges</p>
-        <p class="fig-sub">Rows vary the spread of completed family size; columns vary parent-child
-        persistence. The outlined cell is the benchmark.</p>
-        <div class="scroll-x"><svg id="fig-grid" class="plot" role="img"
-          aria-label="Grid of 33 parameter combinations: the break-even decline per decade rises from 0.33 percent at the lowest dispersion and persistence to 4.49 percent at the highest."></svg></div>
-        <figcaption>The full measured range runs from
+        <p class="fig-title">How much decline it would take</p>
+        <p class="fig-sub">The two things we measured could each be higher or lower than our best
+        estimate. Every dot is one plausible pair, placed at the answer that pair gives.</p>
+        <div class="scroll-x"><svg id="fig-range" class="plot" role="img"
+          aria-label="Thirty-three plausible pairs of measured inputs, each plotted at the extra fertility decline per decade it would take to erase the effect. They range from 0.33 percent to 4.49 percent, and the measured case is 1.52 percent."></svg></div>
+        <figcaption>Across the whole measured range the answer runs from
         <b><span class="v" data-v="boundary.floor" data-dp="2">0.33</span>% to
-        <span class="v" data-v="boundary.ceiling" data-dp="2">4.49%</span> per decade</b>. Cancelling
-        the selection effect in the 2150 population requires
-        <span class="v" data-v="boundary.population" data-dp="2">2.45%</span> per decade because people
-        born before the paths converge remain alive.</figcaption>
+        <span class="v" data-v="boundary.ceiling" data-dp="2">4.49%</span> per decade</b>. Erasing the
+        extra people from the 2150 population, rather than just from the fertility rate, takes
+        <span class="v" data-v="boundary.population" data-dp="2">2.45%</span> — because people who
+        have already been born go on living.</figcaption>
         <details class="numbers"><summary>Show the numbers</summary>
           <div class="scroll-x"><table id="tbl-grid"></table></div>
         </details>
       </figure>
 
-      <p class="thesis-line rise">Present evidence does not establish which side of this boundary the
-      world is on. It does turn a vague disagreement about the far future into a rate that can be
-      observed.</p>
+      <p class="thesis-line rise">Nobody knows yet which side of that line the world is on. The point
+      is that it is now a number someone can go and measure, instead of an argument about the far
+      future.</p>
     </div>
   </section>
 

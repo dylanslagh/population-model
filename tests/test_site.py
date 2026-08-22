@@ -27,7 +27,14 @@ def test_every_number_printed_on_the_page_matches_the_results():
     """The guard that keeps the prose from drifting away from the model."""
 
     checked = build_site.check_numbers(BODY, STORY)
-    assert checked > 30
+
+    # Count the tags rather than assert a hand-written total. A bare threshold
+    # went stale the moment the page was rewritten for a general reader, and it
+    # could never have caught the failure that actually matters: a tagged
+    # element `check_numbers` skips, which leaves a number printed on the page
+    # that nothing compares against the results.
+    assert checked == BODY.count('data-v="')
+    assert checked > 15, "the page has lost the numbers it is supposed to check"
 
 
 def test_a_stale_number_on_the_page_fails_the_build():

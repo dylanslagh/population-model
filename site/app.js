@@ -141,7 +141,7 @@
      - by scroll position, which is a fact about the page, not a measurement.
      Full density is therefore only ever paid for in the hero, where the globe
      is actually legible and nothing is scrolling. */
-  var stride = mobile ? 2 : 1;
+  var stride = 1;
 
   function buildLamp() {
     var size = 34;
@@ -193,7 +193,7 @@
     H = window.innerHeight;
     mobile = window.matchMedia("(max-width: 820px), (pointer: coarse)").matches;
     dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 2);
-    stride = mobile ? 2 : 1;
+    stride = 1;
     canvas.width = Math.floor(W * dpr);
     canvas.height = Math.floor(H * dpr);
     canvas.style.width = W + "px";
@@ -475,8 +475,14 @@
       rot: (reduced || mobile ? 0 : time * 0.0042 + scrollY * 0.012) + 18,
       flare: clamp(1 - view.veil * 0.85, 0.12, 1),
       /* Behind a nearly opaque veil the globe is a suggestion, so it is drawn
-         as one: most of the story is figures, and this is most of the scroll. */
-      detail: mobile ? (view.veil > 0.88 ? 3 : 2)
+         as one: most of the story is figures, and this is most of the scroll.
+
+         The phone is not a cheaper case of this, it is a different one: it
+         paints the hero once and never again, so full density costs a single
+         paint rather than one per frame. It used to draw at stride 2 and
+         detail 2 - one light per four million - under a caption promising one
+         per million. A one-off paint is worth paying to make that true. */
+      detail: mobile ? 1
         : view.veil > 0.88 ? 3 : view.veil > 0.78 ? 2 : 1
     };
     drawGlobe(state);
@@ -987,114 +993,98 @@
       }), [1, 2]);
   })();
 
-  /* --- the break-even grid --------------------------------------------- */
-  (function gridFigure() {
-    var svg = document.getElementById("fig-grid");
+  /* --- how much decline would cancel it -------------------------------- */
+  (function rangeFigure() {
+    /* This used to be a 33-cell heat map: family-size spread up one side,
+       parent-child persistence along the other, break-even rate as colour.
+       It is the right figure for the paper and the wrong one for this page -
+       a general reader meets two unfamiliar statistical axes and a colour
+       scale before reaching the point, and the point is only ever the number
+       on the third axis. So the same 33 results are drawn as 33 dots on the
+       one axis that matters. Nothing is dropped: both parameters are still in
+       the hover reading and in the table under "Show the numbers". */
+    var svg = document.getElementById("fig-range");
     if (!svg) return;
     var compact = window.innerWidth <= 600;
     var b = STORY.boundary;
-    var cvs = [], pers = [];
-    b.grid.forEach(function (cell) {
-      if (cvs.indexOf(cell.cv) < 0) cvs.push(cell.cv);
-      if (pers.indexOf(cell.persistence) < 0) pers.push(cell.persistence);
-    });
-    cvs.sort(function (a, c) { return a - c; });
-    pers.sort(function (a, c) { return a - c; });
 
     var Wd = compact ? 360 : 960;
-    var Ht = compact ? 390 : 340;
-    var L = compact ? 55 : 96;
-    var Rm = compact ? 12 : 30;
-    var T = compact ? 82 : 76;
-    var B = compact ? 112 : 96;
-    svg.setAttribute("viewBox", "0 0 " + Wd + " " + Ht);
-    var cw = (Wd - L - Rm) / pers.length, ch = (Ht - T - B) / cvs.length;
-    var max = 0, min = Infinity;
-    b.grid.forEach(function (cell) {
-      if (cell.breakEven > max) max = cell.breakEven;
-      if (cell.breakEven < min) min = cell.breakEven;
+    var L = compact ? 24 : 40, Rm = compact ? 24 : 40;
+    var T = compact ? 52 : 46, B = compact ? 60 : 58;
+
+    var top = 0;
+    b.grid.forEach(function (cell) { if (cell.breakEven > top) top = cell.breakEven; });
+    var axisMax = Math.ceil(top);
+    var X = function (v) { return L + v / axisMax * (Wd - L - Rm); };
+
+    /* Stack dots that would otherwise land on top of each other, so the
+       clustering is visible rather than hidden under a single mark. */
+    var rDot = compact ? 4.6 : 5.4;
+    var rowStep = rDot * 2 + 2.5;
+    var cells = b.grid.slice().sort(function (a, c) { return a.breakEven - c.breakEven; });
+    var columns = [], maxRow = 0;
+    cells.forEach(function (cell) {
+      var x = X(cell.breakEven), placed = null;
+      for (var i = 0; i < columns.length; i++) {
+        if (Math.abs(columns[i].x - x) < rDot * 1.9) { placed = columns[i]; break; }
+      }
+      if (!placed) { placed = { x: x, n: 0 }; columns.push(placed); }
+      cell._x = x;
+      cell._row = placed.n++;
+      if (cell._row > maxRow) maxRow = cell._row;
     });
 
-    function mix(a, c, t) {
-      function part(hex, i) { return parseInt(hex.substr(1 + i * 2, 2), 16); }
-      var out = "#";
-      for (var i = 0; i < 3; i++) {
-        var v = Math.round(part(a, i) + (part(c, i) - part(a, i)) * t);
-        out += ("0" + v.toString(16)).slice(-2);
-      }
-      return out;
-    }
-    /* Linear in the value, so the gradient legend means what it says. */
-    function rampAt(value) {
-      var t = clamp((value - min) / (max - min), 0, 1) * (SEQ.length - 1);
-      var i = Math.min(Math.floor(t), SEQ.length - 2);
-      return { colour: mix(SEQ[i], SEQ[i + 1], t - i), step: t };
-    }
+    /* Height follows the tallest stack rather than a guessed constant, so the
+       figure has no dead band above the dots whatever the data does. */
+    var baseY = T + rDot * 2 + 4 + maxRow * rowStep;
+    var Ht = baseY + B;
+    svg.setAttribute("viewBox", "0 0 " + Wd + " " + Ht);
 
-    b.grid.forEach(function (cell) {
-      var col = pers.indexOf(cell.persistence), row = cvs.indexOf(cell.cv);
-      var x = L + col * cw, y = T + row * ch;
+    /* Gridlines rise to just above the tallest stack, not to the top of the
+       box: the headroom above them belongs to the benchmark label. */
+    var topY = baseY - rDot - 2 - maxRow * rowStep;
+    for (var v = 0; v <= axisMax; v++) {
+      el("line", { x1: X(v), x2: X(v), y1: topY - rDot - 8, y2: baseY, class: "grid-line" }, svg);
+      axisLabel(svg, X(v), baseY + 22, v + "%");
+    }
+    el("line", { x1: L, x2: Wd - Rm, y1: baseY, y2: baseY, stroke: GRID, "stroke-width": 1 }, svg);
+    var axisName = axisLabel(svg, L + (Wd - L - Rm) / 2, baseY + 46,
+      compact ? "extra decline per decade" : "extra fertility decline, per decade", "ax-text big");
+    axisName.setAttribute("fill", "#c3cede");
+
+    cells.forEach(function (cell) {
       var isBenchmark = Math.abs(cell.cv - STORY.dispersion.cv) < 1e-6 &&
         Math.abs(cell.persistence - STORY.dispersion.persistence) < 1e-6;
-      var ramp = rampAt(cell.breakEven);
-      var rect = el("rect", {
-        x: x + 1, y: y + 1, width: cw - 2, height: ch - 2, rx: 3,
-        fill: ramp.colour,
-        stroke: isBenchmark ? "#ffffff" : "none", "stroke-width": isBenchmark ? 2 : 0,
+      var y = baseY - rDot - 2 - cell._row * rowStep;
+      var dot = el("circle", {
+        cx: cell._x, cy: y, r: isBenchmark ? rDot + 1.4 : rDot,
+        fill: isBenchmark ? LAMPC : VIOLET,
+        "fill-opacity": isBenchmark ? 1 : 0.62,
+        stroke: isBenchmark ? "#ffffff" : "none", "stroke-width": isBenchmark ? 1.6 : 0,
         tabindex: isBenchmark ? "0" : null, role: "img",
-        "aria-label": "spread " + fmt(cell.cv, 2) + ", persistence " + fmt(cell.persistence, 3) +
-          ": break-even " + fmt(cell.breakEven, 2) + " percent per decade"
+        "aria-label": fmt(cell.breakEven, 2) + " percent per decade, where family-size spread is " +
+          fmt(cell.cv, 2) + " and parent-child persistence is " + fmt(cell.persistence, 3) +
+          (isBenchmark ? "; this is the measured case" : "")
       }, svg);
-      hoverable(rect, "<b>" + fmt(cell.breakEven, 2) + "% per decade</b><br>" +
-        "cancels a selection effect of &times;" + fmt(cell.effect, 3) +
-        "<br><span class='k'>spread " + fmt(cell.cv, 2) + " &middot; persistence " +
-        fmt(cell.persistence, 3) + (isBenchmark ? " &middot; the benchmark" : "") + "</span>");
-      /* No number inside every cell: a gold ramp's midtones carry neither dark
-         nor light text well. The benchmark is labelled outside the grid, the
-         ends are on the legend, and hover or the table gives the rest. */
+      hoverable(dot, "<b>" + fmt(cell.breakEven, 2) + "% per decade</b>" +
+        (isBenchmark ? " &middot; the measured case" : "") +
+        "<br><span class='k'>if family-size spread were " + fmt(cell.cv, 2) +
+        " and persistence " + fmt(cell.persistence, 3) + "</span>");
       if (isBenchmark) {
         el("line", {
-          x1: x + cw / 2, x2: x + cw / 2, y1: y - 6, y2: T - 12,
-          stroke: "#ffffff", "stroke-width": 1, "stroke-opacity": 0.55
+          x1: cell._x, x2: cell._x, y1: y - rDot - 4, y2: T - 6,
+          stroke: "#ffffff", "stroke-width": 1, "stroke-opacity": 0.5
         }, svg);
-        var mark = axisLabel(svg, x + cw / 2, T - 18,
-          (compact ? "benchmark " : "benchmark: ") + fmt(cell.breakEven, 2) +
-          (compact ? "%" : "% per decade"), "mark-label");
-        mark.setAttribute("font-size", "12.5");
+        /* Deliberately no number on this label. The lattice cell at the
+           measured parameters reads 1.53%, while the exact solve at those
+           same parameters - the figure quoted beside this chart - is 1.52%.
+           Both are right; printing them a centimetre apart just reads as the
+           page contradicting itself. The number lives in the callout, and
+           hovering the dot gives the cell's own value. */
+        var mark = axisLabel(svg, cell._x, T - 14, "what we measure", "mark-label");
+        mark.setAttribute("font-size", compact ? "12" : "13.5");
       }
     });
-
-    cvs.forEach(function (cv, row) {
-      var label = axisLabel(svg, L - 12, T + row * ch + ch / 2 + 4, fmt(cv, 2), "ax-text big", "end");
-      label.setAttribute("fill", cv === STORY.dispersion.cv ? LAMPC : "#8794ab");
-    });
-    pers.forEach(function (p, col) {
-      if (col % 2 !== 0 && pers.length > 6) return;
-      axisLabel(svg, L + col * cw + cw / 2, Ht - B + 22, fmt(p, 3));
-    });
-    var yTitle = axisLabel(svg, 4, T - 8,
-      compact ? "family-size spread" : "spread of\u00a0family size", "ax-text", "start");
-    yTitle.setAttribute("fill", "#7d8ca6");
-    axisLabel(svg, L + (Wd - L - Rm) / 2, Ht - B + 46,
-      compact ? "parent–child persistence" : "parent–child correlation in completed family size", "ax-text big");
-    var note = axisLabel(svg, L + (Wd - L - Rm) / 2, Ht - B + 68,
-      compact ? "colour: extra decline per decade" :
-        "cell colour: additional decline per decade that exactly cancels selection", "ax-text");
-    note.setAttribute("fill", "#7d8ca6");
-
-    /* ramp legend */
-    var lx = L, ly = 20, lw = 210, lh = 9;
-    var gradId = "ramp";
-    var defs = el("defs", {}, svg);
-    var grad = el("linearGradient", { id: gradId, x1: "0", x2: "1" }, defs);
-    SEQ.forEach(function (colour, i) {
-      el("stop", { offset: (i / (SEQ.length - 1) * 100) + "%", "stop-color": colour }, grad);
-    });
-    el("rect", { x: lx, y: ly, width: lw, height: lh, rx: 2, fill: "url(#" + gradId + ")" }, svg);
-    var lo = axisLabel(svg, lx, ly - 6, fmt(min, 2) + "%", "ax-text", "start");
-    lo.setAttribute("fill", "#7d8ca6");
-    var hi = axisLabel(svg, lx + lw, ly - 6, fmt(max, 2) + "%", "ax-text", "end");
-    hi.setAttribute("fill", "#7d8ca6");
 
     table("tbl-grid", ["Spread (CV)", "Persistence", "Selection effect", "Break-even, % per decade"],
       b.grid.map(function (cell) {

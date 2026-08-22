@@ -298,7 +298,7 @@ is a short argument designed to get a first-time reader to the paper quickly:
    2100, this project's dashed post-2100 extension, and the selection path;
 4. the embedded YouTube population timelapse;
 5. the three-step variation -> persistence -> composition mechanism;
-6. the break-even boundary grid;
+6. the break-even dot plot;
 7. a concise account of how Dylan, Claude Opus 5, and ChatGPT 5.6 Sol made the
    paper; and
 8. the paper, citation copier, and conversation record.
@@ -306,9 +306,30 @@ is a short argument designed to get a first-time reader to the paper quickly:
 The page is built from `site/body.html`, `site/index.template.html`,
 `site/app.js`, and the two JSON payloads in `site/data/`. Run
 `python scripts/build_site.py`; it writes the committed root `index.html` and
-refuses to finish if any of the 22 printed results disagrees with
-`site/data/story.json`. Then run `python scripts/build_public.py` to stage the
-reviewed payload in `dist/`.
+refuses to finish if any printed result disagrees with `site/data/story.json`.
+Then run `python scripts/build_public.py` to stage the reviewed payload in
+`dist/`.
+
+**The page is written for a general reader; the paper is where the expert
+vocabulary lives.** A reader review on 2026-08-22 found the statistical framing
+was losing people, and the fix each time was to cut jargon rather than add a
+paragraph explaining it. "Selection is large enough to matter, and small enough
+to cancel" became "Who has the children adds 1.8 billion people"; "fertility has
+a distribution, not just a mean" became "an average hides who is having the
+children", carried by a concrete two-countries example instead of a definition;
+"how much decline would cancel selection" became "how much further would
+fertility have to fall to erase it". If something here reads as though it were
+written for a demographer, that is a regression, not a standard being upheld.
+
+The break-even figure was a 33-cell heat map — family-size spread against
+parent-child persistence, break-even rate as colour — and the same reader could
+not read it at all. It is now 33 dots on the single axis that carries the point,
+drawn by `rangeFigure` into `#fig-range`. The two parameters survive in the
+hover text and in the "Show the numbers" table, and the heat map remains the
+right figure for the paper. The benchmark dot is deliberately labelled without a
+number: the lattice cell reads 1.53% while the exact solve quoted beside the
+chart is 1.52%, and printing both within a centimetre of each other reads as the
+page contradicting itself.
 
 The restraint is deliberate. Do not restore the first-draft top banner, long
 scrolling card narrative, duplicated result blocks, links to the interactive
@@ -316,16 +337,38 @@ map or separate paper landing page, or repeated "what this is not" caveats.
 The site should persuade by getting to the result, mechanism, boundary, and
 paper with very little friction.
 
-Mobile and desktop now have different rendering rules for good reasons:
+**The globe's light density is a constant and must stay one.** It used to be
+steered by a frame-timing controller that raised `stride` when frames ran long.
+That controller could not settle: the light pass is ~7000 individual sprite
+draws costing about 26 ms at stride 1 and about 13 ms at stride 2, a factor of
+two, while the thresholds it steered by spanned 15 to 26 ms, a factor of 1.7. No
+stride value lands inside that band, so it sat in a limit cycle and the desktop
+hero visibly flickered between a sparse and a dense Earth for as long as the
+page was open. Damping it with hysteresis only slows the cycle down; the loop is
+structural. Canvas resolution is not an alternative lever either — measured, the
+pass costs 20-25 ms at every dpr from 1 to 2, because the cost is per-draw-call
+overhead rather than fill rate.
 
-- On mobile the globe is a stationary background. Scroll-linked globe motion
-  was visibly choppy, and content reveal animations caused blocks to appear
-  unpredictably after refresh, so mobile content is present from the start.
+The deeper reason not to reintroduce it: `stride` is not a quality setting, it
+is the data. The caption promises one light per million people, and at stride 2
+it is one per two million. Mobile used to draw at stride 2 *and* detail 2 — one
+light per four million — under that same caption; since mobile paints the hero
+once rather than every frame, full density there costs a single paint and the
+caption is now true on every device. The remaining cost control is `detail`,
+driven by the veil and therefore by scroll position, which is a fact about the
+page rather than a measurement of it.
+
+Mobile and desktop still have different rendering rules for good reasons:
+
+- On mobile the globe is a stationary background painted once. Scroll-linked
+  globe motion was visibly choppy, and content reveal animations caused blocks
+  to appear unpredictably after refresh, so mobile content is present from the
+  start.
 - Figures fit the viewport without horizontal scrolling. The world figure uses
   a compact key and only the selection and extension endpoint labels; the full
   desktop annotations would overlap at phone width.
-- The boundary-grid tooltip is dismissed when the reader scrolls away so it
-  cannot remain floating over unrelated content.
+- The break-even figure's tooltip is dismissed when the reader scrolls away so
+  it cannot remain floating over unrelated content.
 - On desktop, remove-or-override conflicts matter. An obsolete first-draft
   `#hero h1` rule once overrode the current `.hero-v2 h1` rule and forced a
   132-pixel headline. That block was deleted on 2026-08-22, and a
@@ -579,6 +622,27 @@ WPP spelling that did not exist.
 
 **Natural Earth is pinned to release `v5.1.2`, not `master`.** A shape that
 moves under a stored prediction is the same problem as a data file that moves.
+
+**A required-artifact list and the fixture that fakes a repo have to move
+together.** Adding the author strip to the front page added three required files
+to `scripts/build_public.py`. `make_repo` in `tests/test_public.py` was not
+updated, so ten tests died on the first required-artifact check before reaching
+whatever each was actually testing — and the error they reported was the missing
+portrait, not the behaviour under test. They sat red long enough to be read as
+background noise. If a test in that file fails for a reason unrelated to its
+name, check the fixture against the constants at the top of `build_public.py`
+first.
+
+**A hand-written count in a test goes stale and guards nothing.**
+`tests/test_site.py` asserted the page checked more than 30 numbers against
+`story.json`. Rewriting the page for a general reader dropped it to 23, which is
+correct — fewer numbers is the point of that rewrite — so the test failed for
+being out of date rather than for finding a defect. Worse, the threshold could
+never have caught the failure that matters: a tagged element the regex skips,
+leaving a number printed on the page that nothing verifies. It now asserts that
+the number checked equals the count of `data-v="` in the body, which maintains
+itself and catches the real thing. Prefer a guard derived from the source over a
+constant someone has to remember to update.
 
 ## 9. How verification works here
 
