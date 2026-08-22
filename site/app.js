@@ -120,7 +120,28 @@
   var W = 0, H = 0, dpr = 1;
   var stars = document.createElement("canvas");
   var lamp = document.createElement("canvas");
-  var stride = mobile ? 2 : 1, frameCost = 16;
+  /* `stride` samples the light pool: 1 draws every light, 2 draws every other
+     one. It is deliberately a CONSTANT, not something measured frame timing is
+     allowed to move. Two reasons, and the second is the important one.
+
+     It cannot be made to settle. The lights are ~7000 separate sprite draws, so
+     the pass costs about 26 ms at stride 1 and about 13 ms at stride 2 - a
+     factor of two - while the thresholds it was steered by spanned 15 to 26 ms,
+     a factor of 1.7. No stride lands inside that band, so the controller sat in
+     a limit cycle: stride 1 reads too slow, stride 2 reads too fast, forever.
+     On the desktop hero that was visible as the population rapidly flickering
+     between sparse and dense for as long as the page was open.
+
+     And stride is not a quality knob, it is the data. The caption says one
+     light per million people; at stride 2 it is one per two million. A picture
+     of the world's population may not quietly redraw itself with half the
+     people in it because a frame ran long.
+
+     The honest cost control is `detail` in paint(), which is driven by the veil
+     - by scroll position, which is a fact about the page, not a measurement.
+     Full density is therefore only ever paid for in the hero, where the globe
+     is actually legible and nothing is scrolling. */
+  var stride = mobile ? 2 : 1;
 
   function buildLamp() {
     var size = 34;
@@ -172,7 +193,7 @@
     H = window.innerHeight;
     mobile = window.matchMedia("(max-width: 820px), (pointer: coarse)").matches;
     dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 2);
-    stride = mobile ? 2 : Math.min(stride, 3);
+    stride = mobile ? 2 : 1;
     canvas.width = Math.floor(W * dpr);
     canvas.height = Math.floor(H * dpr);
     canvas.style.width = W + "px";
@@ -473,32 +494,19 @@
     }
   }
 
-  var last = performance.now();
   var scrollTarget = window.scrollY;
   var needsPaint = true;
-  /* The first second or two after load is the noisiest frame timing gets -
-     first paint, web fonts, JIT warmup - and reacting to it made the light
-     count on the globe visibly flicker before anything had settled. Hold
-     stride through that window, then require it to stay past a threshold
-     for a bit before changing again, so a few noisy frames can't do it. */
-  var strideHoldUntil = last + 1500;
   window.addEventListener("scroll", function () {
     if (!mobile) scrollTarget = window.scrollY;
   }, { passive: true });
 
   function frame(time) {
-    var dt = Math.min(time - last, 50); last = time;
     if (mobile) {
       if (needsPaint) {
         paint(time, 0);
         needsPaint = false;
       }
     } else {
-      frameCost = frameCost * 0.9 + dt * 0.1;
-      if (time > strideHoldUntil) {
-        if (frameCost > 26 && stride < 3) { stride++; strideHoldUntil = time + 1000; }
-        else if (frameCost < 15 && stride > 1) { stride--; strideHoldUntil = time + 1000; }
-      }
       scrollTarget = window.scrollY;
       paint(time, scrollTarget);
     }
@@ -515,7 +523,7 @@
     resize(); needsPaint = true;
   });
   window.addEventListener("orientationchange", function () { resize(); needsPaint = true; });
-  requestAnimationFrame(function (t) { last = t; frame(t); });
+  requestAnimationFrame(frame);
 
   /* ------------------------------------------------------------- reveals */
 
