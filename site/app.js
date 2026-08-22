@@ -476,6 +476,12 @@
   var last = performance.now();
   var scrollTarget = window.scrollY;
   var needsPaint = true;
+  /* The first second or two after load is the noisiest frame timing gets -
+     first paint, web fonts, JIT warmup - and reacting to it made the light
+     count on the globe visibly flicker before anything had settled. Hold
+     stride through that window, then require it to stay past a threshold
+     for a bit before changing again, so a few noisy frames can't do it. */
+  var strideHoldUntil = last + 1500;
   window.addEventListener("scroll", function () {
     if (!mobile) scrollTarget = window.scrollY;
   }, { passive: true });
@@ -489,8 +495,10 @@
       }
     } else {
       frameCost = frameCost * 0.9 + dt * 0.1;
-      if (frameCost > 26 && stride < 3) stride++;
-      else if (frameCost < 15 && stride > 1) stride--;
+      if (time > strideHoldUntil) {
+        if (frameCost > 26 && stride < 3) { stride++; strideHoldUntil = time + 1000; }
+        else if (frameCost < 15 && stride > 1) { stride--; strideHoldUntil = time + 1000; }
+      }
       scrollTarget = window.scrollY;
       paint(time, scrollTarget);
     }
