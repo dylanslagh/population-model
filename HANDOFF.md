@@ -4,10 +4,9 @@ Written for whoever works on this next, human or model. `CLAUDE.md` is the
 short list of rules. This is the longer briefing: what exists, what is verified,
 what will bite you, and what to do next.
 
-> **This file is the current status.** `NEXT_SESSION.md` preserves the planning
-> state from before the paper and public-facing site were completed; do not use
-> its website to-do list as the current brief. `LOCAL_TOOLS.md` still records
-> the actual R, Rtools, Python, Tectonic, archive, and export paths.
+> **This file is the current status.** `LOCAL_TOOLS.md` records the actual R,
+> Rtools, Python, Tectonic, archive, and export paths. Earlier planning states
+> belong in git history rather than in a second handoff file.
 
 ---
 
@@ -674,8 +673,7 @@ the boundary figure readable, and the evidence on how fertility declines have
 differed across the family-size distribution within cohorts was not found at the
 coverage needed.
 
-`NEXT_SESSION.md` is now historical planning context. Update this handoff when a
-review changes the current site or publication state.
+Update this handoff when a review changes the current site or publication state.
 
 ## 13. The video
 
