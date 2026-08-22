@@ -1,22 +1,26 @@
 # World population model to 2150
 
-An interactive map, backed by a demographic projection that runs to 2150 and
-keeps score of its own predictions. If you are picking the project up in a new
-session, start with [HANDOFF.md](HANDOFF.md); the exact local paths for R,
-Python, Tectonic, and the downloaded UW data are in
+A 237-country cohort-component projection to 2150, carrying a fertility
+mechanism that a national average cannot represent, and a working paper that
+reports what it costs to cancel it.
+
+**Read the paper:**
+[`paper/population-model-1_2_2.pdf`](paper/population-model-1_2_2.pdf), with
+[`paper/population-model-supplement-1_2_2.pdf`](paper/population-model-supplement-1_2_2.pdf)
+for the engine validation, parameter sources, historical backtest and the full
+reproducibility path. **Read the argument** at
+[population.dylanslagh.com](https://population.dylanslagh.com), built from
+`site/` into `index.html`. **Explore the countries** in the interactive map at
+`map/index.html`. **Read how it was made:** every conversation that produced
+the project is committed in [`conversations/`](conversations/).
+
+If you are picking the project up in a new session, start with
+[HANDOFF.md](HANDOFF.md), which carries the current status and the traps; the
+exact local paths for R, Python, Tectonic and the downloaded UW data are in
 [LOCAL_TOOLS.md](LOCAL_TOOLS.md). The design brief is in
 [spec/population-2150-spec-v0.3.md](spec/population-2150-spec-v0.3.md) and it is
 the authority on why the project exists; this file is about what has actually
-been built. The handoff contains the current status and longer technical history.
-
-The public outputs are the public site --- a scrolling account of the argument
-over a rotating Earth lit by the model's own population, at `index.html`, with
-the interactive country map at `map/index.html` --- and a field-quality research
-paper in LaTeX and PDF. The current paper is version 1.2.1:
-[`paper/population-model-1_2_1.pdf`](paper/population-model-1_2_1.pdf), with
-[`paper/population-model-supplement-1_2_1.pdf`](paper/population-model-supplement-1_2_1.pdf)
-providing validation, parameter sources, the historical backtest and the full
-reproducibility path.
+been built.
 
 The short version of the argument: by 2150 essentially nobody alive today is
 still alive, so the answer is dominated entirely by what long-run fertility
@@ -72,8 +76,10 @@ mainstream composition change. Future development pressure is then a stress-test
 axis rather than a preferred forecast.
 
 At the central measured family-size spread and parent-child persistence,
-mainstream selection reaches a 1.165 fertility multiplier by 2150. An additional
-decline of about **1.53% per decade** after 2050 cancels it. The 4% path is an
+mainstream selection reaches a 1.164 fertility multiplier by 2150. An additional
+decline of **1.52% per decade** after 2050 cancels it — that is the paper's
+headline, solved across 50 paired stochastic migration paths, and the coarser
+deterministic lattice puts the same cell at 1.53%. The 4% path is an
 intentionally severe stress test, not an estimate of the future economy.
 
 The model ladder is a reduction test. Mainstream selection, calculated from two
@@ -132,7 +138,7 @@ country and very little for the world total.
 
 ## What exists now
 
-**The projection engine, built and tested.** This is phase 2 of the ten phases
+**The projection engine, built and tested.** This is phase 2 of the six phases
 in the spec. It is the piece everything else hangs off: given fertility,
 mortality and migration, it moves people through the years one at a time. It
 contains no theory about the future — that is deliberate, so that later results
@@ -152,12 +158,12 @@ Reproducing the UN is not the goal — the spec is explicit that the UN will win
 at 2050 and that's fine. It is the proof that the machinery is sound before any
 of the project's own claims get loaded into it.
 
-**What the older deterministic diagnostic says:** world population peaks at
+**What the deterministic diagnostic says:** world population peaks at
 **10.29 billion in 2084**, and reaches **8.78 billion by 2150**. Only the portion
-through 2100 is the UN reproduction. The older run holds fertility, mortality,
-and final migration counts after the source ends; it is retained as a test and
-legacy comparison, not the project's reference extension. The stochastic
-migration extension instead reaches a median **8.725 billion** in 2150, with a
+through 2100 is the UN reproduction; past it the run simply holds fertility,
+mortality and the final migration counts, which makes it a comparison rather
+than the project's reference extension. The stochastic migration extension is
+the reference, and reaches a median **8.725 billion** in 2150 with a
 migration-only 90% range of **8.656-8.772 billion**.
 
 The absurdity check — every woman keeps having children at exactly the 2024 rate
@@ -169,48 +175,52 @@ All numbers above come from `out/validation_wpp2024.json` and
 `out/run_to_2150.json`, regenerated by the scripts below. Nothing here is typed
 in by hand.
 
-**The Phase 4 Bayesian foundation is now in place.** The exact University of
-Washington annual fertility and life-expectancy archives have been downloaded,
-checked against the publisher's byte lengths, fingerprinted with SHA-256, and
-safely unpacked. These are UW products aligned to WPP 2024, not official UN
-products, and the code says so explicitly.
+**The Phase 4 probabilistic baseline, complete.** The University of Washington's
+annual fertility and life-expectancy archives are downloaded, checked against
+the publisher's byte lengths, fingerprinted with SHA-256, and read through a
+version-pinned R environment using UW's own accessors. These are UW products
+aligned to WPP 2024, not official UN products, and the code says so wherever
+the result is shown.
 
-The probabilistic path has two deliberate boundaries. The first preserves the
-1,000 UW total-fertility and female/male life-expectancy trajectories with their
-original draw identities. A separately versioned conversion step must turn
-those compact trajectories into the age-specific rates the engine needs. Only
-then does the second stage advance each prior or posterior draw through the
-already-tested population engine, one at a time. Fertility and mortality draw
-IDs, their pairing rule, migration assumptions, and any decision to hold a
-rate past its final source year all remain attached to the result.
+The probabilistic path keeps two deliberate boundaries. The first preserves the
+1,000 total-fertility and female/male life-expectancy trajectories with their
+original draw identities; a separately versioned step turns those compact
+trajectories into the age-specific rates the engine needs. The second advances
+each draw through the already-tested engine, one at a time. Fertility and
+mortality draw IDs, their pairing rule, migration assumptions, and any decision
+to hold a rate past its final source year stay attached to the result.
 
-This is infrastructure, not a Bayesian forecast yet. The version-pinned R
-reader has now produced and validated a genuine 1,000-trajectory Finland
-fixture through the official accessors. It confirmed the 2023 source anchor,
-all 78 stored alignment-shift values per component, and that the sole missing
-WPP location is Holy See (M49 336). The conversion from TFR/e0 to age schedules
-must still be implemented and tested before any posterior population range is
-published.
+The ensemble is stored as vintage `2026-08-10-phase4-uw-baseline` with every
+quantity marked `is_project_claim: false`. It is a **conventional probabilistic
+comparator**, not this project's own view of 2150: it propagates UW's
+mean-reverting posterior, which is the assumption the spec's eighth standing
+instruction declines to adopt by default. Phase 5 needed something fixed to be
+compared against, and this is it.
 
-## Two things found while building it
+**The Phase 5 mechanistic layer, complete.** Selection is an extra composition
+axis on the same engine. Setting every fertility propensity to one reproduces
+the ordinary engine to a relative difference of 3×10⁻¹⁶, so any difference in a
+result is the mechanism rather than a second implementation of the arithmetic.
+All eight sourced mechanism parameters are checked against their sources in
+[`docs/mechanism-parameter-audit.md`](docs/mechanism-parameter-audit.md); five
+further parameters are scenario knobs with no independently established future
+value, are labelled as such in the loader, and none of them carries a headline.
 
-**The spec's 244 billion test does not work.** Spec section 8 says the
-constant-fertility run should reach about 244 billion by 2150, and that the
-engine has a bug if it doesn't. That figure comes from the UN's 2004 long-range
-report, which froze the fertility of the *2002* revision. Constant fertility
-means "freeze the base year", so the answer is a direct function of what
-fertility was in the base year — and it has fallen a great deal since 2002.
-Hitting 244 billion from a 2024 base would mean the engine was wrong. It has
-been replaced with a check that does bite: reproduce the UN's own WPP 2024
-constant-fertility variant, which the engine does to 0.05%.
+## Two conventions that look like rounding and are not
 
-**Mothers under 15 and over 49 matter more than they look.** The UN's
-single-age fertility file covers ages 15–49 only; its five-year file covers
-10–54. The missing mothers are about 0.3% of world births. Left out, the
-projection ran 0.3% low at 2100 and the error was growing steadily — small
-enough to look like rounding, and a compounding bias over 126 years. The ingest
-now assembles both files and refuses to build if the result doesn't reproduce
-the UN's published fertility rate.
+**Childbearing runs 10–54, not 15–49.** The UN's single-age fertility file
+covers 15–49; its five-year file covers 10–54. The mothers outside the narrower
+window are about 0.3% of world births, which is 0.3% at 2100 and still growing
+— small enough to read as rounding, and a compounding bias over 126 years. The
+ingest assembles both files and refuses to build if the result does not
+reproduce the UN's published fertility rate.
+
+**Constant fertility means "freeze the base year", so it is not a fixed
+number.** Any published constant-fertility total is a function of the base
+year's fertility, and world fertility has fallen a long way between revisions.
+The check that bites is therefore reproducing the UN's *own* WPP 2024
+constant-fertility variant, which the engine does to 0.05% — not matching a
+total quoted from an older report against a newer base.
 
 ## Running it
 
@@ -340,9 +350,12 @@ comes with them.
 
 ## What is next
 
-The one-country accessor checkpoint is complete. The next Phase 4 checkpoint is
-the separately versioned conversion from TFR/e0 to age-specific fertility and
-survival schedules, first against the verified Finland fixture and then across
-the full 236-location export. After reconstruction checks come prior-predictive
-runs through the existing engine. The mechanistic layer where selection
-competes against a falling fertility environment remains phase 5.
+Phases 1 to 5 are built and tested. What remains is phase 6, **scoring**: the
+formats are fixed, two prediction vintages are stored, and the writer raises
+rather than overwrite one. Nothing in it resolves soon. WPP 2027 is the next
+data event that moves any of these predictions, and the cohort fertility that
+would settle the mechanism's central parameter does not complete until about
+2038. A model that keeps score has to wait for the score.
+
+Smaller work that is genuinely open is listed in
+[HANDOFF.md](HANDOFF.md#4-what-is-not-built).

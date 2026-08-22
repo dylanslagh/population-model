@@ -395,11 +395,10 @@ footer p{max-width:80ch}
   cancels. Country results, especially for the Gulf, remain extremely wide.
   This is a project extension after 2100, never an official UN projection.</p>
   <div class="flow-wrap">__UN_EXTENSION__</div>
-  <p class="note">The interactive country line and pyramids above still use the
-  earlier deterministic working run after 2100, including its frozen final
-  migration count. They are retained for inspection while the new stochastic
-  extension is connected to the selection model; the figure in this section is
-  the current reference for post-2100 migration.</p>
+  <p class="note">The interactive country line and pyramids above hold the final
+  migration count constant after 2100 rather than drawing stochastic paths. That
+  keeps a single country's line readable; the figure in this section is the
+  reference for post-2100 migration, and the two differ only after 2100.</p>
   <h2 id="selection-first">Start with selection; stress-test future development</h2>
   <p>Today's fertility already contains today's economic and social environment.
   The cleaner benchmark therefore keeps the observed and already-projected
@@ -412,16 +411,18 @@ footer p{max-width:80ch}
   <p>The left panel asks how much <i>additional</i>, uniform decline after 2050
   would be needed to cancel selection. At the central measured family-size
   spread and parent-child persistence, the answer is about <b>1.53% per
-  decade</b>. The old 4% path sits far beyond that boundary, so it belongs as a
-  stress test rather than as this project's preferred forecast.</p>
+  decade</b> on this lattice, and 1.52% when solved exactly across paired
+  stochastic migration paths. The 4% path sits far beyond that boundary, so it
+  belongs as a stress test rather than as this project's preferred forecast.</p>
   <div class="flow-wrap">__SELECTION_BOUNDARY__</div>
   <p>The model ladder on the right is also a complexity check. Mainstream
   selection adds 1.82 billion people by 2150 relative to the stable-low
   no-selection benchmark. Adding the named groups and one routing knob changes
   that by only another 0.05 billion. The illustrative 4% pressure path then
   removes 2.79 billion.
-  The headline was being controlled by the unsourced environmental knob, not by
-  the elaborate selection extension.</p>
+  So the headline is controlled by the unsourced environmental knob rather than
+  by the elaborate selection machinery, which is the reason this project reports
+  the boundary instead of a population total.</p>
   <h2>What the uncertainty is made of</h2>
   <p>The band above says the answer is uncertain. It does not say what about,
   and those are different claims. Each bar below is how wide the 90% range gets
@@ -444,17 +445,17 @@ footer p{max-width:80ch}
   keeps rising &mdash; longer education, steeper careers, costlier housing,
   later partnership &mdash; so a person of any given disposition has fewer
   children than the same person would have had a generation earlier.</p>
-  <p>The older four-corner plot below remains useful as a stress test. Under its
-  illustrative 4% pressure path, selection does not catch the moving
-  environment by 2150. The break-even map above now makes the conditional nature
-  of that result explicit: 4% is a scenario well beyond the central 1.53%
-  boundary, not a measured future economic path.</p>
+  <p>The four-corner plot below is a stress test. Under its illustrative 4%
+  pressure path, selection does not catch the moving environment by 2150. The
+  break-even map above is what makes that result readable as the conditional
+  statement it is: 4% is a scenario well beyond the central boundary, not a
+  measured future economic path.</p>
   <p><b>The last empirical gap is now measured.</b> Across 19 low-fertility
   countries, the median spread in completed family size is a coefficient of
   variation of 0.57 (country range 0.44-0.79); U.S. CDC cohorts independently
-  give 0.69. The old assumed 0.60 was close by luck. The model uses this as an
-  effective spread paired with the observed parent-child correlation, not as a
-  claim that all family-size variation is an inherited latent trait.</p>
+  give 0.69. The model uses this as an effective spread paired with the observed
+  parent-child correlation, not as a claim that all family-size variation is an
+  inherited latent trait.</p>
   __MECHANISMS__
   <p class="note">All eight sourced mechanism parameters have been
   <b>checked against their evidence</b>. Five of the thirteen parameters remain
@@ -468,9 +469,9 @@ footer p{max-width:80ch}
   already happened. From 2024 they come from this project's projection engine, run on
   the UN's own fertility and mortality assumptions — it reproduces their published
   numbers to about 0.001% at 2100. After 2100 nobody publishes fertility or mortality
-  rates, so the run holds them at their 2100 values. The interactive line also
-  retains the older frozen-migration treatment; the separate boundary figure
-  above shows the current stochastic extension. Everything after 2100 is a
+  rates, so the run holds them at their 2100 values. The interactive line holds
+  migration constant there too; the separate boundary figure above draws it
+  stochastically. Everything after 2100 is a
   project assumption, not a UN forecast.</p>
   <p><b>A warning the project takes seriously.</b> Migration is close to unforecastable
   beyond a few decades. It roughly cancels out for the world as a whole, but it

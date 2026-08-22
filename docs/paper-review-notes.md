@@ -4,6 +4,8 @@ Review of *Selection on Fertility, and the Environmental Decline That Would Canc
 
 These are candidate points for Dylan to consider, not an instruction to implement all of them. They are ordered roughly by importance.
 
+*Kept as a dated artifact of that review, not as current guidance about the paper. The review itself is conversation 10 in [`conversations/`](../conversations/index.md), and what the paper does now is in [HANDOFF.md](../HANDOFF.md) section 14.*
+
 1. **A correlation is being treated as a transmission probability.** Equation 4 uses the reported parent-child correlation, $r$, as though it were the probability of inheriting a type or the regression slope of child fertility on parent fertility. Those quantities coincide only under additional assumptions, including equal variances between generations. In general, $\operatorname{Cov}(X,Y)=r\sigma_X\sigma_Y$, not $r\sigma_X^2$. [Murphy's study](https://www.tandfonline.com/doi/full/10.1080/19485565.2013.833779) reports Pearson correlations; it does not directly estimate the transition probability used by the model.
 
 2. **The covariance is constructed, not "directly observed."** The coefficient of variation and correlation come from different datasets, countries, and cohorts. Multiplying their central values creates a synthetic covariance under assumptions; it does not reproduce a covariance observed in one intergenerational sample. Either estimate the covariance or regression slope from paired data, or soften this central claim substantially.
