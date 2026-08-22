@@ -34,6 +34,7 @@ import math
 import random
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -438,6 +439,33 @@ def build_globe() -> dict:
     }
 
 
+def read_conversation_record() -> dict:
+    """Count the committed conversation record, so the page cannot misstate it.
+
+    The page tells a reader the paper was made in a numbered set of recorded
+    conversations over a stretch of days. Both numbers move whenever the record
+    is re-exported, and a hand-typed count is exactly the kind of claim that
+    goes quietly wrong. So they are read out of the generated index and checked
+    by the build like every other number the page prints.
+    """
+    index = REPO / "conversations" / "index.md"
+    rows = re.findall(
+        r"^\|\s*\d+\s*\|.*?\|\s*(\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})\s*\|",
+        index.read_text(encoding="utf-8"), re.M,
+    )
+    if not rows:
+        raise BuildError(f"no conversation rows found in {index}; has the "
+                         f"index format changed?")
+    first = date.fromisoformat(min(start for start, _ in rows))
+    last = date.fromisoformat(max(end for _, end in rows))
+    return {
+        "conversations": len(rows),
+        "days": (last - first).days + 1,
+        "first": first.isoformat(),
+        "last": last.isoformat(),
+    }
+
+
 def build_story() -> dict:
     macros = load_macros()
     break_even = json.loads((REFERENCE / "selection_break_even_sensitivity.json").read_text(encoding="utf-8"))
@@ -494,6 +522,7 @@ def build_story() -> dict:
             "date": macros["PaperDate"],
             "dataVintage": macros["DataVintage"],
         },
+        "record": read_conversation_record(),
         "horizon": {
             "endYear": int(number(macros, "ProjectionEndYear")),
             "unBoundary": int(number(macros, "OfficialBoundaryYear")),

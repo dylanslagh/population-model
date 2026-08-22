@@ -995,14 +995,15 @@
 
   /* --- how much decline would cancel it -------------------------------- */
   (function rangeFigure() {
-    /* This used to be a 33-cell heat map: family-size spread up one side,
-       parent-child persistence along the other, break-even rate as colour.
-       It is the right figure for the paper and the wrong one for this page -
-       a general reader meets two unfamiliar statistical axes and a colour
-       scale before reaching the point, and the point is only ever the number
-       on the third axis. So the same 33 results are drawn as 33 dots on the
-       one axis that matters. Nothing is dropped: both parameters are still in
-       the hover reading and in the table under "Show the numbers". */
+    /* 33 results, drawn as 33 dots on the one axis that carries the point: the
+       break-even rate. Nothing is dropped - both parameters that produced each
+       dot are in the hover reading and in the table under "Show the numbers".
+
+       Do not turn this into a heat map of spread against persistence, however
+       natural that grid looks in the data. It is the right figure for the paper
+       and the wrong one for this page: a general reader meets two unfamiliar
+       statistical axes and a colour scale before reaching an answer that only
+       ever lived on a third axis. */
     var svg = document.getElementById("fig-range");
     if (!svg) return;
     var compact = window.innerWidth <= 600;
