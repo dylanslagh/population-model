@@ -58,8 +58,7 @@ whole.
 
 It is not a clean document and it should not be read as one. It contains wrong
 turns, numbers that were later corrected, and assumptions that survived longer
-than they deserved to. Some of the mistakes are recorded in the paper and its
-supplement because they were instructive:
+than they deserved to:
 
 - an absurdity check that itself encoded a stale figure and was wrong for years;
 - a rail on the life-expectancy sex gap that clipped a tenth of all values
@@ -68,26 +67,41 @@ supplement because they were instructive:
   they differ by 0.22%;
 - a field named `median_peak` that held a mean.
 
-Each of those was found by a check, and the checks are in the repository. A
-reader who wants to know how much to trust the paper is entitled to see how many
-times it was wrong first.
+**This is deliberately the only place they are recorded.** The paper and the
+supplement are written to be read on their own, by someone who has never seen
+this directory and never needs to: they state what the model does and what it
+found, not the order in which the authors arrived at it. That division is the
+point of keeping the record at all. Each of those mistakes was caught by a
+check, the checks are in the repository, and a reader who wants to know how much
+to trust the paper is entitled to see how many times it was wrong first — but
+they should have to come here to see it, rather than have it mixed into the
+argument.
 
-## The two design conversations
+## The four transcripts that are not session files
 
-The first two entries are different in kind from the rest. They happened in chat
-rather than in a coding tool, they contain no tool calls, and between them they
-produced the specification everything afterwards was built against. Each app
-wrote its own transcript, and because those files are small and already curated
-they are committed verbatim under [`sources/`](sources/) alongside the render —
-unlike the JSONL sessions, which are not.
+Conversations 01, 02, 12 and 14 happened in apps that keep no readable session
+file, so what is committed under [`sources/`](sources/) is the transcript the app
+itself produced — unlike the JSONL sessions, which are not committed.
 
-They are also the most interesting reading here, because the project's ideas and
-at least one of its durable mistakes are both visible arriving. The claim that a
-constant-fertility projection should reach roughly 244 billion by 2150 — which
-the paper's supplement records as an absurdity check that was itself wrong — is
-in conversation 01, offered in passing as a sanity test. It became a stated
-requirement in the specification and stayed one until the engine was built and
-disagreed with it.
+**01 and 02 designed the project.** They happened in chat rather than in a coding
+tool, they contain no tool calls, and between them they produced the
+specification everything afterwards was built against. They are also the most
+interesting reading here, because the project's ideas and at least one of its
+durable mistakes are both visible arriving. The claim that a constant-fertility
+projection should reach roughly 244 billion by 2150 is in conversation 01,
+offered in passing as a sanity test. It became a stated requirement in the
+specification and stayed one until the engine was built and disagreed with it.
+
+**12 and 14 are ChatGPT Work sessions**, which revised the paper to v1.2.1 and
+rewrote the public site. They are the weakest records in this directory and the
+index says so rather than printing a zero: the app retained no tool output and no
+reasoning, and by the time each transcript was made it no longer held the
+original wording of its own replies. Dylan's messages are his. The assistant
+turns are condensed summaries of work whose result is visible in the commits
+those conversations produced, and two intervals in conversation 12 are marked in
+square brackets as summaries rather than quotations. Both files were reformatted
+to this directory's `USER:` / `ASSISTANT:` convention so the exporter could read
+them; no message text was changed.
 
 ## Known gaps
 
@@ -109,6 +123,13 @@ summariser cut them off mid-string. The hub review site's address appears in
 several conversations; it is password-gated and is already named in the
 repository's committed handoff files, so it is left as written rather than
 redacted, which would be theatre.
+
+**Other people are anonymised, and it shows.** One reader gave detailed feedback
+on the site in conversation 15 and appears there as `[a reader]`. Their comments
+are quoted in full because they changed the page; their name is not published
+because they were talking to Dylan, not to the internet. The substitution is in
+`PRIVATE_NAMES` in the exporter, so it is visible and reversible rather than a
+silent edit.
 
 ## Regenerating
 

@@ -1,6 +1,6 @@
 # 11. Revising the paper and continuing the rates
 
-**Claude Code** &middot; 2026-08-16 to 2026-08-16 &middot; 5 messages from Dylan, 60 from the model, 368 tool calls.
+**Claude Code** &middot; 2026-08-16 to 2026-08-16 &middot; 6 messages from Dylan, 63 from the model, 376 tool calls.
 
 > Tool output and model reasoning are omitted; see [README](README.md) for what that leaves out and why.
 
@@ -1147,4 +1147,104 @@ The gap entry is stale — that conversation is now number 02. Fixing it and the
 - `Bash — cd "~/Documents/GitHub/population-model" && ./.venv/Scripts/python.exe - <<'PY' from pathlib i...`
 
 </details>
+
+### Model
+
+Now the paper sentence and the landing page, then commit.
+
+<details><summary>6 tool calls</summary>
+
+- `Edit — ~\Documents\GitHub\population-model\paper\sections\00_contributions.tex`
+- `Bash — cd "~/Documents/GitHub/population-model" && ./.venv/Scripts/python.exe - <<'PY' from pathlib i...`
+- `Bash — cd "~/Documents/GitHub/population-model" && ./.venv/Scripts/python.exe -c " import pymupdf d=p...`
+- `Read — ~\Documents\GitHub\population-model\out\paper-pages\contributions.png`
+- `Bash — cd "~/Documents/GitHub/population-model" && git add -A && git commit -q -F - <<'MSG' && git lo...`
+- `Bash — cd "~/Documents/GitHub/population-model" && git push 2>&1 | tail -3 && gh workflow run publish...`
+
+</details>
+
+### Model
+
+Committed and pushed; the hub is rebuilding.
+
+## What's live
+
+`conversations/` — **eleven** conversations, 98,000 words, 864 KB, rendered from 93 MB of local transcripts.
+
+| # | Conversation | Tool | Dates |
+|---|---|---|---|
+| 01 | Designing the project | chat | 08-08 |
+| 02 | A hierarchical model, and the case for development pressure | chat | 08-08 |
+| 03 | Building the engine, backtest and map | Claude Code | 08-08 → 09 |
+| 04 | Population-model handoff and map colours | Codex | 08-09 → 10 |
+| 05 | The probabilistic baseline and the mechanism layer | Claude Code | 08-10 → 12 |
+| 06 | Researching the mechanism parameters | Codex | 08-14 |
+| 07 | Finding the next task | Codex | 08-15 |
+| 08 | The bar-chart race video | Claude Code | 08-15 |
+| 09 | Writing the paper | Claude Code | 08-15 → 16 |
+| 10 | Reviewing the paper | Codex | 08-16 |
+| 11 | Revising the paper and continuing the rates | Claude Code | 08-16 |
+
+No gaps. Your two transcripts closed the only one, and they're committed verbatim under `conversations/sources/` as well as rendered — they're small and already curated, so unlike the JSONL there was no reason not to keep the originals.
+
+## The best thing in them
+
+Conversation 01, message [2]:
+
+> *"One sanity check worth building in: the UN's constant-fertility scenario hits 244 billion by 2150. If your engine reproduces that under constant-fertility inputs, your math is right."*
+
+That's the 244-billion error, arriving. Offered in passing as a helpful check, written into the spec as a requirement, and it sat there until the engine was built and disagreed with it — because the figure came from a 2004 UN report built on the 2002 revision, and fertility had fallen a great deal since. Hitting 244 billion from a 2024 base would have meant the engine was *wrong*.
+
+The supplement already described that failure. Now it can be pointed at. I added it to the paper's contributions note, because it makes the case for publishing the record better than any argument about transparency does: the mistake is one I made, in the first ten minutes, and it survived because it was written down confidently.
+
+## Three bugs the export surfaced
+
+All found by a check firing when it shouldn't have, which is becoming the pattern on this project:
+
+- A sort whose tiebreak called `list.index` on the list being reordered underneath it.
+- Dating each session by its first *kept* turn, which put a resumed session days early — the harness replays the opening prompt with its original timestamp.
+- Your username surviving in URL-encoded scratch paths (`<project-scratch>...`) after being redacted in every plain form. Redacting one form and not another reads as deliberate, which is worse than redacting neither.
+
+I also chased two apparent encoding failures that turned out to be the Windows console mangling em dashes on the way to my screen. The files have 71 em dashes and zero replacement characters.
+
+## Two things worth knowing
+
+**Conversations 09 and 11 open with the same message from you.** Not duplication — 11 resumed the same named session after a restart. Noted in the README.
+
+**`hub.dylanslagh.com` appears 29 times** and I left it as written. It's password-gated and already named in your committed handoff files, so redacting it here would have been theatre — but it is now more discoverable than it was this morning. Say the word if you'd rather I scrub it.
+
+The paper is 26 pages, the supplement 8, and 189 tests pass. The public webpage is still the one unstarted output.
+
+### Dylan
+
+Minor quick question: When did the UN start publishing it's 2100 prediction, and what does that imply for when it will first publish a 2150 prediction of its own?
+
+<details><summary>2 tool calls</summary>
+
+- `WebSearch — World Population Prospects 2010 revision first time projections extended to 2100 previously 2050 horizon`
+- `WebSearch — United Nations long-range population projections reports 1992 "to 2150" 1998 revision "World Population to ...`
+
+</details>
+
+### Model
+
+**2100 arrived with the 2010 revision**, presented 3 May 2011. It was the first standard WPP to project to 2100 for all countries; every revision before it stopped at 2050. And the stated reason for the extension was methodological rather than calendrical — they had to develop a new fertility projection method (the Bayesian hierarchical one your model's comparator is built on) before they could defend going past 2050.
+
+**But the UN has already published 2150 projections — three times.** Just not inside the standard WPP:
+
+- **1992** — *Long-range World Population Projections: Two Centuries of Population Growth, 1950–2150*
+- **~1999**, based on the 1998 revision — also to 2150, by major area only
+- **2004** — *World Population to 2300*, which jumped past 2150 and was the first with country-level detail
+
+So the honest answer to your question is that a UN 2150 number exists; it's just 22 years old and built on WPP 2002. That's the same document your 244-billion figure came from, which is why it was stale enough to be wrong.
+
+**What the history implies.** Two different clocks:
+
+*The standard WPP horizon* isn't close. They extended when it had shrunk to ~42 years and jumped to ~90; WPP 2024 still has 76 years of runway, and WPP 2027 will have 73. On the 2010 precedent they'd extend around the 2060s — and even then only if a method can carry it.
+
+*The long-range reports* are the likelier route, and they used to come every 5–15 years. Nothing since 2004 is by a wide margin the longest gap in the series.
+
+Which is the actual gap your project sits in: not that nobody has ever published a 2150 figure, but that nobody has published a *current* one, and the institution best placed to has gone two decades without trying.
+
+Sources: [WPP 2010 revision](https://www.un.org/en/desa/world-population-prospects-2010-revision) · [1992 long-range report](https://digitallibrary.un.org/record/138811/files/un_1992_long-range_world_population_projections_1950-2150.pdf) · [World Population to 2300](https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/files/documents/2020/Jan/un_2002_world_population_to_2300.pdf) · [UN long-range projections index](https://www.un.org/en/development/desa/population/publications/pdf/trends/population-projections.pdf)
 

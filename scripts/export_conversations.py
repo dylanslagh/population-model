@@ -30,8 +30,9 @@ Dropped, with counts reported in the index so the omission is not silent:
 
 Redaction
 ---------
-Absolute paths are rewritten to `~`, and the export refuses to write anything if
-a credential-shaped string appears. That check has never fired; it is here so
+Absolute paths are rewritten to `~`, other people Dylan named in passing become
+`[a reader]` and similar, and the export refuses to write anything if a
+credential-shaped string appears. That last check has never fired; it is here so
 that if it ever does, the failure is loud rather than a quiet publication.
 
     python scripts/export_conversations.py
@@ -117,11 +118,25 @@ class Conversation:
 USER = HOME.name
 ENCODED_HOME = re.compile(rf"C--Users-{re.escape(USER)}-[A-Za-z0-9-]*")
 
+#: Other people who appear by name because Dylan mentioned them in passing. They
+#: did not agree to be in a public record, and what they said matters here while
+#: who they are does not, so the name goes and the words stay. Dylan's own name
+#: is not redacted: he is an author.
+PRIVATE_NAMES = {"Kira": "[a reader]"}
+PRIVATE_NAME_RE = re.compile(
+    r"\b(" + "|".join(re.escape(n) for n in PRIVATE_NAMES) + r")('s)?\b"
+) if PRIVATE_NAMES else None
+
 
 def clean(text: str) -> str:
     """Normalise absolute paths, so the record is about the work not the machine."""
     if not text:
         return ""
+    if PRIVATE_NAME_RE:
+        text = PRIVATE_NAME_RE.sub(
+            lambda m: PRIVATE_NAMES[m.group(1)] + ("'s" if m.group(2) else ""),
+            text,
+        )
     # Windows, forward-slash, escaped, and the Git Bash mount form, which is
     # what the shell tool actually emitted for most of this project.
     drive, rest = str(HOME)[0], str(HOME)[2:].replace("\\", "/")
@@ -211,10 +226,14 @@ def read_claude(path: Path, title: str, share_url: str = "") -> Conversation:
 
 # ------------------------------------------------------ plain-text transcripts
 
-#: The two conversations that designed the project happened in chat rather than
-#: in a coding tool, and each app wrote its own transcript. Those files are
-#: small, already curated, and shareable, so unlike the JSONL sessions they are
-#: committed alongside the render and the render is parsed back out of them.
+#: Some conversations happened in an app that keeps no readable session file:
+#: the two that designed the project, and the two ChatGPT Work sessions that
+#: revised the paper and the site. In each case the app wrote its own
+#: transcript. Those files are small, already curated, and shareable, so unlike
+#: the JSONL sessions they are committed alongside the render and the render is
+#: parsed back out of them. Anything before the first speaker marker is the
+#: file's own framing rather than a message, and is dropped; say what it said in
+#: the source's ``note`` instead, where the index can carry it.
 TEXT_SPEAKERS = (
     (re.compile(r"^\[\d+\]\s+(DYLAN|CLAUDE)\s*$"), {"DYLAN": "user", "CLAUDE": "assistant"}),
     (re.compile(r"^(USER|ASSISTANT):\s*$"), {"USER": "user", "ASSISTANT": "assistant"}),
@@ -222,10 +241,17 @@ TEXT_SPEAKERS = (
 
 
 def read_text(path: Path, title: str, share_url: str = "",
-              started: str = "") -> Conversation:
-    convo = Conversation(path.stem[:8], title, "chat", path, share_url=share_url)
-    convo.file_started = convo.file_ended = started
-    convo.dropped = {"tool output": 0, "reasoning": 0, "subagent": 0, "injected": 0}
+              started: str = "", ended: str = "", tool: str = "chat",
+              dropped: str = "") -> Conversation:
+    convo = Conversation(path.stem[:8], title, tool, path, share_url=share_url)
+    convo.file_started = started
+    convo.file_ended = ended or started
+    # A transcript the app wrote for us cannot report how much it left out. A
+    # zero would claim nothing was dropped, which is the opposite of true, so
+    # these carry a word instead of a count.
+    blank = dropped if dropped else 0
+    convo.dropped = {"tool output": blank, "reasoning": blank,
+                     "subagent": blank, "injected": blank}
 
     role, buffer = None, []
 
@@ -423,31 +449,44 @@ def scan_for_secrets(text: str, where: str) -> None:
 
 
 # The conversations, in the order they happened. Titles are Dylan's and the
-# tools' own, not invented here.
+# tools' own, not invented here. `started`/`ended` are only for `text` sources,
+# which carry no timestamps of their own; the others are read out of the file.
 SOURCES = [
-    ("text", "sources/00-claude-design-conversation.txt",
-     "Designing the project", "2026-08-08T00:00"),
-    ("text", "sources/01-chatgpt-bayesian-hierarchical-model.txt",
-     "A hierarchical model, and the case for development pressure",
-     "2026-08-08T12:00"),
-    ("codex", "2026/08/09/rollout-2026-08-09T15-00-56-019fe7e6-46af-7b02-96de-3d39dcb00b44.jsonl",
-     "Population-model handoff and map colours", ""),
-    ("claude", "e9fffde5-ee84-4f45-a521-998acaa5dd8e.jsonl",
-     "Building the engine, backtest and map", ""),
-    ("claude", "ee3deccd-97b5-4043-9011-99268da9e308.jsonl",
-     "The probabilistic baseline and the mechanism layer", ""),
-    ("codex", "2026/08/13/rollout-2026-08-13T20-02-09-019ffd93-7be4-7270-a6c4-0ac41f19480b.jsonl",
-     "Researching the mechanism parameters", ""),
-    ("codex", "2026/08/15/rollout-2026-08-15T06-11-38-01a004e7-d884-70a2-a3e1-d1c000b02528.jsonl",
-     "Finding the next task", ""),
-    ("claude", "1ff8c8ce-f77a-4aed-83f6-e86b1157bbc2.jsonl",
-     "The bar-chart race video", ""),
-    ("claude", "fd025039-0589-460c-b029-1c146653edfe.jsonl",
-     "Writing the paper", ""),
-    ("codex", "2026/08/16/rollout-2026-08-16T06-27-51-01a00a1d-0e30-71f3-aaa5-6af05d0426a3.jsonl",
-     "Reviewing the paper", ""),
-    ("claude", "f7ec965b-b541-4139-bfcb-3b4029d57cce.jsonl",
-     "Revising the paper and continuing the rates", ""),
+    dict(kind="text", path="sources/00-claude-design-conversation.txt",
+         title="Designing the project", started="2026-08-08T00:00"),
+    dict(kind="text", path="sources/01-chatgpt-bayesian-hierarchical-model.txt",
+         title="A hierarchical model, and the case for development pressure",
+         started="2026-08-08T12:00"),
+    dict(kind="codex", path="2026/08/09/rollout-2026-08-09T15-00-56-019fe7e6-46af-7b02-96de-3d39dcb00b44.jsonl",
+         title="Population-model handoff and map colours"),
+    dict(kind="claude", path="e9fffde5-ee84-4f45-a521-998acaa5dd8e.jsonl",
+         title="Building the engine, backtest and map"),
+    dict(kind="claude", path="ee3deccd-97b5-4043-9011-99268da9e308.jsonl",
+         title="The probabilistic baseline and the mechanism layer"),
+    dict(kind="codex", path="2026/08/13/rollout-2026-08-13T20-02-09-019ffd93-7be4-7270-a6c4-0ac41f19480b.jsonl",
+         title="Researching the mechanism parameters"),
+    dict(kind="codex", path="2026/08/15/rollout-2026-08-15T06-11-38-01a004e7-d884-70a2-a3e1-d1c000b02528.jsonl",
+         title="Finding the next task"),
+    dict(kind="claude", path="1ff8c8ce-f77a-4aed-83f6-e86b1157bbc2.jsonl",
+         title="The bar-chart race video"),
+    dict(kind="claude", path="fd025039-0589-460c-b029-1c146653edfe.jsonl",
+         title="Writing the paper"),
+    dict(kind="codex", path="2026/08/16/rollout-2026-08-16T06-27-51-01a00a1d-0e30-71f3-aaa5-6af05d0426a3.jsonl",
+         title="Reviewing the paper"),
+    dict(kind="claude", path="f7ec965b-b541-4139-bfcb-3b4029d57cce.jsonl",
+         title="Revising the paper and continuing the rates"),
+    dict(kind="text", path="sources/12-chatgpt-paper-revision.txt",
+         title="Revising the paper to version 1.2.1",
+         tool="ChatGPT Work", started="2026-08-19", ended="2026-08-22",
+         dropped="not kept"),
+    dict(kind="claude", path="ec22f14c-3324-442f-997f-ca1df6589230.jsonl",
+         title="Making the repository public and building the site"),
+    dict(kind="text", path="sources/13-chatgpt-website-revision.txt",
+         title="Revising the public website",
+         tool="ChatGPT Work", started="2026-08-20", ended="2026-08-22",
+         dropped="not kept"),
+    dict(kind="claude", path="f655cff7-ab06-48c4-9b9f-909ac39461af.jsonl",
+         title="Fixing the globe and simplifying the front page"),
 ]
 
 #: Conversations known to exist but not exported. Empty is the goal; when it is
@@ -462,17 +501,25 @@ def main() -> int:
     args = parser.parse_args()
 
     conversations: list[Conversation] = []
-    for kind, relative, title, share in SOURCES:
+    for source in SOURCES:
+        kind, title = source["kind"], source["title"]
         root = {"claude": CLAUDE_SESSIONS, "codex": CODEX_SESSIONS,
                 "text": OUT}[kind]
-        path = root / relative
+        path = root / source["path"]
         if not path.exists():
             raise SystemExit(f"missing source transcript: {path}")
         if kind == "text":
-            conversations.append(read_text(path, title, started=share))
+            conversations.append(read_text(
+                path, title,
+                share_url=source.get("share", ""),
+                started=source.get("started", ""),
+                ended=source.get("ended", ""),
+                tool=source.get("tool", "chat"),
+                dropped=source.get("dropped", ""),
+            ))
         else:
             reader = read_claude if kind == "claude" else read_codex
-            conversations.append(reader(path, title, share))
+            conversations.append(reader(path, title, source.get("share", "")))
     # Sort by date, breaking ties in declared order. The two chat transcripts
     # carry a date and no per-message times, so they cannot be ordered against a
     # coding session that began the same day by timestamp alone; the declared
