@@ -4,31 +4,33 @@ Written for whoever works on this next, human or model. `CLAUDE.md` is the
 short list of rules. This is the longer briefing: what exists, what is verified,
 what will bite you, and what to do next.
 
-> **Start with `NEXT_SESSION.md`.** It contains Dylan's clarified end goal,
-> current session status, the exact next task, and a link to `LOCAL_TOOLS.md`,
-> where the actual R, Rtools, Python, Tectonic, archive, and export paths are
-> recorded. This file is the deeper technical history.
+> **This file is the current status.** `NEXT_SESSION.md` preserves the planning
+> state from before the paper and public-facing site were completed; do not use
+> its website to-do list as the current brief. `LOCAL_TOOLS.md` still records
+> the actual R, Rtools, Python, Tectonic, archive, and export paths.
 
 ---
 
 ## 1. What this is
 
-An interactive world map backed by a demographic projection that runs to 2150,
-which keeps a scored record of its own predictions. Click a country, see its
-population pyramid and its path to 2150.
+A demographic research project with five finished surfaces: a 237-country
+cohort-component model to 2150, working paper v1.2.1 and supplement, a concise
+public-facing website, an interactive country map, and a YouTube population
+timelapse. The complete human-AI conversation record is committed beside them.
 
-The point is **not** forecast accuracy. The UN will beat this model at 2050 and
-that is fine and expected. The point is a model that can be wrong *for a stated
-reason*, and a track record that can be graded decades later. Read
-`spec/population-2150-spec-v0.3.md` §3 before §5 — several architectural
-choices look wrong if you assume accuracy is the goal.
+The paper's central question is compositional. Families differ in completed
+size, some of that difference persists across generations, and a national mean
+fertility rate cannot represent the resulting selection. The model measures
+the population effect of that missing mechanism and solves for the additional
+fertility decline that would cancel it. At the benchmark, selection raises the
+2150 result from 8.54 to 10.36 billion; a 1.52% additional universal decline per
+decade after 2050 cancels it in the fertility rate.
 
-The one substantive claim underneath everything: by 2150 essentially nobody
-alive today is still alive, so the answer is dominated entirely by the long-run
-fertility process. A long-run fertility of 1.85 versus 1.30 is a 4.4×
-difference in world population at 2150, from a parameter nobody can measure.
-Precision in the base data is nearly irrelevant; precision about the mechanism
-is everything.
+This is not presented as a confident forecast. The useful result is the
+boundary between opposing mechanisms, with the assumptions and measured ranges
+made explicit. Read `spec/population-2150-spec-v0.3.md` §3 before §5 for the
+original architecture, but treat the selection-first paper and current site as
+the authoritative framing of the finished project.
 
 ## 2. Read in this order
 
@@ -284,7 +286,58 @@ zero world net migration in every draw-year.
 
 This is the page's organising idea now, on Dylan's direction: what earns trust
 is showing the kinds of uncertainty represented correctly, not grading somebody
-else's forecasts. See `NEXT_SESSION.md`.
+else's forecasts.
+
+### The public-facing site (built and under review)
+
+The root `index.html` is no longer the old map or a technical project tour. It
+is a short argument designed to get a first-time reader to the paper quickly:
+
+1. the compositional premise in the hero;
+2. the 8.54 -> 10.36 billion selection result;
+3. one world-population figure combining UN estimates, the UN medium path to
+   2100, this project's dashed post-2100 extension, and the selection path;
+4. the embedded YouTube population timelapse;
+5. the three-step variation -> persistence -> composition mechanism;
+6. the break-even boundary grid;
+7. a concise account of how Dylan, Claude Opus 5, and ChatGPT 5.6 Sol made the
+   paper; and
+8. the paper, citation copier, and conversation record.
+
+The page is built from `site/body.html`, `site/index.template.html`,
+`site/app.js`, and the two JSON payloads in `site/data/`. Run
+`python scripts/build_site.py`; it writes the committed root `index.html` and
+refuses to finish if any of the 22 printed results disagrees with
+`site/data/story.json`. Then run `python scripts/build_public.py` to stage the
+reviewed payload in `dist/`.
+
+The restraint is deliberate. Do not restore the first-draft top banner, long
+scrolling card narrative, duplicated result blocks, links to the interactive
+map or separate paper landing page, or repeated "what this is not" caveats.
+The site should persuade by getting to the result, mechanism, boundary, and
+paper with very little friction.
+
+Mobile and desktop now have different rendering rules for good reasons:
+
+- On mobile the globe is a stationary background. Scroll-linked globe motion
+  was visibly choppy, and content reveal animations caused blocks to appear
+  unpredictably after refresh, so mobile content is present from the start.
+- Figures fit the viewport without horizontal scrolling. The world figure uses
+  a compact key and only the selection and extension endpoint labels; the full
+  desktop annotations would overlap at phone width.
+- The boundary-grid tooltip is dismissed when the reader scrolls away so it
+  cannot remain floating over unrelated content.
+- On desktop, remove-or-override conflicts matter. An obsolete first-draft
+  `#hero h1` rule once overrode the current `.hero-v2 h1` rule and forced a
+  132-pixel headline. That block was deleted on 2026-08-22, and a
+  short-viewport media query now scales hero type and spacing by height. Do not
+  reintroduce a width-only hero size.
+
+The video is YouTube ID `R0z4HbkDI0I`. It sits immediately after the main result
+with a direct "Watch on YouTube" link because Dylan wants the paper site to
+drive views to it. Author images are committed at `authors/dylan-slagh.webp`,
+`authors/anthropic.svg`, and `authors/openai.svg`; keep their relative paths so
+the hub subdirectory deployment continues to work.
 
 ## 4. What is not built
 
@@ -298,13 +351,10 @@ else's forecasts. See `NEXT_SESSION.md`.
   watch countries; widening it to all 236 is small work.
 - **Survey coverage and vital-registration completeness** in the confidence
   layer. Only census recency is sourced. Do not invent the other two.
-- **A genuinely public webpage.** The live page is still the authenticated hub,
-  and Dylan's direction is that the public site be designed from scratch rather
-  than derived from it. This is the only one of the three central outputs that
-  has not been started. `NEXT_SESSION.md` carries the scoped pieces.
-
-  The other two are done: the YouTube bar-chart race is rendered and encoded
-  (§13), and the paper is written (§14).
+- **A confirmed unauthenticated launch.** The public-facing site itself is
+  built and committed, and the authenticated hub is the review surface. Confirm
+  the Cloudflare/DNS state before claiming that `population.dylanslagh.com` is
+  open to the world; that deployment fact is outside the repository.
 
 ## 5. Rules that must not break
 
@@ -568,11 +618,12 @@ exactly them into `dist/`, refusing to finish if any local link is broken:
 | `map/index.html` | the interactive country map, with the Phase 4 uncertainty band |
 | `paper/index.html` | the paper landing page, with the reviewed and versioned PDFs |
 
-Everything is served today at `hub.dylanslagh.com/population-model/`,
-password-gated. **The genuinely public host is `population.dylanslagh.com`**, a
-Cloudflare Pages project whose build command is `python3 scripts/build_public.py`
-with output directory `dist`. If that project does not exist yet, it is the one
-setup step left; nothing in the repository depends on it.
+The review build is served at `hub.dylanslagh.com/population-model/`, behind the
+hub password. The intended unauthenticated host is
+`population.dylanslagh.com`, using `python3 scripts/build_public.py` as the
+Cloudflare Pages build command and `dist` as the output directory. Treat the
+site code as finished and the public exposure of that domain as a deployment
+check, not a missing design task.
 
 Two traps in the site build. `scripts/build_site.py` compares every number
 printed on the page against `site/data/story.json` and **fails** rather than
@@ -608,10 +659,12 @@ the world annually, and record the required receipts. The central universal
 pressure boundary is 1.52% per decade (90% migration-path range 1.51%–1.53%).
 The reproducible receipt is `data/reference/paired_selection_boundary_sensitivity.json`.
 
-**The paper is written** (§14) and **the video is rendered** (§13). What remains
-of the three central outputs is the **genuinely public webpage**, which should be
-redesigned from the ground up rather than derived from the authenticated hub
-working page.
+**The paper, video, and public-facing website are all built.** The immediate
+work is review and correction, not another redesign. Dylan reviewed mobile
+first and then desktop; preserve the intentional platform differences recorded
+in §3. The main page should remain concise enough that adding a section requires
+asking what it replaces or whether it materially improves the path to the
+paper.
 
 Keep the economic-pressure parameter universal as the transparent boundary
 sensitivity axis Dylan chose; do not add a type-specific interaction as a new
@@ -621,8 +674,8 @@ the boundary figure readable, and the evidence on how fertility declines have
 differed across the family-size distribution within cohorts was not found at the
 coverage needed.
 
-`NEXT_SESSION.md` carries the rest, including Dylan's editorial direction for
-the page and the scoped pieces of it that are not built.
+`NEXT_SESSION.md` is now historical planning context. Update this handoff when a
+review changes the current site or publication state.
 
 ## 13. The video
 
@@ -748,11 +801,10 @@ acknowledgements, the licence, and whether and where it is released.
 
 ---
 
-*Status updated 2026-08-15 on `main`: the paper is written and published to
-`paper/population-model.pdf` (27 pages); all eight sourced mechanism parameters
-verified; paired stochastic migration and the selection-boundary robustness
-receipt passed; 173 tests pass. Two bugs were fixed along the way — a strict
-migration-feasibility check that had broken `run_phase5.py` on `main`, and a
-field named `median_peak` that held a mean. Phase 6 scoring remains planned for
-WPP 2027 and later completed-cohort-fertility data around 2038. The hub remains
-a working page and the public site is not built.*
+*Status updated 2026-08-22 on `main`: paper v1.2.1 and supplement are built; all
+eight sourced mechanism parameters are verified; paired stochastic migration
+and the selection-boundary robustness receipt passed; the YouTube video is
+published and embedded; and the concise public-facing site is built and under
+review through the hub. Mobile uses a stationary globe and immediate content;
+desktop hero sizing now respects viewport height. Phase 6 scoring remains
+planned for WPP 2027 and later completed-cohort-fertility data around 2038.*
